@@ -32,7 +32,7 @@ services:
     networks:
       - internal
     volumes:
-      - /var/db-data:/var/lib/postgresql/data
+      - ./var/db-data:/var/lib/postgresql/data
 
 
 networks:

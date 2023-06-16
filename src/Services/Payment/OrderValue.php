@@ -4,24 +4,10 @@ namespace App\Services\Payment;
 
 use App\Entity\Client;
 use App\Entity\MenuItem;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class OrderValue extends AbstractController
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * @param EntityManagerInterface $em
-     */
-    public function __construct(EntityManagerInterface $em) {
-        $this->em = $em;
-    }
-
     /**
      * @param Client $client
      * @return float
@@ -41,21 +27,19 @@ class OrderValue extends AbstractController
         return $orderPrice;
     }
 
-    public function paymentProcess(Client $client): JsonResponse
+    public function isEnoughMoney(Client $client, float $orderValue = null): bool
     {
-        $orderValue = $this->getOrderValue($client);
-        $customersMoney = $client->getMoney();
-
-        if ($customersMoney > $orderValue)
-        {
-            $customersMoney -= $orderValue;
-            $client->setMoney($customersMoney);
-            $this->em->flush();
-        } else {
-            return $this->json(['message' => 'Customer dont have enough money!']);
+        if ($orderValue === null) {
+            $orderValue = $this->getOrderValue($client);
         }
 
-        return $this->json(['message' => 'successfully paid with card!']);
+        $customersMoney = $client->getMoney();
+
+        if ($customersMoney >= $orderValue) {
+            return true;
+        }
+
+        return false;
     }
 
 }

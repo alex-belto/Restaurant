@@ -4,28 +4,28 @@ namespace App\Controller\Payment;
 
 use App\Entity\Client;
 use App\Interfaces\PaymentInterface;
-use App\Services\Payment\OrderValue;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CardPaymentController extends AbstractController implements PaymentInterface
 {
-    /**
-     * @var OrderValue
-     */
-    private $orderValue;
 
     /**
-     * @param OrderValue $orderValue
+     * @throws \Exception
      */
-    public function __construct(
-        OrderValue $orderValue
-    ) {
-        $this->orderValue = $orderValue;
+    public function pay(Client $client, float $orderValue): void
+    {
+
+        if ($this->isValidCard()) {
+            $restOfMoney = $client->getMoney() - $orderValue;
+            $client->setMoney($restOfMoney);
+        } else {
+            throw new \Exception('Card is not valid!');
+        }
     }
 
-    public function pay(Client $client): JsonResponse
+    public function isValidCard(): bool
     {
-        return $this->orderValue->paymentProcess($client);
+        //check card
+        return true;
     }
 }

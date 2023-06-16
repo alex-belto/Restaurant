@@ -2,11 +2,9 @@
 
 namespace App\Entity;
 
-use App\Interfaces\PaymentInterface;
 use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
@@ -23,13 +21,9 @@ class Client
     #[ORM\ManyToMany(targetEntity: MenuItem::class)]
     private Collection $menuItems;
 
-    #[ORM\Column(type: Types::OBJECT)]
-    private ?object $paymentStrategy = null;
-
-    public function __construct(PaymentInterface $paymentStrategy)
+    public function __construct()
     {
         $this->menuItems = new ArrayCollection();
-        $this->paymentStrategy = $paymentStrategy;
     }
 
     public function getId(): ?int
@@ -71,22 +65,5 @@ class Client
         $this->menuItems->removeElement($menuItem);
 
         return $this;
-    }
-
-    public function getPaymentStrategy(): ?object
-    {
-        return $this->paymentStrategy;
-    }
-
-    public function setPaymentStrategy(object $paymentStrategy): static
-    {
-        $this->paymentStrategy = $paymentStrategy;
-
-        return $this;
-    }
-
-    public function pay(): void
-    {
-        $this->paymentStrategy->pay($this);
     }
 }

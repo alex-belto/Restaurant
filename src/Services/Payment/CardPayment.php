@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Controller\Payment;
+namespace App\Services\Payment;
 
 use App\Entity\Client;
 use App\Interfaces\PaymentInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class CardPaymentController extends AbstractController implements PaymentInterface
+class CardPayment implements PaymentInterface
 {
 
     /**
@@ -14,18 +13,13 @@ class CardPaymentController extends AbstractController implements PaymentInterfa
      */
     public function pay(Client $client, float $orderValue): void
     {
+        $cardValidation = new CardValidation();
 
-        if ($this->isValidCard()) {
+        if ($cardValidation->isCardValid($client)) {
             $restOfMoney = $client->getMoney() - $orderValue;
             $client->setMoney($restOfMoney);
         } else {
             throw new \Exception('Card is not valid!');
         }
-    }
-
-    public function isValidCard(): bool
-    {
-        //check card
-        return true;
     }
 }

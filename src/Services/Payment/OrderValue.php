@@ -12,7 +12,7 @@ class OrderValue extends AbstractController
      * @param Client $client
      * @return float
      */
-    public function getOrderValue(Client $client): float
+    public function getOrderValue(Client $client, int $tips = null): float
     {
         $orderItems = $client->getMenuItems();
         $orderPrice = 0;
@@ -22,6 +22,10 @@ class OrderValue extends AbstractController
         {
             $price = $orderItem->getPrice();
             $orderPrice += $price;
+        }
+
+        if ($tips) {
+            $orderPrice += $orderPrice/100 * $tips;
         }
 
         return $orderPrice;

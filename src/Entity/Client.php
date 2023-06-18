@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
@@ -20,6 +21,18 @@ class Client
 
     #[ORM\ManyToMany(targetEntity: MenuItem::class)]
     private Collection $menuItems;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $cardNumber = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $cardExpirationDate = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $cardCvv = null;
 
     public function __construct()
     {
@@ -63,6 +76,54 @@ class Client
     public function removeMenuItem(MenuItem $menuItem): static
     {
         $this->menuItems->removeElement($menuItem);
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getCardNumber(): ?int
+    {
+        return $this->cardNumber;
+    }
+
+    public function setCardNumber(?int $cardNumber): static
+    {
+        $this->cardNumber = $cardNumber;
+
+        return $this;
+    }
+
+    public function getCardExpirationDate(): ?\DateTimeInterface
+    {
+        return $this->cardExpirationDate;
+    }
+
+    public function setCardExpirationDate(?\DateTimeInterface $cardExpirationDate): static
+    {
+        $this->cardExpirationDate = $cardExpirationDate;
+
+        return $this;
+    }
+
+    public function getCardCvv(): ?int
+    {
+        return $this->cardCvv;
+    }
+
+    public function setCardCvv(?int $cardCvv): static
+    {
+        $this->cardCvv = $cardCvv;
 
         return $this;
     }

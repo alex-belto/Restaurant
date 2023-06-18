@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Controller\Payment;
+namespace App\Services\Payment;
 
 use App\Entity\Client;
 use App\Interfaces\PaymentInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class CashPaymentController extends AbstractController implements PaymentInterface
+class CashPayment implements PaymentInterface
 {
 
     public function pay(Client $client, float $orderValue): void

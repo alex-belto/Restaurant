@@ -8,6 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: MenuItemRepository::class)]
 class MenuItem
 {
+    public const DISH = 1;
+    public const DRINK = 2;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -21,6 +24,9 @@ class MenuItem
 
     #[ORM\Column(length: 255)]
     protected ?string $time = null;
+
+    #[ORM\Column(length: 255)]
+    private ?int $type = null;
 
     public function getId(): ?int
     {
@@ -59,6 +65,18 @@ class MenuItem
     public function setTime(string $time): static
     {
         $this->time = $time;
+
+        return $this;
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(int $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }

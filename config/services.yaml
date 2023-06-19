@@ -24,3 +24,6 @@ services:
     # please note that last definitions always *replace* previous ones
     App\Factory\MenuItemFactory:
         arguments: []
+
+    App\DataFixtures\MenuFixtures:
+        tags: ['doctrine.fixture.orm']

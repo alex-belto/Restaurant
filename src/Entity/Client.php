@@ -2,14 +2,13 @@
 
 namespace App\Entity;
 
+use App\Interfaces\StaffInterface;
 use App\Repository\ClientRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
-class Client
+class Client implements StaffInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,9 +17,6 @@ class Client
 
     #[ORM\Column]
     private ?float $money = null;
-
-    #[ORM\ManyToMany(targetEntity: MenuItem::class)]
-    private Collection $menuItems;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -34,10 +30,11 @@ class Client
     #[ORM\Column(nullable: true)]
     private ?int $cardCvv = null;
 
-    public function __construct()
-    {
-        $this->menuItems = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(inversedBy: 'clients')]
+    private ?Waiter $waiter = null;
+
+    #[ORM\OneToOne(mappedBy: 'client', cascade: ['persist', 'remove'])]
+    private ?Order $connectedOrder = null;
 
     public function getId(): ?int
     {
@@ -52,30 +49,6 @@ class Client
     public function setMoney(float $money): static
     {
         $this->money = $money;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, MenuItem>
-     */
-    public function getMenuItems(): Collection
-    {
-        return $this->menuItems;
-    }
-
-    public function addMenuItem(MenuItem $menuItem): static
-    {
-        if (!$this->menuItems->contains($menuItem)) {
-            $this->menuItems->add($menuItem);
-        }
-
-        return $this;
-    }
-
-    public function removeMenuItem(MenuItem $menuItem): static
-    {
-        $this->menuItems->removeElement($menuItem);
 
         return $this;
     }
@@ -124,6 +97,40 @@ class Client
     public function setCardCvv(?int $cardCvv): static
     {
         $this->cardCvv = $cardCvv;
+
+        return $this;
+    }
+
+    public function getWaiter(): ?Waiter
+    {
+        return $this->waiter;
+    }
+
+    public function setWaiter(?Waiter $waiter): static
+    {
+        $this->waiter = $waiter;
+
+        return $this;
+    }
+
+    public function getConnectedOrder(): ?Order
+    {
+        return $this->connectedOrder;
+    }
+
+    public function setConnectedOrder(?Order $conectedOrder): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($conectedOrder === null && $this->connectedOrder !== null) {
+            $this->connectedOrder->setClient(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($conectedOrder !== null && $conectedOrder->getClient() !== $this) {
+            $conectedOrder->setClient($this);
+        }
+
+        $this->conectedOrder = $conectedOrder;
 
         return $this;
     }

@@ -27,3 +27,8 @@ services:
 
     App\DataFixtures\MenuFixtures:
         tags: ['doctrine.fixture.orm']
+
+    App\EventListener\Waiter\WaiterListener:
+        class: 'App\EventListener\Waiter\WaiterListener'
+        tags:
+            - { name: 'doctrine.event_listener', event: 'postUpdate' , entity: 'App\Entity\Waiter' }

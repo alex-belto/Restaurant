@@ -9,7 +9,7 @@ use Faker\Factory;
 
 class ClientManager
 {
-    public function addClient(bool $card = false): void
+    public function addClient(bool $card = false): Client
     {
         /** @var EntityManagerInterface $em */
         $em = EntityManagerInterface::class;
@@ -27,6 +27,8 @@ class ClientManager
         }
         $em->persist($client);
         $em->flush();
+
+        return $client;
     }
 
 }

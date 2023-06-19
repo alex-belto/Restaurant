@@ -28,6 +28,9 @@ class MenuItem
     #[ORM\Column(length: 255)]
     private ?int $type = null;
 
+    #[ORM\ManyToOne(inversedBy: 'menuItems')]
+    private ?Order $connectedOrder = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -77,6 +80,18 @@ class MenuItem
     public function setType(int $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getConnectedOrder(): ?Order
+    {
+        return $this->connectedOrder;
+    }
+
+    public function setConnectedOrder(?Order $connectedOrder): static
+    {
+        $this->connectedOrder = $connectedOrder;
 
         return $this;
     }

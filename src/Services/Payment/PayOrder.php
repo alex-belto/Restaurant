@@ -68,13 +68,10 @@ class PayOrder
             4 => 'card_tips'
         };
 
-        if ($paymentStrategy == 'cash_tips' || $paymentStrategy == 'card_tips') {
-            return [
-                'paymentStrategy' => $paymentStrategy,
-                'tips' => $tipsPercent
-            ];
-        }
+        return [
+            'paymentStrategy' => $paymentStrategy,
+            'tips' => $tipsPercent
+        ];
 
-        return ['paymentStrategy' => $paymentStrategy, 'tips' => $tipsPercent];
     }
 }

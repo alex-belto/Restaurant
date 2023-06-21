@@ -24,10 +24,14 @@ class Restaurant
     #[ORM\Column(nullable: true)]
     private ?float $balance = null;
 
+    #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: MenuItem::class)]
+    private Collection $MenuItems;
+
     public function __construct()
     {
         $this->waiters = new ArrayCollection();
         $this->Kitcheners = new ArrayCollection();
+        $this->MenuItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -103,6 +107,36 @@ class Restaurant
     public function setBalance(?float $balance): static
     {
         $this->balance = $balance;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MenuItem>
+     */
+    public function getMenuItems(): Collection
+    {
+        return $this->MenuItems;
+    }
+
+    public function addMenuItem(MenuItem $menuItem): static
+    {
+        if (!$this->MenuItems->contains($menuItem)) {
+            $this->MenuItems->add($menuItem);
+            $menuItem->setRestaurant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenuItem(MenuItem $menuItem): static
+    {
+        if ($this->MenuItems->removeElement($menuItem)) {
+            // set the owning side to null (unless already changed)
+            if ($menuItem->getRestaurant() === $this) {
+                $menuItem->setRestaurant(null);
+            }
+        }
 
         return $this;
     }

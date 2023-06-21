@@ -36,6 +36,12 @@ class Order
     #[ORM\ManyToOne(inversedBy: 'orders')]
     private ?Kitchener $kitchener = null;
 
+    #[ORM\Column]
+    private ?float $price = 0;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $tips = null;
+
     public function __construct()
     {
         $this->menuItems = new ArrayCollection();
@@ -59,6 +65,7 @@ class Order
         if (!$this->menuItems->contains($menuItem)) {
             $this->menuItems->add($menuItem);
             $menuItem->setConnectedOrder($this);
+            $this->price += $menuItem->getPrice();
         }
 
         return $this;
@@ -70,6 +77,7 @@ class Order
             // set the owning side to null (unless already changed)
             if ($menuItem->getConnectedOrder() === $this) {
                 $menuItem->setConnectedOrder(null);
+                $this->price -= $menuItem->getPrice();
             }
         }
 
@@ -120,6 +128,30 @@ class Order
     public function setKitchener(?Kitchener $kitchener): static
     {
         $this->kitchener = $kitchener;
+
+        return $this;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(float $price): static
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getTips(): ?int
+    {
+        return $this->tips;
+    }
+
+    public function setTips(?int $tips): static
+    {
+        $this->tips = $tips;
 
         return $this;
     }

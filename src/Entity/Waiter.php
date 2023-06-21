@@ -25,6 +25,9 @@ class Waiter implements StaffInterface
     #[ORM\OneToMany(mappedBy: 'waiter', targetEntity: Order::class)]
     private Collection $orders;
 
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
     public function __construct()
     {
         $this->clients = new ArrayCollection();
@@ -104,6 +107,18 @@ class Waiter implements StaffInterface
                 $order->setWaiter(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }

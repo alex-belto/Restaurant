@@ -6,10 +6,11 @@ use App\Entity\Client;
 use App\Entity\Kitchener;
 use App\Entity\Order;
 use App\Services\Waiter\WaiterManager;
+use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 
-class WaiterListener
+class WaiterListener implements EventSubscriber
 {
     /**
      * @var WaiterManager
@@ -31,6 +32,14 @@ class WaiterListener
     ) {
         $this->waiterManager = $waiterManager;
         $this->em = $em;
+    }
+
+    public function getSubscribedEvents(): array
+    {
+        return [
+            'postUpdateClient',
+            'postUpdateKitchener'
+        ];
     }
 
     public function postUpdateClient(LifecycleEventArgs $eventArgs) {

@@ -5,10 +5,10 @@ namespace App\EventListener\Kitchener;
 use App\Entity\Order;
 use App\Entity\Waiter;
 use App\Services\Kitchener\KitchenerManager;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\EventSubscriber;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 
-class KitchenerListener
+class KitchenerListener implements EventSubscriber
 {
     /**
      * @var KitchenerManager
@@ -22,6 +22,11 @@ class KitchenerListener
         KitchenerManager $kitchenerService
     ) {
         $this->kitchenerService = $kitchenerService;
+    }
+
+    public function getSubscribedEvents(): array
+    {
+        return ['postUpdateWaiter'];
     }
 
     public function postUpdateWaiter(LifecycleEventArgs $eventArgs) {

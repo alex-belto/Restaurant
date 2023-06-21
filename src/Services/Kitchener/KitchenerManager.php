@@ -5,7 +5,7 @@ namespace App\Services\Kitchener;
 use App\Entity\Kitchener;
 use App\Entity\Order;
 use App\Interfaces\OrderManagerInterface;
-use App\Services\Staff\ChooseStaff;
+use App\Services\Staff\StaffManager;
 use Doctrine\ORM\EntityManagerInterface;
 
 class KitchenerManager implements OrderManagerInterface
@@ -16,17 +16,17 @@ class KitchenerManager implements OrderManagerInterface
     private $em;
 
     /**
-     * @var ChooseStaff
+     * @var StaffManager
      */
     private $chooseStaff;
 
     /**
      * @param EntityManagerInterface $em
-     * @param ChooseStaff $chooseStaff
+     * @param StaffManager $chooseStaff
      */
     public function __construct(
         EntityManagerInterface $em,
-        ChooseStaff $chooseStaff
+        StaffManager $chooseStaff
     ) {
         $this->em = $em;
         $this->chooseStaff = $chooseStaff;

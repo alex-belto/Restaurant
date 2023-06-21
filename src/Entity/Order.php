@@ -32,6 +32,9 @@ class Order
     #[ORM\Column]
     private ?int $status = null;
 
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+    private ?Kitchener $kitchener = null;
+
     public function __construct()
     {
         $this->menuItems = new ArrayCollection();
@@ -104,6 +107,18 @@ class Order
     public function setStatus(int $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getKitchener(): ?Kitchener
+    {
+        return $this->kitchener;
+    }
+
+    public function setKitchener(?Kitchener $kitchener): static
+    {
+        $this->kitchener = $kitchener;
 
         return $this;
     }

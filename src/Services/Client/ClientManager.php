@@ -3,12 +3,32 @@
 namespace App\Services\Client;
 
 use App\Entity\Client;
+use App\Entity\Order;
+use App\Repository\MenuItemRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 
 class ClientManager
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    /**
+     * @var MenuItemRepository
+     */
+    private $menuItemRepository;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        MenuItemRepository $menuItemRepository
+    ) {
+        $this->em = $em;
+        $this->menuItemRepository = $menuItemRepository;
+    }
+
     public function addClient(bool $card = false): Client
     {
         /** @var EntityManagerInterface $em */
@@ -29,6 +49,23 @@ class ClientManager
         $em->flush();
 
         return $client;
+    }
+
+    public function makeOrder(Client $client): Order
+    {
+        $order = new Order();
+        $order->setClient($client);
+        $order->setStatus(Order::READY_TO_KITCHEN);
+
+        for ($i = 0; $i <= 5; $i++) {
+            $itemId = rand(1, 19);
+            $menuItem = $this->menuItemRepository->find(['id' => $itemId]);
+            $order->addMenuItem($menuItem);
+            $this->em->persist($order);
+            $this->em->flush();
+        }
+
+        return $order;
     }
 
 }

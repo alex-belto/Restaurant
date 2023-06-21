@@ -25,6 +25,9 @@ class Kitchener implements StaffInterface
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\ManyToOne(inversedBy: 'Kitcheners')]
+    private ?Restaurant $restaurant = null;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -85,6 +88,18 @@ class Kitchener implements StaffInterface
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getRestaurant(): ?Restaurant
+    {
+        return $this->restaurant;
+    }
+
+    public function setRestaurant(?Restaurant $restaurant): static
+    {
+        $this->restaurant = $restaurant;
 
         return $this;
     }

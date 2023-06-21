@@ -65,6 +65,8 @@ class ClientManager
             $this->em->flush();
         }
 
+        $client->setConnectedOrder($order);
+        $this->em->flush();
         return $order;
     }
 

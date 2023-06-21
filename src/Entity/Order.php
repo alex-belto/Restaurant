@@ -14,6 +14,7 @@ class Order
     public const READY_TO_EAT = 1;
     public const READY_TO_WAITER = 2;
     public const READY_TO_KITCHEN = 3;
+    public const DONE = 4;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

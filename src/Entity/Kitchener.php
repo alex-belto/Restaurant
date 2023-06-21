@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
+use App\Interfaces\StaffInterface;
 use App\Repository\KitchenerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: KitchenerRepository::class)]
-class Kitchener
+class Kitchener implements StaffInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

@@ -35,6 +35,6 @@ class RestaurantManager extends AbstractController
     public function openRestaurant(int $days): void
     {
         $client = $this->clientManager->addClient(true);
-        $this->waiterOrderManager->processingOrder($client);
+        $this->clientManager->makeOrder($client);
     }
 }

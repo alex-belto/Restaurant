@@ -32,3 +32,8 @@ services:
         class: 'App\EventListener\Waiter\WaiterListener'
         tags:
             - { name: 'doctrine.event_listener', event: 'postUpdate' , entity: 'App\Entity\Waiter' }
+
+    App\EventListener\Kitchener\KitchenerListener:
+        class: 'App\EventListener\Kitchener\KitchenerListener'
+        tags:
+            - { name: 'doctrine.event_subscriber', event: 'postUpdateWaiter', entity: 'App\Entity\Waiter' }

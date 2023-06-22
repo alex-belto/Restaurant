@@ -39,6 +39,16 @@ class ClientRepository extends ServiceEntityRepository
         }
     }
 
+    public function dropClients(): void
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        $qb
+            ->delete('client', 'c')
+            ->getQuery()
+            ->execute();
+    }
+
 //    /**
 //     * @return Client[] Returns an array of Client objects
 //     */

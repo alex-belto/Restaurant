@@ -39,6 +39,16 @@ class RestaurantRepository extends ServiceEntityRepository
         }
     }
 
+    public function dropRestaurant(): void
+    {
+        $qb = $this->createQueryBuilder('r');
+
+        $qb
+            ->delete('restaurant', 'r')
+            ->getQuery()
+            ->execute();
+    }
+
 //    /**
 //     * @return Restaurant[] Returns an array of Restaurant objects
 //     */

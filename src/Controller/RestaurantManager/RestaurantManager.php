@@ -3,14 +3,14 @@
 namespace App\Controller\RestaurantManager;
 
 use App\Services\Client\ClientManager;
-use App\Services\Waiter\WaiterOrderManager;
+use App\Services\Waiter\WaiterManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 class RestaurantManager extends AbstractController
 {
     /**
-     * @var WaiterOrderManager
+     * @var WaiterManager
      */
     private $waiterOrderManager;
 
@@ -20,11 +20,11 @@ class RestaurantManager extends AbstractController
     private $clientManager;
 
     /**
-     * @param WaiterOrderManager $waiterOrderManager
+     * @param WaiterManager $waiterOrderManager
      * @param ClientManager $clientManager
      */
     public function __construct(
-        WaiterOrderManager $waiterOrderManager,
+        WaiterManager $waiterOrderManager,
         ClientManager $clientManager
     ) {
         $this->waiterOrderManager = $waiterOrderManager;

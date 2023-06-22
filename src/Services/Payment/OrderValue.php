@@ -10,15 +10,16 @@ class OrderValue extends AbstractController
 {
     /**
      * @param Client $client
+     * @param int|null $tips
      * @return float
      */
     public function getOrderValue(Client $client, int $tips = null): float
     {
-        $orderItems = $client->getMenuItems();
+        $orderItems = $client->getConnectedOrder();
         $orderPrice = 0;
 
         /** @var MenuItem $orderItem */
-        foreach ($orderItems as $orderItem)
+        foreach ($orderItems->getMenuItems() as $orderItem)
         {
             $price = $orderItem->getPrice();
             $orderPrice += $price;

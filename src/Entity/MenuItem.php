@@ -31,6 +31,9 @@ class MenuItem
     #[ORM\ManyToOne(inversedBy: 'menuItems')]
     private ?Order $connectedOrder = null;
 
+    #[ORM\ManyToOne(inversedBy: 'MenuItems')]
+    private ?Restaurant $restaurant = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -92,6 +95,18 @@ class MenuItem
     public function setConnectedOrder(?Order $connectedOrder): static
     {
         $this->connectedOrder = $connectedOrder;
+
+        return $this;
+    }
+
+    public function getRestaurant(): ?Restaurant
+    {
+        return $this->restaurant;
+    }
+
+    public function setRestaurant(?Restaurant $restaurant): static
+    {
+        $this->restaurant = $restaurant;
 
         return $this;
     }

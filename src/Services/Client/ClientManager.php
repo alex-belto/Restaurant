@@ -38,7 +38,7 @@ class ClientManager
         $cardExpiration = DateTime::CreateFromFormat('Y-m-d', $cardExpirationString);
 
         $client = new Client();
-        $client->setName($faker->name);
+        $client->setName($faker->name());
         $client->setMoney(rand(20, 150));
         if ($card) {
             $client->setCardNumber(rand(2910000000000000, 4800000000000000));
@@ -65,6 +65,8 @@ class ClientManager
             $this->em->flush();
         }
 
+        $client->setConnectedOrder($order);
+        $this->em->flush();
         return $order;
     }
 

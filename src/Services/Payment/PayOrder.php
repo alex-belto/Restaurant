@@ -3,25 +3,22 @@
 namespace App\Services\Payment;
 
 use App\Entity\Client;
-use App\Interfaces\PaymentInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-class PayOrderController
+class PayOrder
 {
     /**
      * @throws \Exception
      */
-    public function payOrder(Client $client, PaymentInterface $paymentStrategy, int $tips = null): void
+    public function payOrder(Client $client): void
     {
         /** @var EntityManagerInterface $em */
         $em = EntityManagerInterface::class;
         $orderValueClass = new OrderValue();
         $orderValue = $orderValueClass->getOrderValue($client);
-        if ($tips) {
-            $orderValue = $orderValueClass->getOrderValue($client, $tips);
-        }
+        $payment = $this->getPaymentMethod();
 
-        switch ($paymentStrategy) {
+        switch ($payment['paymentStrategy']) {
             case 'cash':
                 $paymentStrategy = new CashPayment();
                 $isEnoughMoney = $orderValueClass->isEnoughMoney($client);
@@ -31,14 +28,12 @@ class PayOrderController
                 $isEnoughMoney = $orderValueClass->isEnoughMoney($client);
                 break;
             case 'cash_tips':
-                $paymentStrategy = new TipsCardPayment(new CardPayment());
-                $paymentStrategy->setTips($tips);
+                $paymentStrategy = new TipsCardPayment();
                 $isEnoughMoney = $orderValueClass->isEnoughMoney($client, $orderValue);
                 break;
             case 'card_tips':
 
-                $paymentStrategy = new TipsCashPayment(new CashPayment());
-                $paymentStrategy->setTips($tips);
+                $paymentStrategy = new TipsCashPayment();
                 $isEnoughMoney = $orderValueClass->isEnoughMoney($client, $orderValue);
                 break;
             default:
@@ -47,7 +42,7 @@ class PayOrderController
 
         try {
             if ($isEnoughMoney) {
-                $paymentStrategy->pay($client, $orderValue);
+                $paymentStrategy->pay($client, $client->getConnectedOrder());
                 $em->flush();
             } else {
                 throw new \Exception('Customer dont have enough money!');
@@ -55,5 +50,22 @@ class PayOrderController
         } catch(\Exception $e) {
             throw new \Exception($e->getMessage());
         }
+    }
+
+    public function getPaymentMethod(): array
+    {
+        $strategyNumber = rand(1,4);
+
+        $paymentStrategy = match ($strategyNumber) {
+            1 => 'card',
+            2 => 'cash',
+            3 => 'cash_tips',
+            4 => 'card_tips'
+        };
+
+        return [
+            'paymentStrategy' => $paymentStrategy
+        ];
+
     }
 }

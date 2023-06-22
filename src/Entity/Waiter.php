@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
+use App\Interfaces\StaffInterface;
 use App\Repository\WaiterRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: WaiterRepository::class)]
-class Waiter
+class Waiter implements StaffInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -23,6 +24,12 @@ class Waiter
 
     #[ORM\OneToMany(mappedBy: 'waiter', targetEntity: Order::class)]
     private Collection $orders;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
+    #[ORM\ManyToOne(inversedBy: 'waiters')]
+    private ?Restaurant $restaurant = null;
 
     public function __construct()
     {
@@ -103,6 +110,30 @@ class Waiter
                 $order->setWaiter(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getRestaurant(): ?Restaurant
+    {
+        return $this->restaurant;
+    }
+
+    public function setRestaurant(?Restaurant $restaurant): static
+    {
+        $this->restaurant = $restaurant;
 
         return $this;
     }

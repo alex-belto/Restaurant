@@ -22,8 +22,6 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    App\Factory\MenuItemFactory:
-        arguments: []
 
     App\DataFixtures\MenuFixtures:
         tags: ['doctrine.fixture.orm']
@@ -32,6 +30,8 @@ services:
         class: 'App\EventListener\Waiter\WaiterListener'
         tags:
             - { name: 'doctrine.event_listener', event: 'postUpdate' , entity: 'App\Entity\Waiter' }
+            - { name: 'doctrine.event_subscriber', event: 'postUpdateClient', entity: 'App\Entity\Client' }
+            - { name: 'doctrine.event_subscriber', event: 'postUpdateKitchener', entity: 'App\Entity\Kitchener' }
 
     App\EventListener\Kitchener\KitchenerListener:
         class: 'App\EventListener\Kitchener\KitchenerListener'

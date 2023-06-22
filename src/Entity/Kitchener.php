@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
+use App\Interfaces\StaffInterface;
 use App\Repository\KitchenerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: KitchenerRepository::class)]
-class Kitchener
+class Kitchener implements StaffInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,6 +21,12 @@ class Kitchener
 
     #[ORM\OneToMany(mappedBy: 'kitchener', targetEntity: Order::class)]
     private Collection $orders;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
+    #[ORM\ManyToOne(inversedBy: 'Kitcheners')]
+    private ?Restaurant $restaurant = null;
 
     public function __construct()
     {
@@ -69,6 +76,30 @@ class Kitchener
                 $order->setKitchener(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getRestaurant(): ?Restaurant
+    {
+        return $this->restaurant;
+    }
+
+    public function setRestaurant(?Restaurant $restaurant): static
+    {
+        $this->restaurant = $restaurant;
 
         return $this;
     }

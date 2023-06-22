@@ -21,9 +21,10 @@ class RestaurantManager extends AbstractController
      * @throws \Exception
      */
     #[Route('/restaurant/open/{days}', name: 'open_restaurant', methods: ['GET'])]
-    public function openRestaurant(int $days): void
+    public function openRestaurant(int $days): array
     {
         $restaurant = $this->restaurantManager->buildRestaurant();
-        $this->restaurantManager->startRestaurant($restaurant, $days);
+        $result = $this->restaurantManager->startRestaurant($restaurant, $days);
+        return $result;
     }
 }

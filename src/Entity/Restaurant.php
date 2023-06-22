@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: RestaurantRepository::class)]
 class Restaurant
 {
+    public const TIPS_STANDARD_STRATEGY = 1;
+    public const TIPS_WAITER_STRATEGY = 2;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -22,10 +25,13 @@ class Restaurant
     private Collection $Kitcheners;
 
     #[ORM\Column(nullable: true)]
-    private ?float $balance = null;
+    private ?float $balance = 0;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: MenuItem::class)]
     private Collection $MenuItems;
+
+    #[ORM\Column]
+    private ?int $tipsStrategy = 1;
 
     public function __construct()
     {
@@ -137,6 +143,18 @@ class Restaurant
                 $menuItem->setRestaurant(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTipsStrategy(): ?int
+    {
+        return $this->tipsStrategy;
+    }
+
+    public function setTipsStrategy(int $tipsStrategy): static
+    {
+        $this->tipsStrategy = $tipsStrategy;
 
         return $this;
     }

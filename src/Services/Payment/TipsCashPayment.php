@@ -3,26 +3,20 @@
 namespace App\Services\Payment;
 
 use App\Entity\Client;
+use App\Entity\Order;
 use App\Interfaces\PaymentInterface;
+use App\Services\Tips\ProcessingTips;
 
 class TipsCashPayment implements PaymentInterface
 {
     /**
-     * @var int
+     * @throws \Exception
      */
-    private int $tipsPercent;
-
-    public function pay(Client $client, float $orderValue): void
+    public function pay(Client $client, Order $order): void
     {
         $cashPayment = new CashPayment();
-        $tips = $orderValue / 100 * $this->tipsPercent;
-        $orderValue += $tips;
-
-       $cashPayment->pay($client, $orderValue);
-    }
-
-    public function setTips(int $tipsPercent): void
-    {
-        $this->tipsPercent = $tipsPercent;
+        $cashPayment->pay($client, $order);
+        $processingTips = new ProcessingTips();
+        $processingTips($order);
     }
 }

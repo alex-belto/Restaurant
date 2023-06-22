@@ -3,14 +3,15 @@
 namespace App\Services\Payment;
 
 use App\Entity\Client;
+use App\Entity\Order;
 use App\Interfaces\PaymentInterface;
 
 class CashPayment implements PaymentInterface
 {
 
-    public function pay(Client $client, float $orderValue): void
+    public function pay(Client $client, Order $order): void
     {
-        $restOfMoney = $client->getMoney() - $orderValue;
-        $client->setMoney($restOfMoney);
+       $processingPayment = new ProcessingPayment();
+       $processingPayment($client, $order);
     }
 }

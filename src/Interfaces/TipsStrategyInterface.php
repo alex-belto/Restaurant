@@ -7,6 +7,6 @@ use App\Entity\Restaurant;
 
 interface TipsStrategyInterface
 {
-    public function splitTips(Order $order, Restaurant $restaurant):void;
+    public function splitTips(Order $order):void;
 
 }

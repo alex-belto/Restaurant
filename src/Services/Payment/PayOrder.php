@@ -29,15 +29,11 @@ class PayOrder
                 break;
             case 'cash_tips':
                 $paymentStrategy = new TipsCardPayment();
-                $tips = $payment['tips'];
-                $paymentStrategy->setTips($tips);
                 $isEnoughMoney = $orderValueClass->isEnoughMoney($client, $orderValue);
                 break;
             case 'card_tips':
 
                 $paymentStrategy = new TipsCashPayment();
-                $tips = $payment['tips'];
-                $paymentStrategy->setTips($tips);
                 $isEnoughMoney = $orderValueClass->isEnoughMoney($client, $orderValue);
                 break;
             default:
@@ -46,7 +42,7 @@ class PayOrder
 
         try {
             if ($isEnoughMoney) {
-                $paymentStrategy->pay($client, $orderValue);
+                $paymentStrategy->pay($client, $client->getConnectedOrder());
                 $em->flush();
             } else {
                 throw new \Exception('Customer dont have enough money!');
@@ -59,7 +55,6 @@ class PayOrder
     public function getPaymentMethod(): array
     {
         $strategyNumber = rand(1,4);
-        $tipsPercent = rand(5, 20);
 
         $paymentStrategy = match ($strategyNumber) {
             1 => 'card',
@@ -69,8 +64,7 @@ class PayOrder
         };
 
         return [
-            'paymentStrategy' => $paymentStrategy,
-            'tips' => $tipsPercent
+            'paymentStrategy' => $paymentStrategy
         ];
 
     }

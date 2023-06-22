@@ -3,7 +3,7 @@
 namespace App\Services\Tips;
 
 use App\Entity\Kitchener;
-use App\Entity\Restaurant;
+use App\Entity\Order;
 use App\Entity\Waiter;
 use App\Interfaces\TipsStrategyInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,12 +20,13 @@ class TipsStandardStrategy implements TipsStrategyInterface
         $this->em = $em;
     }
 
-    public function splitTips(float $tips, Restaurant $restaurant): void
+    public function splitTips(Order $order): void
     {
+        $restaurant = $order->getWaiter()->getRestaurant();
         $waiters = $restaurant->getWaiters();
         $kitcheners = $restaurant->getKitcheners();
         $amountOfStaff = count($waiters) + count($kitcheners);
-        $tipsForEach = $tips / $amountOfStaff;
+        $tipsForEach = $order->getTips() / $amountOfStaff;
 
         /** @var Kitchener $kitchener */
         foreach ($kitcheners as $kitchener) {

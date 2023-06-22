@@ -2,39 +2,27 @@
 
 namespace App\Controller\RestaurantManager;
 
-use App\Services\Client\ClientManager;
-use App\Services\Waiter\WaiterManager;
+use \App\Services\Restaurant\RestaurantManager as Manager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 class RestaurantManager extends AbstractController
 {
     /**
-     * @var WaiterManager
+     * @var Manager
      */
-    private $waiterOrderManager;
+    private $restaurantManager;
 
-    /**
-     * @var ClientManager
-     */
-    private $clientManager;
-
-    /**
-     * @param WaiterManager $waiterOrderManager
-     * @param ClientManager $clientManager
-     */
-    public function __construct(
-        WaiterManager $waiterOrderManager,
-        ClientManager $clientManager
-    ) {
-        $this->waiterOrderManager = $waiterOrderManager;
-        $this->clientManager = $clientManager;
+    public function __construct(Manager $restaurantManager) {
+        $this->restaurantManager = $restaurantManager;
     }
 
+    /**
+     * @throws \Exception
+     */
     #[Route('/restaurant/open/{days}', name: 'open_restaurant', methods: ['GET'])]
     public function openRestaurant(int $days): void
     {
-        $client = $this->clientManager->addClient(true);
-        $this->clientManager->makeOrder($client);
+        $this->restaurantManager->startRestaurant($days);
     }
 }

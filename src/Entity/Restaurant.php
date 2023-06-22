@@ -12,6 +12,8 @@ class Restaurant
 {
     public const TIPS_STANDARD_STRATEGY = 1;
     public const TIPS_WAITER_STRATEGY = 2;
+    public const WORK_HOURS = 8;
+    public const MAX_VISITORS_PER_HOUR = 50;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

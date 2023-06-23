@@ -35,7 +35,18 @@ class Restaurant
     #[ORM\Column]
     private ?int $tipsStrategy = 1;
 
-    public function __construct()
+    private static Restaurant $instance;
+
+    public static function getInstance(): self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
+    private function __construct()
     {
         $this->waiters = new ArrayCollection();
         $this->Kitcheners = new ArrayCollection();

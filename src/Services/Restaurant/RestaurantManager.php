@@ -98,7 +98,7 @@ class RestaurantManager
      */
     public function buildRestaurant(): Restaurant
     {
-        $restaurant = new Restaurant();
+        $restaurant = Restaurant::getInstance();
         $this->hireStaff($restaurant, 3, 'kitchener');
         $this->hireStaff($restaurant, 7, 'waiter');
         $this->fillUpMenu($restaurant, 15, 'dish');

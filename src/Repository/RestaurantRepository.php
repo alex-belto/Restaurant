@@ -2,8 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Order;
 use App\Entity\Restaurant;
+use App\Entity\Waiter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -47,6 +50,23 @@ class RestaurantRepository extends ServiceEntityRepository
             ->delete('restaurant', 'r')
             ->getQuery()
             ->execute();
+    }
+
+    /**
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
+     */
+    public function getAmountOfClientsWithTips(Restaurant $restaurant): int
+    {
+        $qb = $this->createQueryBuilder('r');
+
+        return $qb
+            ->select('coalesce(count(o), 0)')
+            ->innerJoin(Waiter::class, 'w', Join::WITH, 'r.id = w.restaurant')
+            ->innerJoin(Order::class, 'o', Join::WITH, 'o.waiter = w.id')
+            ->where('o.tips != null')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
 //    /**

@@ -21,7 +21,7 @@ class Client
     private ?string $name = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $cardNumber = null;
+    private ?string $cardNumber = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $cardExpirationDate = null;
@@ -64,12 +64,12 @@ class Client
         return $this;
     }
 
-    public function getCardNumber(): ?int
+    public function getCardNumber(): ?string
     {
         return $this->cardNumber;
     }
 
-    public function setCardNumber(?int $cardNumber): static
+    public function setCardNumber(?string $cardNumber): static
     {
         $this->cardNumber = $cardNumber;
 

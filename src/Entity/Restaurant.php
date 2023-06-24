@@ -35,7 +35,10 @@ class Restaurant
     #[ORM\Column]
     private ?int $tipsStrategy = 1;
 
-    private static Restaurant $instance;
+    private static ?Restaurant $instance = null;
+
+    #[ORM\Column]
+    private ?int $days = 0;
 
     public static function getInstance(): self
     {
@@ -168,6 +171,18 @@ class Restaurant
     public function setTipsStrategy(int $tipsStrategy): static
     {
         $this->tipsStrategy = $tipsStrategy;
+
+        return $this;
+    }
+
+    public function getDays(): ?int
+    {
+        return $this->days;
+    }
+
+    public function setDays(int $days): static
+    {
+        $this->days = $days;
 
         return $this;
     }

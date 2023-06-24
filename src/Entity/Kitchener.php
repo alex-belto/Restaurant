@@ -25,7 +25,7 @@ class Kitchener implements StaffInterface
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Kitcheners')]
+    #[ORM\ManyToOne(cascade: ['persist', 'remove'], inversedBy: 'Kitcheners')]
     private ?Restaurant $restaurant = null;
 
     public function __construct()

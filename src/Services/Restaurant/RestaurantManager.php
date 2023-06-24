@@ -45,25 +45,26 @@ class RestaurantManager
     /**
      * @throws \Exception
      */
-    public function startRestaurant(Restaurant $restaurant, int $days): array
+    public function startRestaurant(Restaurant $restaurant): array
     {
-        $daysPassed = 0;
+        $days = $restaurant->getDays();
         $visitorsForAllTime = 0;
 
         for ($i = 1; $i <= $days; $i++) {
-            $daysPassed ++;
             $visitorsPerDay = rand(50, 400);
             $visitorsForAllTime += $visitorsPerDay;
 
             for ($j = 1; $j <= $visitorsPerDay; $j++) {
-                $visitorsPerDay --;
                 $client = $this->clientManager->addClient(true);
-                $order = $this->clientManager->makeOrder($client);
+                $order = $this->clientManager->makeOrder($client, $restaurant);
                 if ($order->getStatus() === Order::DONE) {
                     $order->setTips(rand(5, 20));
                     $this->payOrder->payOrder($client);
                 }
             }
+            $days --;
+            $restaurant->setDays($days);
+            $this->em->flush();
         }
 
         $waiterBalance = [];
@@ -96,15 +97,19 @@ class RestaurantManager
     /**
      * @throws \Exception
      */
-    public function buildRestaurant(): Restaurant
+    public function buildRestaurant(int $days): Restaurant
     {
         $restaurant = Restaurant::getInstance();
-        $this->hireStaff($restaurant, 3, 'kitchener');
-        $this->hireStaff($restaurant, 7, 'waiter');
-        $this->fillUpMenu($restaurant, 15, 'dish');
-        $this->fillUpMenu($restaurant,  4, 'drink');
-        $this->em->persist($restaurant);
-        $this->em->flush();
+
+        if ($restaurant->getDays() === 0) {
+            $this->hireStaff($restaurant, 3, 'kitchener');
+            $this->hireStaff($restaurant, 7, 'waiter');
+            $this->fillUpMenu($restaurant, 15, 'dish');
+            $this->fillUpMenu($restaurant,  4, 'drink');
+            $restaurant->setDays($days);
+            $this->em->persist($restaurant);
+            $this->em->flush();
+        }
 
         return $restaurant;
     }
@@ -129,7 +134,7 @@ class RestaurantManager
                 $kitcheners = $this->em->getRepository(Kitchener::class)->findAll();
                 if (count($kitcheners) >= $amount) {
                     for ($i = 0; $i < $amount; $i++) {
-                        $restaurant->addWaiter($kitcheners[$i]);
+                        $restaurant->addKitchener($kitcheners[$i]);
                     }
                 } else {
                     throw new \Exception('U dont have enough staff in pull');

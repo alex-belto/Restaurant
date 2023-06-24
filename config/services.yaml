@@ -29,7 +29,6 @@ services:
     App\EventListener\Waiter\WaiterListener:
         class: 'App\EventListener\Waiter\WaiterListener'
         tags:
-            - { name: 'doctrine.event_listener', event: 'postUpdate' , entity: 'App\Entity\Waiter' }
             - { name: 'doctrine.event_subscriber', event: 'postUpdateClient', entity: 'App\Entity\Client' }
             - { name: 'doctrine.event_subscriber', event: 'postUpdateKitchener', entity: 'App\Entity\Kitchener' }
 

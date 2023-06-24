@@ -44,7 +44,7 @@ class ClientRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('c');
 
         $qb
-            ->delete('client', 'c')
+            ->delete('App\Entity\Client', 'c')
             ->getQuery()
             ->execute();
     }

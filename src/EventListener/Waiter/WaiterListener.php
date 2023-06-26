@@ -3,8 +3,8 @@
 namespace App\EventListener\Waiter;
 
 use App\Entity\Client;
-use App\Entity\Kitchener;
 use App\Entity\Order;
+use App\Services\Checker\Checker;
 use App\Services\Waiter\WaiterManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
@@ -22,45 +22,43 @@ class WaiterListener
     private $em;
 
     /**
+     * @var Checker
+     */
+    private $checker;
+
+    /**
      * @param WaiterManager $waiterManager
      * @param EntityManagerInterface $em
+     * @param Checker $checker
      */
     public function __construct(
         WaiterManager $waiterManager,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        Checker $checker
     ) {
         $this->waiterManager = $waiterManager;
         $this->em = $em;
+        $this->checker = $checker;
     }
 
-    public function postUpdateClient(LifecycleEventArgs $eventArgs) {
+    public function postUpdateClient(Client $client, LifecycleEventArgs $eventArgs): void
+    {
+        $changeSet = $eventArgs->getObjectManager()->getUnitOfWork()->getEntityChangeSet($client);
+        $isChangedStatus = $this->checker->isChanged($changeSet, ['status']);
 
-        /** @var Client $entity */
-        $entity = $eventArgs->getObject();
-        $changeSet = $eventArgs->getObjectManager()->getUnitOfWork()->getEntityChangeSet($entity);
-        dd($entity);
-        if (isset($changeSet['connectedOrder'])) {
-            $this->waiterManager->processingOrder($entity->getConnectedOrder());
+        if ($isChangedStatus) {
+            $this->waiterManager->processingOrder($client->getConnectedOrder());
         }
     }
 
-    public function postUpdateKitchener(LifecycleEventArgs $eventArgs) {
+    public function postUpdateOrder(Order $order) {
 
-        /** @var Kitchener $entity */
-        $entity = $eventArgs->getObject();
-        $changeSet = $eventArgs->getObjectManager()->getUnitOfWork()->getEntityChangeSet($entity);
-
-        if (isset($changeSet['orders']) &&
-            count($changeSet['orders'][0]) < count($changeSet['orders'][1])) {
-            /** @var Order $addedOrder */
-            $addedOrder = array_diff($changeSet['orders'][1], $changeSet['orders'][0])[0];
-            if ($addedOrder->getStatus() === Order::READY_TO_WAITER) {
-                $addedOrder->setStatus(Order::READY_TO_EAT);
-                $entity->removeOrder($addedOrder);
-                $this->em->flush();
-                $this->waiterManager->bringFood($addedOrder);
-            }
+        if ($order->getStatus() === Order::READY_TO_WAITER) {
+            $order->setStatus(Order::READY_TO_EAT);
+            $kitchener = $order->getKitchener();
+            $kitchener->removeOrder($order);
+            $this->waiterManager->bringFood($order);
+            $this->em->flush();
         }
     }
-
 }

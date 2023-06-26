@@ -9,6 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 class Client
 {
+    public const WITHOUT_ORDER = 1;
+    public const ORDER_PLACED = 2;
+    public const ORDER_PAYED = 3;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -34,6 +38,9 @@ class Client
 
     #[ORM\OneToOne(mappedBy: 'client', cascade: ['persist', 'remove'])]
     private ?Order $connectedOrder = null;
+
+    #[ORM\Column]
+    private int $status = 1;
 
     public function getId(): ?int
     {
@@ -117,19 +124,22 @@ class Client
         return $this->connectedOrder;
     }
 
-    public function setConnectedOrder(?Order $conectedOrder): static
+    public function setConnectedOrder(?Order $connectedOrder): static
     {
-        // unset the owning side of the relation if necessary
-        if ($conectedOrder === null && $this->connectedOrder !== null) {
-            $this->connectedOrder->setClient(null);
-        }
+        $connectedOrder->setClient($this);
+        $this->connectedOrder = $connectedOrder;
 
-        // set the owning side of the relation if necessary
-        if ($conectedOrder !== null && $conectedOrder->getClient() !== $this) {
-            $conectedOrder->setClient($this);
-        }
+        return $this;
+    }
 
-        $this->conectedOrder = $conectedOrder;
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

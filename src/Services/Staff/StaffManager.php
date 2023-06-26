@@ -53,9 +53,10 @@ class StaffManager
             default => throw new \Exception('wrong type' . $type)
         };
 
-        $amountOfStaff = count($repository->findAll());
-        $randomStaff = rand(1, $amountOfStaff) - 1;
-        return $repository->find(['id' => $randomStaff]);
+        $staff = $repository->findAll();
+        $amountOfStaff = count($staff);
+        $randomStaff = rand(0, $amountOfStaff - 1);
+        return $staff[$randomStaff];
 
     }
 

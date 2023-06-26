@@ -67,6 +67,7 @@ class ClientManager
             $this->em->persist($order);
         }
 
+        $client->setStatus(Client::ORDER_PLACED);
         $client->setConnectedOrder($order);
         $this->em->flush();
         return $order;

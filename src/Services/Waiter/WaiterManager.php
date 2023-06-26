@@ -44,11 +44,9 @@ class WaiterManager implements OrderManagerInterface
 
     public function bringFood(Order $order): void
     {
-        $client = $order->getClient();
         $order->setStatus(Order::DONE);
         $waiter = $order->getWaiter();
         $waiter->removeOrder($order);
-        $this->em->flush();
     }
 
 }

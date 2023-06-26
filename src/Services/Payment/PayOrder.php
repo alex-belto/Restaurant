@@ -43,6 +43,7 @@ class PayOrder
         try {
             if ($isEnoughMoney) {
                 $paymentStrategy->pay($client, $client->getConnectedOrder());
+                $client->setStatus(Client::ORDER_PAYED);
                 $em->flush();
             } else {
                 throw new \Exception('Customer dont have enough money!');

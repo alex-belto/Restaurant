@@ -3,9 +3,11 @@
 namespace App\Services\Staff;
 
 use App\Entity\Kitchener;
+use App\Entity\Restaurant;
 use App\Entity\Waiter;
 use App\Interfaces\StaffInterface;
 use App\Repository\KitchenerRepository;
+use App\Repository\RestaurantRepository;
 use App\Repository\WaiterRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
@@ -28,6 +30,11 @@ class StaffManager
     private $em;
 
     /**
+     * @var RestaurantRepository
+     */
+    private $restaurantRepository;
+
+    /**
      * @param WaiterRepository $waiterRepository
      * @param KitchenerRepository $kitchenerRepository
      * @param EntityManagerInterface $em
@@ -35,11 +42,13 @@ class StaffManager
     public function __construct(
         WaiterRepository $waiterRepository,
         KitchenerRepository $kitchenerRepository,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        RestaurantRepository $restaurantRepository
     ) {
         $this->waiterRepository = $waiterRepository;
         $this->kitchenerRepository = $kitchenerRepository;
         $this->em = $em;
+        $this->restaurantRepository = $restaurantRepository;
     }
 
     /**
@@ -47,13 +56,14 @@ class StaffManager
      */
     public function chooseStaff(string $type): StaffInterface
     {
-        $repository = match ($type) {
-            'waiter' => $this->waiterRepository,
-            'kitchener' => $this->kitchenerRepository,
+        $restaurant = Restaurant::getInstance();
+
+        $staff = match ($type) {
+            'waiter' => $restaurant->getWaiters(),
+            'kitchener' => $restaurant->getKitcheners(),
             default => throw new \Exception('wrong type' . $type)
         };
-
-        $staff = $repository->findAll();
+        
         $amountOfStaff = count($staff);
         $randomStaff = rand(0, $amountOfStaff - 1);
         return $staff[$randomStaff];

@@ -4,7 +4,6 @@ namespace App\EventListener\Waiter;
 
 use App\Entity\Client;
 use App\Entity\Order;
-use App\Services\Checker\Checker;
 use App\Services\Waiter\WaiterManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
@@ -22,31 +21,22 @@ class WaiterListener
     private $em;
 
     /**
-     * @var Checker
-     */
-    private $checker;
-
-    /**
      * @param WaiterManager $waiterManager
      * @param EntityManagerInterface $em
-     * @param Checker $checker
      */
     public function __construct(
         WaiterManager $waiterManager,
         EntityManagerInterface $em,
-        Checker $checker
     ) {
         $this->waiterManager = $waiterManager;
         $this->em = $em;
-        $this->checker = $checker;
     }
 
     public function postUpdateClient(Client $client, LifecycleEventArgs $eventArgs): void
     {
         $changeSet = $eventArgs->getObjectManager()->getUnitOfWork()->getEntityChangeSet($client);
-        $isChangedStatus = $this->checker->isChanged($changeSet, ['status']);
 
-        if ($isChangedStatus) {
+        if (isset($changeSet['status'])) {
             $this->waiterManager->processingOrder($client->getConnectedOrder());
         }
     }

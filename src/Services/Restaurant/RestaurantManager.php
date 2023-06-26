@@ -31,6 +31,7 @@ class RestaurantManager
     /**
      * @param ClientManager $clientManager
      * @param PayOrder $payOrder
+     * @param EntityManagerInterface $em
      */
     public function __construct(
         ClientManager $clientManager,

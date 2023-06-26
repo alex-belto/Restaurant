@@ -26,6 +26,10 @@ services:
     App\DataFixtures\MenuFixtures:
         tags: ['doctrine.fixture.orm']
 
+    App\Services\Payment\PayOrder:
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+
     App\EventListener\Waiter\WaiterListener:
         class: 'App\EventListener\Waiter\WaiterListener'
         tags:

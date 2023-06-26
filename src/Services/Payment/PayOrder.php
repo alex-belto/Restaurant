@@ -4,16 +4,27 @@ namespace App\Services\Payment;
 
 use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class PayOrder
 {
     /**
-     * @throws \Exception
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    /**
+     * @var EntityManagerInterface $em
+     */
+    public function __construct(EntityManagerInterface $em) {
+        $this->em = $em;
+    }
+
+    /**
+     * @throws Exception
      */
     public function payOrder(Client $client): void
     {
-        /** @var EntityManagerInterface $em */
-        $em = EntityManagerInterface::class;
         $orderValueClass = new OrderValue();
         $orderValue = $orderValueClass->getOrderValue($client);
         $payment = $this->getPaymentMethod();
@@ -37,19 +48,19 @@ class PayOrder
                 $isEnoughMoney = $orderValueClass->isEnoughMoney($client, $orderValue);
                 break;
             default:
-                throw new \Exception('wrong payment strategy');
+                throw new Exception('wrong payment strategy');
         }
 
         try {
             if ($isEnoughMoney) {
                 $paymentStrategy->pay($client, $client->getConnectedOrder());
                 $client->setStatus(Client::ORDER_PAYED);
-                $em->flush();
+                $this->em->flush();
             } else {
-                throw new \Exception('Customer dont have enough money!');
+                throw new Exception('Customer dont have enough money!');
             }
-        } catch(\Exception $e) {
-            throw new \Exception($e->getMessage());
+        } catch(\Throwable $e) {
+            throw new Exception($e->getMessage());
         }
     }
 

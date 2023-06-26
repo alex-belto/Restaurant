@@ -12,8 +12,7 @@ class ProcessingPayment
         Client $client,
         Order $order
     ) {
-        dd($client->getWaiter()->getRestaurant());
-        $restaurant =  $client->getWaiter()->getRestaurant();
+        $restaurant =  Restaurant::getInstance();
         $restOfMoney = $client->getMoney() - ($order->getPrice() + $order->getTips());
         $client->setMoney($restOfMoney);
         $restaurantBalance = $restaurant->getBalance() + $order->getPrice();

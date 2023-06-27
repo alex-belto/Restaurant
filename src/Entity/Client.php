@@ -36,7 +36,7 @@ class Client
     #[ORM\ManyToOne(inversedBy: 'clients')]
     private ?Waiter $waiter = null;
 
-    #[ORM\OneToOne(mappedBy: 'client', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'client', cascade: ['detach'])]
     private ?Order $connectedOrder = null;
 
     #[ORM\Column]

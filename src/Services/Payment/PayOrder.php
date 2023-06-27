@@ -14,10 +14,52 @@ class PayOrder
     private $em;
 
     /**
-     * @param EntityManagerInterface $em
+     * @var CashPayment
      */
-    public function __construct(EntityManagerInterface $em) {
+    private $cashPayment;
+
+    /**
+     * @var CardPayment
+     */
+    private $cardPayment;
+
+    /**
+     * @var TipsCashPayment
+     */
+    private $tipsCashPayment;
+
+    /**
+     * @var TipsCardPayment
+     */
+    private $tipsCardPayment;
+
+    /**
+     * @var OrderValue
+     */
+    private $orderValue;
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param CashPayment $cashPayment
+     * @param CardPayment $cardPayment
+     * @param TipsCashPayment $tipsCashPayment
+     * @param TipsCardPayment $tipsCardPayment
+     * @param OrderValue $orderValue
+     */
+    public function __construct(
+        EntityManagerInterface $em,
+        CashPayment $cashPayment,
+        CardPayment $cardPayment,
+        TipsCashPayment $tipsCashPayment,
+        TipsCardPayment $tipsCardPayment,
+        OrderValue $orderValue
+    ) {
         $this->em = $em;
+        $this->cashPayment = $cashPayment;
+        $this->cardPayment = $cardPayment;
+        $this->tipsCashPayment = $tipsCashPayment;
+        $this->tipsCardPayment = $tipsCardPayment;
+        $this->orderValue = $orderValue;
     }
 
     /**
@@ -25,27 +67,25 @@ class PayOrder
      */
     public function payOrder(Client $client): void
     {
-        $orderValueClass = new OrderValue();
-        $orderValue = $orderValueClass->getOrderValue($client);
+        $orderValue = $this->orderValue->getOrderValue($client);
         $payment = $this->getPaymentMethod();
 
         switch ($payment['paymentStrategy']) {
             case 'cash':
-                $paymentStrategy = new CashPayment();
-                $isEnoughMoney = $orderValueClass->isEnoughMoney($client);
+                $paymentStrategy = $this->cashPayment;
+                $isEnoughMoney = $this->orderValue->isEnoughMoney($client);
                 break;
             case 'card':
-                $paymentStrategy = new CardPayment();
-                $isEnoughMoney = $orderValueClass->isEnoughMoney($client);
+                $paymentStrategy = $this->cardPayment;
+                $isEnoughMoney = $this->orderValue->isEnoughMoney($client);
                 break;
             case 'cash_tips':
-                $paymentStrategy = new TipsCardPayment();
-                $isEnoughMoney = $orderValueClass->isEnoughMoney($client, $orderValue);
+                $paymentStrategy = $this->tipsCashPayment;
+                $isEnoughMoney = $this->orderValue->isEnoughMoney($client, $orderValue);
                 break;
             case 'card_tips':
-
-                $paymentStrategy = new TipsCashPayment();
-                $isEnoughMoney = $orderValueClass->isEnoughMoney($client, $orderValue);
+                $paymentStrategy = $this->tipsCardPayment;
+                $isEnoughMoney = $this->orderValue->isEnoughMoney($client, $orderValue);
                 break;
             default:
                 throw new Exception('wrong payment strategy');
@@ -56,8 +96,6 @@ class PayOrder
                 $paymentStrategy->pay($client, $client->getConnectedOrder());
                 $client->setStatus(Client::ORDER_PAYED);
                 $this->em->flush();
-            } else {
-                throw new Exception('Customer dont have enough money!');
             }
         } catch(\Throwable $e) {
             throw new Exception($e->getMessage());

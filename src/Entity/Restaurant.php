@@ -43,6 +43,8 @@ class Restaurant
     public static function getInstance(): self
     {
         if (self::$instance === null) {
+
+//            self::$instance = self::$cache->fetch('restaurant_instance');
             self::$instance = new self();
         }
 

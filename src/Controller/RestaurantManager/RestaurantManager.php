@@ -2,9 +2,8 @@
 
 namespace App\Controller\RestaurantManager;
 
-use App\Entity\Client;
+use App\Entity\Restaurant;
 use App\Repository\ClientRepository;
-use App\Repository\RestaurantRepository;
 use \App\Services\Restaurant\RestaurantManager as Manager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,11 +23,6 @@ class RestaurantManager extends AbstractController
     private $clientRepository;
 
     /**
-     * @var RestaurantRepository
-     */
-    private $restaurantRepository;
-
-    /**
      * @var EntityManagerInterface
      */
     private $em;
@@ -36,18 +30,15 @@ class RestaurantManager extends AbstractController
     /**
      * @param Manager $restaurantManager
      * @param ClientRepository $clientRepository
-     * @param RestaurantRepository $restaurantRepository
      * @param EntityManagerInterface $em
      */
     public function __construct(
         Manager $restaurantManager,
         ClientRepository $clientRepository,
-        RestaurantRepository $restaurantRepository,
         EntityManagerInterface $em
     ) {
         $this->restaurantManager = $restaurantManager;
         $this->clientRepository = $clientRepository;
-        $this->restaurantRepository = $restaurantRepository;
         $this->em = $em;
     }
 
@@ -60,8 +51,17 @@ class RestaurantManager extends AbstractController
         $restaurant = $this->restaurantManager->buildRestaurant($days);
         $result = $this->restaurantManager->startRestaurant($restaurant);
 //        $this->clientRepository->dropClients();
-//        $this->em->remove($restaurant);
         $this->em->flush();
         return $this->json($result);
+    }
+
+    #[Route('restaurant/stop', name: 'close_restaurant', methods: ['GET'])]
+    public function dropRestaurant(): JsonResponse
+    {
+        $restaurant = Restaurant::getInstance();
+        $restaurant->setDays(0);
+        $this->em->flush();
+
+        return $this->json(['Restaurant closed!']);
     }
 }

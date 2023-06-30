@@ -49,6 +49,18 @@ class ClientRepository extends ServiceEntityRepository
             ->execute();
     }
 
+    public function getAmountOfClientsWithTips(): int
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        return $qb
+            ->select('coalesce(count(o), 0)')
+            ->innerJoin('c.connectedOrder', 'o')
+            ->where('o.tips IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
 //    /**
 //     * @return Client[] Returns an array of Client objects
 //     */

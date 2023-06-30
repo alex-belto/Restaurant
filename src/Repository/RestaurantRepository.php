@@ -52,23 +52,6 @@ class RestaurantRepository extends ServiceEntityRepository
             ->execute();
     }
 
-    /**
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\NoResultException
-     */
-    public function getAmountOfClientsWithTips(Restaurant $restaurant): int
-    {
-        $qb = $this->createQueryBuilder('r');
-
-        return $qb
-            ->select('coalesce(count(o), 0)')
-            ->innerJoin(Waiter::class, 'w', Join::WITH, 'r.id = w.restaurant')
-            ->innerJoin(Order::class, 'o', Join::WITH, 'o.waiter = w.id')
-            ->where('o.tips != null')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
 //    /**
 //     * @return Restaurant[] Returns an array of Restaurant objects
 //     */

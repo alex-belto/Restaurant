@@ -55,7 +55,7 @@ class RestaurantManager extends AbstractController
     #[Route('/restaurant/open/{days}', name: 'open_restaurant', methods: ['GET'])]
     public function openRestaurant(int $days): JsonResponse
     {
-        set_time_limit(120);
+        set_time_limit(180);
         $restaurant = $this->buildRestaurant->getRestaurant();
         $restaurant->setDays($days);
         $this->em->flush();

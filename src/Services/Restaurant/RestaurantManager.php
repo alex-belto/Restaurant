@@ -6,6 +6,8 @@ use App\Entity\Kitchener;
 use App\Entity\Order;
 use App\Entity\Restaurant;
 use App\Entity\Waiter;
+use App\Repository\ClientRepository;
+use App\Repository\RestaurantRepository;
 use App\Services\Client\ClientManager;
 use App\Services\Payment\PayOrder;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,28 +20,28 @@ class RestaurantManager
     private $clientManager;
 
     /**
-     * @var PayOrder
-     */
-    private $payOrder;
-
-    /**
      * @var EntityManagerInterface
      */
     private $em;
 
     /**
+     * @var ClientRepository
+     */
+    private $clientRepository;
+
+    /**
      * @param ClientManager $clientManager
-     * @param PayOrder $payOrder
      * @param EntityManagerInterface $em
+     * @param ClientRepository $clientRepository
      */
     public function __construct(
         ClientManager $clientManager,
-        PayOrder $payOrder,
         EntityManagerInterface $em,
+        ClientRepository $clientRepository
     ) {
         $this->clientManager = $clientManager;
-        $this->payOrder = $payOrder;
         $this->em = $em;
+        $this->clientRepository = $clientRepository;
     }
 
     /**
@@ -50,17 +52,19 @@ class RestaurantManager
         $days = $restaurant->getDays();
         $visitorsForAllTime = 0;
 
-        for ($i = 1; $i <= $days; $i++) {
-            $visitorsPerDay = rand(50, 400);
-            $visitorsForAllTime += $visitorsPerDay;
+//        for ($i = 1; $i <= $days; $i++) {
+//            $visitorsPerDay = rand(50, 400);
+//            $visitorsForAllTime += $visitorsPerDay;
+//
+//            for ($j = 1; $j <= $visitorsPerDay; $j++) {
+//                $this->clientManager->addClient(true);
+//            }
+//            $days --;
+//            $restaurant->setDays($days);
+//            $this->em->flush();
+//        }
 
-            for ($j = 1; $j <= $visitorsPerDay; $j++) {
-                $this->clientManager->addClient(true);
-            }
-            $days --;
-            $restaurant->setDays($days);
-            $this->em->flush();
-        }
+        $visitorsWithTips = $this->clientRepository->getAmountOfClientsWithTips();
 
         $waiterBalance = [];
         /** @var Waiter $waiter */
@@ -85,7 +89,8 @@ class RestaurantManager
             'restaurant_balance' => $restaurant->getBalance(),
             'waiters_balance' => $waiterBalance,
             'kitcheners_balance' => $kitchenersBalance,
-            'visitors_for_all_time' => $visitorsForAllTime
+            'visitors_for_all_time' => $visitorsForAllTime,
+            'visitors_with_tips' => $visitorsWithTips
         ];
     }
 }

@@ -2,17 +2,19 @@
 
 namespace App\Controller\RestaurantManager;
 
-use App\Entity\Client;
 use App\Repository\ClientRepository;
 use App\Repository\OrderRepository;
 use App\Repository\RestaurantRepository;
-use App\Services\Restaurant\BuildRestaurant;
+use App\Services\Restaurant\RestaurantBuilder;
 use \App\Services\Restaurant\RestaurantManager as Manager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * The main controller is responsible for managing the restaurant.
+ */
 class RestaurantManager extends AbstractController
 {
     /**
@@ -21,7 +23,7 @@ class RestaurantManager extends AbstractController
     private $restaurantManager;
 
     /**
-     * @var BuildRestaurant
+     * @var RestaurantBuilder
      */
     private $buildRestaurant;
 
@@ -49,17 +51,17 @@ class RestaurantManager extends AbstractController
      * @param Manager $restaurantManager
      * @param ClientRepository $clientRepository
      * @param EntityManagerInterface $em
-     * @param BuildRestaurant $buildRestaurant
+     * @param RestaurantBuilder $buildRestaurant
      * @param OrderRepository $orderRepository
      * @param RestaurantRepository $restaurantRepository
      */
     public function __construct(
-        Manager $restaurantManager,
-        ClientRepository $clientRepository,
+        Manager                $restaurantManager,
+        ClientRepository       $clientRepository,
         EntityManagerInterface $em,
-        BuildRestaurant $buildRestaurant,
-        OrderRepository $orderRepository,
-        RestaurantRepository $restaurantRepository
+        RestaurantBuilder      $buildRestaurant,
+        OrderRepository        $orderRepository,
+        RestaurantRepository   $restaurantRepository
     ) {
         $this->restaurantManager = $restaurantManager;
         $this->clientRepository = $clientRepository;

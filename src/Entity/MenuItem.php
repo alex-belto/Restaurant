@@ -5,6 +5,10 @@ namespace App\Entity;
 use App\Repository\MenuItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * The "MenuItem" entity stores information about menu items, including their name,
+ * preparation time, price, associated restaurant, and related order.
+ */
 #[ORM\Entity(repositoryClass: MenuItemRepository::class)]
 class MenuItem
 {

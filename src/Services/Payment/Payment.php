@@ -5,7 +5,10 @@ namespace App\Services\Payment;
 use App\Entity\Client;
 use App\Entity\Order;
 
-class ProcessingPayment
+/**
+ * The class handles the payment processing for an order.
+ */
+class Payment
 {
     /**
      * @param Client $client

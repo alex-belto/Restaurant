@@ -5,7 +5,7 @@ namespace App\Services\Staff;
 use App\Entity\Kitchener;
 use App\Entity\Waiter;
 use App\Interfaces\StaffInterface;
-use App\Services\Restaurant\BuildRestaurant;
+use App\Services\Restaurant\RestaurantBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 
@@ -17,17 +17,17 @@ class StaffManager
     private $em;
 
     /**
-     * @var BuildRestaurant
+     * @var RestaurantBuilder
      */
     private $buildRestaurant;
 
     /**
      * @param EntityManagerInterface $em
-     * @param BuildRestaurant $buildRestaurant
+     * @param RestaurantBuilder $buildRestaurant
      */
     public function __construct(
         EntityManagerInterface $em,
-        BuildRestaurant $buildRestaurant
+        RestaurantBuilder $buildRestaurant
     ) {
         $this->em = $em;
         $this->buildRestaurant = $buildRestaurant;

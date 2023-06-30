@@ -9,6 +9,9 @@ use App\Repository\ClientRepository;
 use App\Services\Client\ClientManager;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * The class is responsible for executing the overall logic and operations of a restaurant.
+ */
 class RestaurantManager
 {
     /**

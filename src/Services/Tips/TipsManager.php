@@ -5,7 +5,10 @@ namespace App\Services\Tips;
 use App\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ProcessingTips
+/**
+ * The class selects a tip distribution strategy and distributes the tips among the staff members.
+ */
+class TipsManager
 {
 
     /**

@@ -6,10 +6,13 @@ use App\Entity\Client;
 use App\Entity\Order;
 use App\Interfaces\PaymentInterface;
 
-class CardPayment implements PaymentInterface
+/**
+ * The class handles card payment transactions.
+ */
+class CardPaymentProcessor implements PaymentInterface
 {
     /**
-     * @var ProcessingPayment
+     * @var Payment
      */
     private $processingPayment;
 
@@ -19,19 +22,19 @@ class CardPayment implements PaymentInterface
     private $cardValidation;
 
     /**
-     * @var CashPayment
+     * @var CashPaymentProcessor
      */
     private $cashPayment;
 
     /**
-     * @param ProcessingPayment $processingPayment
+     * @param Payment $processingPayment
      * @param CardValidation $cardValidation
-     * @param CashPayment $cashPayment
+     * @param CashPaymentProcessor $cashPayment
      */
     public function __construct(
-        ProcessingPayment $processingPayment,
+        Payment        $processingPayment,
         CardValidation $cardValidation,
-        CashPayment $cashPayment
+        CashPaymentProcessor $cashPayment
     ) {
         $this->processingPayment = $processingPayment;
         $this->cardValidation = $cardValidation;

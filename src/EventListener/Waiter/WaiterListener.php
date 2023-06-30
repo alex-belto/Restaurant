@@ -8,6 +8,10 @@ use App\Services\Waiter\WaiterManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 
+/**
+ * Listening to the client, we pass the order to the chef after its status has been changed.
+ * After listening to the order, we pass it to the waiter for processing once its status changes to "READY_TO_WAITER."
+ */
 class WaiterListener
 {
     /**
@@ -32,6 +36,11 @@ class WaiterListener
         $this->em = $em;
     }
 
+    /**
+     * @param Client $client
+     * @param LifecycleEventArgs $eventArgs
+     * @throws \Exception
+     */
     public function postUpdateClient(Client $client, LifecycleEventArgs $eventArgs): void
     {
         $changeSet = $eventArgs->getObjectManager()->getUnitOfWork()->getEntityChangeSet($client);
@@ -41,8 +50,11 @@ class WaiterListener
         }
     }
 
-    public function postUpdateOrder(Order $order) {
-
+    /**
+     * @param Order $order
+     */
+    public function postUpdateOrder(Order $order): void
+    {
         if ($order->getStatus() === Order::READY_TO_WAITER) {
             $order->setStatus(Order::READY_TO_EAT);
             $kitchener = $order->getKitchener();

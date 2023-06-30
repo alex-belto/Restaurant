@@ -6,6 +6,10 @@ use App\Entity\Client;
 use App\Entity\MenuItem;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * The OrderValue class calculates the total cost of an order,
+ * including tips, and checks if the client has sufficient funds.
+ */
 class OrderValue extends AbstractController
 {
     /**

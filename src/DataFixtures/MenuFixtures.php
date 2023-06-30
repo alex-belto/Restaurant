@@ -3,15 +3,18 @@
 namespace App\DataFixtures;
 
 use App\Entity\MenuItem;
-use App\Services\Menu\CreateMenuItem;
+use App\Services\Menu\MenuItemCreator;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * A class for creating the main menu.
+ */
 class MenuFixtures extends Fixture
 {
-    private  CreateMenuItem $createMenuItem;
+    private  MenuItemCreator $createMenuItem;
 
-    public function __construct(CreateMenuItem $createMenuItem)
+    public function __construct(MenuItemCreator $createMenuItem)
     {
         $this->createMenuItem = $createMenuItem;
     }

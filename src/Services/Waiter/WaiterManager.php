@@ -8,6 +8,9 @@ use App\Interfaces\OrderManagerInterface;
 use App\Services\Staff\StaffManager;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * The class handles order processing on the waiter's side.
+ */
 class WaiterManager implements OrderManagerInterface
 {
 

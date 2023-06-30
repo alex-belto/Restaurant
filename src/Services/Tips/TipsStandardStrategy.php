@@ -8,6 +8,10 @@ use App\Entity\Waiter;
 use App\Interfaces\TipsStrategyInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * The class represents the standard strategy for distributing tips,
+ * where the tips are divided equally among all staff members.
+ */
 class TipsStandardStrategy implements TipsStrategyInterface
 {
     /**

@@ -4,8 +4,11 @@ namespace App\EventListener\Client;
 
 use App\Entity\Client;
 use App\Services\Client\ClientManager;
-use App\Services\Restaurant\BuildRestaurant;
+use App\Services\Restaurant\RestaurantBuilder;
 
+/**
+ * After the client is persisted in the system, we proceed to create an order for them.
+ */
 class ClientListener
 {
     /**
@@ -14,17 +17,17 @@ class ClientListener
     private $clientManager;
 
     /**
-     * @var BuildRestaurant
+     * @var RestaurantBuilder
      */
     private $buildRestaurant;
 
     /**
      * @param ClientManager $clientManager
-     * @param BuildRestaurant $buildRestaurant
+     * @param RestaurantBuilder $buildRestaurant
      */
     public function __construct(
         ClientManager $clientManager,
-        BuildRestaurant $buildRestaurant
+        RestaurantBuilder $buildRestaurant
     ) {
         $this->clientManager = $clientManager;
         $this->buildRestaurant = $buildRestaurant;

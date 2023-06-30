@@ -8,10 +8,23 @@ use App\Interfaces\PaymentInterface;
 
 class CashPayment implements PaymentInterface
 {
+    /**
+     * @var ProcessingPayment
+     */
+    private $processingPayment;
 
+    public function __construct(ProcessingPayment $processingPayment) {
+        $this->processingPayment = $processingPayment;
+    }
+
+    /**
+     * @param Client $client
+     * @param Order $order
+     * @throws \Exception
+     */
     public function pay(Client $client, Order $order): void
     {
-       $processingPayment = new ProcessingPayment();
+       $processingPayment = $this->processingPayment;
        $processingPayment($client, $order);
     }
 }

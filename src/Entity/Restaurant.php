@@ -12,6 +12,8 @@ class Restaurant
 {
     public const TIPS_STANDARD_STRATEGY = 1;
     public const TIPS_WAITER_STRATEGY = 2;
+    public const WORK_HOURS = 8;
+    public const MAX_VISITORS_PER_HOUR = 50;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -32,6 +34,11 @@ class Restaurant
 
     #[ORM\Column]
     private ?int $tipsStrategy = 1;
+
+    private static ?Restaurant $instance = null;
+
+    #[ORM\Column]
+    private ?int $days = 0;
 
     public function __construct()
     {
@@ -155,6 +162,18 @@ class Restaurant
     public function setTipsStrategy(int $tipsStrategy): static
     {
         $this->tipsStrategy = $tipsStrategy;
+
+        return $this;
+    }
+
+    public function getDays(): ?int
+    {
+        return $this->days;
+    }
+
+    public function setDays(int $days): static
+    {
+        $this->days = $days;
 
         return $this;
     }

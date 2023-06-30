@@ -15,10 +15,19 @@ class TipsWaiterStrategy implements TipsStrategyInterface
      */
     private $em;
 
-    public function __construct(EntityManagerInterface $em) {
+    /**
+     * @param EntityManagerInterface $em
+     */
+    public function __construct(
+        EntityManagerInterface $em
+    ) {
         $this->em = $em;
     }
 
+    /**
+     * @param Order $order
+     * @throws \Exception
+     */
     public function splitTips(Order $order): void
     {
         $tips = $order->getTips();

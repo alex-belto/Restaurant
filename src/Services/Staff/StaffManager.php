@@ -5,41 +5,32 @@ namespace App\Services\Staff;
 use App\Entity\Kitchener;
 use App\Entity\Waiter;
 use App\Interfaces\StaffInterface;
-use App\Repository\KitchenerRepository;
-use App\Repository\WaiterRepository;
+use App\Services\Restaurant\BuildRestaurant;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 
 class StaffManager
 {
     /**
-     * @var WaiterRepository
-     */
-    private $waiterRepository;
-
-    /**
-     * @var KitchenerRepository
-     */
-    private $kitchenerRepository;
-
-    /**
      * @var EntityManagerInterface
      */
     private $em;
 
     /**
-     * @param WaiterRepository $waiterRepository
-     * @param KitchenerRepository $kitchenerRepository
+     * @var BuildRestaurant
+     */
+    private $buildRestaurant;
+
+    /**
      * @param EntityManagerInterface $em
+     * @param BuildRestaurant $buildRestaurant
      */
     public function __construct(
-        WaiterRepository $waiterRepository,
-        KitchenerRepository $kitchenerRepository,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        BuildRestaurant $buildRestaurant
     ) {
-        $this->waiterRepository = $waiterRepository;
-        $this->kitchenerRepository = $kitchenerRepository;
         $this->em = $em;
+        $this->buildRestaurant = $buildRestaurant;
     }
 
     /**
@@ -47,15 +38,17 @@ class StaffManager
      */
     public function chooseStaff(string $type): StaffInterface
     {
-        $repository = match ($type) {
-            'waiter' => $this->waiterRepository,
-            'kitchener' => $this->kitchenerRepository,
+        $restaurant = $this->buildRestaurant->getRestaurant();
+
+        $staff = match ($type) {
+            'waiter' => $restaurant->getWaiters(),
+            'kitchener' => $restaurant->getKitcheners(),
             default => throw new \Exception('wrong type' . $type)
         };
-
-        $amountOfStaff = count($repository->findAll());
-        $randomStaff = rand(1, $amountOfStaff) - 1;
-        return $repository->find(['id' => $randomStaff]);
+        
+        $amountOfStaff = count($staff);
+        $randomStaff = rand(0, $amountOfStaff - 1);
+        return $staff[$randomStaff];
 
     }
 

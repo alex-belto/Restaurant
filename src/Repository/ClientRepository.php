@@ -39,6 +39,38 @@ class ClientRepository extends ServiceEntityRepository
         }
     }
 
+    public function dropClients(): void
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        $qb
+            ->delete(Client::class, 'c')
+            ->getQuery()
+            ->execute();
+    }
+
+    public function getAmountOfClientsWithTips(): int
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        return $qb
+            ->select('coalesce(count(o), 0)')
+            ->innerJoin('c.connectedOrder', 'o')
+            ->where('o.tips IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function removeAllClients(): void
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        $qb
+            ->delete(Client::class)
+            ->getQuery()
+            ->execute();
+    }
+
 //    /**
 //     * @return Client[] Returns an array of Client objects
 //     */

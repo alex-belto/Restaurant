@@ -3,12 +3,9 @@
 namespace App\EventListener\Kitchener;
 
 use App\Entity\Order;
-use App\Entity\Waiter;
 use App\Services\Kitchener\KitchenerManager;
-use Doctrine\Common\EventSubscriber;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
 
-class KitchenerListener implements EventSubscriber
+class KitchenerListener
 {
     /**
      * @var KitchenerManager
@@ -24,24 +21,11 @@ class KitchenerListener implements EventSubscriber
         $this->kitchenerService = $kitchenerService;
     }
 
-    public function getSubscribedEvents(): array
-    {
-        return ['postUpdateWaiter'];
-    }
+    public function postUpdateOrder(Order $order) {
 
-    public function postUpdateWaiter(LifecycleEventArgs $eventArgs) {
-
-        /** @var Waiter $entity */
-        $entity = $eventArgs->getObject();
-        $changeSet = $eventArgs->getObjectManager()->getUnitOfWork()->getEntityChangeSet($entity);
-
-        if (isset($changeSet['orders']) &&
-            count($changeSet['orders'][0]) < count($changeSet['orders'][1])) {
-            /** @var Order $addedOrder */
-            $addedOrder = array_diff($changeSet['orders'][1], $changeSet['orders'][0])[0];
-            $this->kitchenerService->processingOrder($addedOrder);
+        if ($order->getStatus() === Order::READY_TO_KITCHEN) {
+            $this->kitchenerService->processingOrder($order);
         }
-
     }
 
 }

@@ -33,6 +33,9 @@ class WaiterManager implements OrderManagerInterface
         $this->chooseStaff = $chooseStaff;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function processingOrder(Order $order): void
     {
         /** @var Waiter $waiter */
@@ -44,11 +47,7 @@ class WaiterManager implements OrderManagerInterface
 
     public function bringFood(Order $order): void
     {
-        $client = $order->getClient();
         $order->setStatus(Order::DONE);
-        $waiter = $order->getWaiter();
-        $waiter->removeOrder($order);
-        $this->em->flush();
     }
 
 }

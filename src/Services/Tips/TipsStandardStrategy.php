@@ -10,16 +10,23 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class TipsStandardStrategy implements TipsStrategyInterface
 {
-
     /**
      * @var EntityManagerInterface
      */
     private $em;
 
-    public function __construct(EntityManagerInterface $em) {
+    /**
+     * @param EntityManagerInterface $em
+     */
+    public function __construct(
+        EntityManagerInterface $em,
+    ) {
         $this->em = $em;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function splitTips(Order $order): void
     {
         $restaurant = $order->getWaiter()->getRestaurant();

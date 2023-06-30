@@ -28,7 +28,7 @@ class Waiter implements StaffInterface
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(inversedBy: 'waiters')]
+    #[ORM\ManyToOne(cascade: ['persist', 'remove'], inversedBy: 'waiters')]
     private ?Restaurant $restaurant = null;
 
     public function __construct()

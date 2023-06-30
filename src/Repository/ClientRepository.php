@@ -61,6 +61,16 @@ class ClientRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function removeAllClients(): void
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        $qb
+            ->delete(Client::class)
+            ->getQuery()
+            ->execute();
+    }
+
 //    /**
 //     * @return Client[] Returns an array of Client objects
 //     */

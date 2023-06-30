@@ -2,7 +2,9 @@
 
 namespace App\Controller\RestaurantManager;
 
+use App\Entity\Client;
 use App\Repository\ClientRepository;
+use App\Repository\OrderRepository;
 use App\Services\Restaurant\BuildRestaurant;
 use \App\Services\Restaurant\RestaurantManager as Manager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,6 +35,11 @@ class RestaurantManager extends AbstractController
     private $em;
 
     /**
+     * @var OrderRepository
+     */
+    private $orderRepository;
+
+    /**
      * @param Manager $restaurantManager
      * @param ClientRepository $clientRepository
      * @param EntityManagerInterface $em
@@ -41,12 +48,14 @@ class RestaurantManager extends AbstractController
         Manager $restaurantManager,
         ClientRepository $clientRepository,
         EntityManagerInterface $em,
-        BuildRestaurant $buildRestaurant
+        BuildRestaurant $buildRestaurant,
+        OrderRepository $orderRepository
     ) {
         $this->restaurantManager = $restaurantManager;
         $this->clientRepository = $clientRepository;
         $this->em = $em;
         $this->buildRestaurant = $buildRestaurant;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -61,6 +70,9 @@ class RestaurantManager extends AbstractController
         $this->em->flush();
 
         $result = $this->restaurantManager->startRestaurant($restaurant);
+        $this->orderRepository->removeAllOrders();
+        $this->clientRepository->removeAllClients();
+
         return $this->json($result);
     }
 

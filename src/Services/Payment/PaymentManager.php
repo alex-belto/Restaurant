@@ -6,7 +6,10 @@ use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
-class PayOrder
+/**
+ * The class selects a random payment method and processes the payment for an order.
+ */
+class PaymentManager
 {
     /**
      * @var EntityManagerInterface
@@ -14,22 +17,22 @@ class PayOrder
     private $em;
 
     /**
-     * @var CashPayment
+     * @var CashPaymentProcessor
      */
     private $cashPayment;
 
     /**
-     * @var CardPayment
+     * @var CardPaymentProcessor
      */
     private $cardPayment;
 
     /**
-     * @var TipsCashPayment
+     * @var TipsCashPaymentDecorator
      */
     private $tipsCashPayment;
 
     /**
-     * @var TipsCardPayment
+     * @var TipsCardPaymentDecorator
      */
     private $tipsCardPayment;
 
@@ -40,19 +43,19 @@ class PayOrder
 
     /**
      * @param EntityManagerInterface $em
-     * @param CashPayment $cashPayment
-     * @param CardPayment $cardPayment
-     * @param TipsCashPayment $tipsCashPayment
-     * @param TipsCardPayment $tipsCardPayment
+     * @param CashPaymentProcessor $cashPayment
+     * @param CardPaymentProcessor $cardPayment
+     * @param TipsCashPaymentDecorator $tipsCashPayment
+     * @param TipsCardPaymentDecorator $tipsCardPayment
      * @param OrderValue $orderValue
      */
     public function __construct(
-        EntityManagerInterface $em,
-        CashPayment $cashPayment,
-        CardPayment $cardPayment,
-        TipsCashPayment $tipsCashPayment,
-        TipsCardPayment $tipsCardPayment,
-        OrderValue $orderValue
+        EntityManagerInterface   $em,
+        CashPaymentProcessor     $cashPayment,
+        CardPaymentProcessor     $cardPayment,
+        TipsCashPaymentDecorator $tipsCashPayment,
+        TipsCardPaymentDecorator $tipsCardPayment,
+        OrderValue               $orderValue
     ) {
         $this->em = $em;
         $this->cashPayment = $cashPayment;

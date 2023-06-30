@@ -6,6 +6,10 @@ use App\Repository\ClientRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * The "Client" entity stores information about clients, including their name,
+ * card details, order history, and available funds.
+ */
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 class Client
 {

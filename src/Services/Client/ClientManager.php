@@ -11,6 +11,9 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 
+/**
+ * The class is responsible for creating clients and managing their orders.
+ */
 class ClientManager
 {
     /**

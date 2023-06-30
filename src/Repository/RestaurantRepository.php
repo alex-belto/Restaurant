@@ -52,12 +52,14 @@ class RestaurantRepository extends ServiceEntityRepository
         $qbWaiter
             ->update(Waiter::class, 'w')
             ->set('w.restaurant', 'NULL')
+            ->set('w.tips', 0)
             ->getQuery()
             ->execute();
 
         $qbKitchener
             ->update(Kitchener::class, 'k')
             ->set('k.restaurant', 'NULL')
+            ->set('k.tips', 0)
             ->getQuery()
             ->execute();
 

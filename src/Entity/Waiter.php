@@ -8,6 +8,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * The "Waiter" entity stores information about waiters, including their assigned orders,
+ * restaurant affiliation, and tip records.
+ */
 #[ORM\Entity(repositoryClass: WaiterRepository::class)]
 class Waiter implements StaffInterface
 {

@@ -55,12 +55,7 @@ class RestaurantManager
             $visitorsForAllTime += $visitorsPerDay;
 
             for ($j = 1; $j <= $visitorsPerDay; $j++) {
-                $client = $this->clientManager->addClient(true);
-                $order = $this->clientManager->makeOrder($client, $restaurant);
-                if ($order->getStatus() === Order::DONE) {
-                    $order->setTips(rand(5, 20));
-                    $this->payOrder->payOrder($client);
-                }
+                $this->clientManager->addClient(true);
             }
             $days --;
             $restaurant->setDays($days);

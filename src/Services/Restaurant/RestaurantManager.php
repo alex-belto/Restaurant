@@ -3,13 +3,10 @@
 namespace App\Services\Restaurant;
 
 use App\Entity\Kitchener;
-use App\Entity\Order;
 use App\Entity\Restaurant;
 use App\Entity\Waiter;
 use App\Repository\ClientRepository;
-use App\Repository\RestaurantRepository;
 use App\Services\Client\ClientManager;
-use App\Services\Payment\PayOrder;
 use Doctrine\ORM\EntityManagerInterface;
 
 class RestaurantManager
@@ -52,17 +49,17 @@ class RestaurantManager
         $days = $restaurant->getDays();
         $visitorsForAllTime = 0;
 
-//        for ($i = 1; $i <= $days; $i++) {
-//            $visitorsPerDay = rand(50, 400);
-//            $visitorsForAllTime += $visitorsPerDay;
-//
-//            for ($j = 1; $j <= $visitorsPerDay; $j++) {
-//                $this->clientManager->addClient(true);
-//            }
-//            $days --;
-//            $restaurant->setDays($days);
-//            $this->em->flush();
-//        }
+        for ($i = 1; $i <= $days; $i++) {
+            $visitorsPerDay = rand(50, 400);
+            $visitorsForAllTime += $visitorsPerDay;
+
+            for ($j = 1; $j <= $visitorsPerDay; $j++) {
+                $this->clientManager->addClient(true);
+            }
+            $days --;
+            $restaurant->setDays($days);
+            $this->em->flush();
+        }
 
         $visitorsWithTips = $this->clientRepository->getAmountOfClientsWithTips();
 

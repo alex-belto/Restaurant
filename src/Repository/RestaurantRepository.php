@@ -2,11 +2,11 @@
 
 namespace App\Repository;
 
-use App\Entity\Order;
+use App\Entity\Kitchener;
+use App\Entity\MenuItem;
 use App\Entity\Restaurant;
 use App\Entity\Waiter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -45,9 +45,30 @@ class RestaurantRepository extends ServiceEntityRepository
     public function dropRestaurant(): void
     {
         $qb = $this->createQueryBuilder('r');
+        $qbWaiter = $this->createQueryBuilder('w');
+        $qbKitchener = $this->createQueryBuilder('k');
+        $qbMenuItem = $this->createQueryBuilder('mi');
+
+        $qbWaiter
+            ->update(Waiter::class, 'w')
+            ->set('w.restaurant', 'NULL')
+            ->getQuery()
+            ->execute();
+
+        $qbKitchener
+            ->update(Kitchener::class, 'k')
+            ->set('k.restaurant', 'NULL')
+            ->getQuery()
+            ->execute();
+
+        $qbMenuItem
+            ->update(MenuItem::class, 'mi')
+            ->set('mi.restaurant', 'NULL')
+            ->getQuery()
+            ->execute();
 
         $qb
-            ->delete('restaurant', 'r')
+            ->delete(Restaurant::class)
             ->getQuery()
             ->execute();
     }

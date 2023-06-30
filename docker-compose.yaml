@@ -1,0 +1,39 @@
+version: '3'
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Nginx.Dockerfile
+    ports:
+      - "8080:80"
+    networks:
+      - internal
+    volumes:
+      - ./:/var/www/app
+
+  php:
+    build:
+      context: .
+      dockerfile: ./docker/php/Fpm.Dockerfile
+    volumes:
+      - ./:/var/www/app
+    networks:
+      - internal
+
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=app
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=admin
+    ports:
+      - '5434:5432'
+    networks:
+      - internal
+    volumes:
+      - ./var/db-data:/var/lib/postgresql/data
+
+
+networks:
+  internal:

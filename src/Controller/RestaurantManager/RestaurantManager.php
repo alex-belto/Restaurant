@@ -2,8 +2,8 @@
 
 namespace App\Controller\RestaurantManager;
 
-use App\Entity\Restaurant;
 use App\Repository\ClientRepository;
+use App\Services\Restaurant\BuildRestaurant;
 use \App\Services\Restaurant\RestaurantManager as Manager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +16,11 @@ class RestaurantManager extends AbstractController
      * @var Manager
      */
     private $restaurantManager;
+
+    /**
+     * @var BuildRestaurant
+     */
+    private $buildRestaurant;
 
     /**
      * @var ClientRepository
@@ -35,11 +40,13 @@ class RestaurantManager extends AbstractController
     public function __construct(
         Manager $restaurantManager,
         ClientRepository $clientRepository,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        BuildRestaurant $buildRestaurant
     ) {
         $this->restaurantManager = $restaurantManager;
         $this->clientRepository = $clientRepository;
         $this->em = $em;
+        $this->buildRestaurant = $buildRestaurant;
     }
 
     /**
@@ -48,19 +55,26 @@ class RestaurantManager extends AbstractController
     #[Route('/restaurant/open/{days}', name: 'open_restaurant', methods: ['GET'])]
     public function openRestaurant(int $days): JsonResponse
     {
-        $restaurant = $this->restaurantManager->buildRestaurant($days);
-        $result = $this->restaurantManager->startRestaurant($restaurant);
-//        $this->clientRepository->dropClients();
+        $restaurant = $this->buildRestaurant->getRestaurant();
+        $restaurant->setDays($days);
         $this->em->flush();
+
+        $result = $this->restaurantManager->startRestaurant($restaurant);
+        //$this->clientRepository->dropClients();
+        //$this->em->flush();
         return $this->json($result);
     }
 
+    /**
+     * @return JsonResponse
+     * @throws \Exception
+     */
     #[Route('restaurant/stop', name: 'close_restaurant', methods: ['GET'])]
     public function dropRestaurant(): JsonResponse
     {
-        $restaurant = Restaurant::getInstance();
-        $restaurant->setDays(0);
-        $this->em->flush();
+
+//        $restaurant->setDays(0);
+//        $this->em->flush();
 
         return $this->json(['Restaurant closed!']);
     }

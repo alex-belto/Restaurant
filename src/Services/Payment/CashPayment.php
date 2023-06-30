@@ -20,6 +20,7 @@ class CashPayment implements PaymentInterface
     /**
      * @param Client $client
      * @param Order $order
+     * @throws \Exception
      */
     public function pay(Client $client, Order $order): void
     {

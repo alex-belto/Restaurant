@@ -40,18 +40,7 @@ class Restaurant
     #[ORM\Column]
     private ?int $days = 0;
 
-    public static function getInstance(): self
-    {
-        if (self::$instance === null) {
-
-//            self::$instance = self::$cache->fetch('restaurant_instance');
-            self::$instance = new self();
-        }
-
-        return self::$instance;
-    }
-
-    private function __construct()
+    public function __construct()
     {
         $this->waiters = new ArrayCollection();
         $this->Kitcheners = new ArrayCollection();

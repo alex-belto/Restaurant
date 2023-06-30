@@ -3,52 +3,34 @@
 namespace App\Services\Staff;
 
 use App\Entity\Kitchener;
-use App\Entity\Restaurant;
 use App\Entity\Waiter;
 use App\Interfaces\StaffInterface;
-use App\Repository\KitchenerRepository;
-use App\Repository\RestaurantRepository;
-use App\Repository\WaiterRepository;
+use App\Services\Restaurant\BuildRestaurant;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 
 class StaffManager
 {
     /**
-     * @var WaiterRepository
-     */
-    private $waiterRepository;
-
-    /**
-     * @var KitchenerRepository
-     */
-    private $kitchenerRepository;
-
-    /**
      * @var EntityManagerInterface
      */
     private $em;
 
     /**
-     * @var RestaurantRepository
+     * @var BuildRestaurant
      */
-    private $restaurantRepository;
+    private $buildRestaurant;
 
     /**
-     * @param WaiterRepository $waiterRepository
-     * @param KitchenerRepository $kitchenerRepository
      * @param EntityManagerInterface $em
+     * @param BuildRestaurant $buildRestaurant
      */
     public function __construct(
-        WaiterRepository $waiterRepository,
-        KitchenerRepository $kitchenerRepository,
         EntityManagerInterface $em,
-        RestaurantRepository $restaurantRepository
+        BuildRestaurant $buildRestaurant
     ) {
-        $this->waiterRepository = $waiterRepository;
-        $this->kitchenerRepository = $kitchenerRepository;
         $this->em = $em;
-        $this->restaurantRepository = $restaurantRepository;
+        $this->buildRestaurant = $buildRestaurant;
     }
 
     /**
@@ -56,7 +38,7 @@ class StaffManager
      */
     public function chooseStaff(string $type): StaffInterface
     {
-        $restaurant = Restaurant::getInstance();
+        $restaurant = $this->buildRestaurant->getRestaurant();
 
         $staff = match ($type) {
             'waiter' => $restaurant->getWaiters(),

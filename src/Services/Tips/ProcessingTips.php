@@ -3,7 +3,6 @@
 namespace App\Services\Tips;
 
 use App\Entity\Order;
-use App\Entity\Restaurant;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ProcessingTips
@@ -44,7 +43,7 @@ class ProcessingTips
      */
     public function __invoke(Order $order): void
     {
-        $restaurant = Restaurant::getInstance();
+        $restaurant = $order->getWaiter()->getRestaurant();
         $tipsStrategy = match ($restaurant->getTipsStrategy()) {
             1 => $this->tipsStandardStrategy,
             2 => $this->tipsWaiterStrategy

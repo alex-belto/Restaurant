@@ -4,7 +4,6 @@ namespace App\Services\Tips;
 
 use App\Entity\Kitchener;
 use App\Entity\Order;
-use App\Entity\Restaurant;
 use App\Entity\Waiter;
 use App\Interfaces\TipsStrategyInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,14 +18,20 @@ class TipsWaiterStrategy implements TipsStrategyInterface
     /**
      * @param EntityManagerInterface $em
      */
-    public function __construct(EntityManagerInterface $em) {
+    public function __construct(
+        EntityManagerInterface $em
+    ) {
         $this->em = $em;
     }
 
+    /**
+     * @param Order $order
+     * @throws \Exception
+     */
     public function splitTips(Order $order): void
     {
         $tips = $order->getTips();
-        $restaurant = Restaurant::getInstance();
+        $restaurant = $order->getWaiter()->getRestaurant();
         $headWaiter = $order->getWaiter();
         $orderOwnerTips = ($tips / 100) * 60;
         $waiters = $restaurant->getWaiters();

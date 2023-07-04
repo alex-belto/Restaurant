@@ -40,16 +40,15 @@ class StaffManager
     {
         $restaurant = $this->buildRestaurant->getRestaurant();
 
-        $staff = match ($type) {
+        $staffs = match ($type) {
             'waiter' => $restaurant->getWaiters(),
             'kitchener' => $restaurant->getKitcheners(),
             default => throw new \Exception('wrong type' . $type)
         };
         
-        $amountOfStaff = count($staff);
-        $randomStaff = rand(0, $amountOfStaff - 1);
-        return $staff[$randomStaff];
-
+        $amountOfStaffs = count($staffs);
+        $randomStaffId = rand(0, $amountOfStaffs - 1);
+        return $staffs[$randomStaffId];
     }
 
     /**

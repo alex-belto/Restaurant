@@ -24,7 +24,7 @@ class KitchenerListener
         $this->kitchenerService = $kitchenerService;
     }
 
-    public function postUpdateOrder(Order $order) {
+    public function processingOrderByKitchen(Order $order) {
 
         if ($order->getStatus() === Order::READY_TO_KITCHEN) {
             $this->kitchenerService->processingOrder($order);

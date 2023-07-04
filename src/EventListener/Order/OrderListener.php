@@ -19,7 +19,7 @@ class OrderListener
         $this->payOrder = $payOrder;
     }
 
-    public function postUpdate(Order $order) {
+    public function payOrder(Order $order) {
 
         if ($order->getStatus() === Order::DONE) {
             $client = $order->getClient();

@@ -41,7 +41,7 @@ class WaiterListener
      * @param LifecycleEventArgs $eventArgs
      * @throws \Exception
      */
-    public function postUpdateClient(Client $client, LifecycleEventArgs $eventArgs): void
+    public function processingOrderByWaiter(Client $client, LifecycleEventArgs $eventArgs): void
     {
         $changeSet = $eventArgs->getObjectManager()->getUnitOfWork()->getEntityChangeSet($client);
 
@@ -53,7 +53,7 @@ class WaiterListener
     /**
      * @param Order $order
      */
-    public function postUpdateOrder(Order $order): void
+    public function deliveryOrder(Order $order): void
     {
         if ($order->getStatus() === Order::READY_TO_WAITER) {
             $order->setStatus(Order::READY_TO_EAT);

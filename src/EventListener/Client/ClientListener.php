@@ -36,7 +36,7 @@ class ClientListener
     /**
      * @throws \Exception
      */
-    public function postPersist(Client $client) {
+    public function makeOrder(Client $client) {
 
         $restaurant = $this->buildRestaurant->getRestaurant();
         $this->clientManager->makeOrder($client, $restaurant);

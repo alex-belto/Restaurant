@@ -44,7 +44,7 @@ class Client
     private ?Order $connectedOrder = null;
 
     #[ORM\Column]
-    private int $status = 1;
+    private int $status = self::WITHOUT_ORDER;
 
     public function getId(): ?int
     {

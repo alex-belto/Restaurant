@@ -37,7 +37,7 @@ class Restaurant
     private Collection $MenuItems;
 
     #[ORM\Column]
-    private ?int $tipsStrategy = 1;
+    private ?int $tipsStrategy = self::TIPS_STANDARD_STRATEGY;
 
     private static ?Restaurant $instance = null;
 

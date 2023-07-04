@@ -100,7 +100,7 @@ class RestaurantManager extends AbstractController
             unlink($filePath);
             $message = 'Restaurant closed!';
         } else {
-            $message = "Restaurant not found!";
+            $message = 'Restaurant not found!';
         }
 
         $this->restaurantRepository->dropRestaurant();

@@ -46,7 +46,7 @@ class RestaurantBuilder
     /**
      * @throws \Exception
      */
-    public function buildRestaurant(): Restaurant
+    public function buildRestaurant(int $days): Restaurant
     {
 
         $restaurant = new Restaurant();
@@ -55,6 +55,7 @@ class RestaurantBuilder
         $this->hireStaff($restaurant, 7, 'waiter');
         $this->fillUpMenu($restaurant, 15, 'dish');
         $this->fillUpMenu($restaurant,  4, 'drink');
+        $restaurant->setDays($days);
         $this->em->persist($restaurant);
         $this->em->flush();
         file_put_contents($this->filePath, $restaurant->getId());
@@ -62,10 +63,10 @@ class RestaurantBuilder
         return $restaurant;
     }
 
-    public function getRestaurant(): Restaurant
+    public function getRestaurant(?int $days = null): Restaurant
     {
         if (!file_exists($this->filePath)) {
-            $this->buildRestaurant();
+            $this->buildRestaurant($days);
         }
 
         $restaurantId = file_get_contents($this->filePath);

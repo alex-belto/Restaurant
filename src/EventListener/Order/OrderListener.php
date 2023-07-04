@@ -23,7 +23,7 @@ class OrderListener
 
         if ($order->getStatus() === Order::DONE) {
             $client = $order->getClient();
-            $order->setTips(rand(5, 20));
+            $order->setTips(rand(0, 20));
             $this->payOrder->payOrder($client);
         }
     }

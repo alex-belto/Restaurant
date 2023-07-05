@@ -4,12 +4,11 @@ namespace App\Services\Tips;
 
 use App\Entity\Order;
 use App\Entity\Restaurant;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * The class selects a tip distribution strategy and distributes the tips among the staff members.
  */
-class TipsManager
+class TipsDistributor
 {
     /**
      * @var TipsStandardStrategy

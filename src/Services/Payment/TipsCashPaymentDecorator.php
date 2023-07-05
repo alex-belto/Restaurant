@@ -5,7 +5,7 @@ namespace App\Services\Payment;
 use App\Entity\Client;
 use App\Entity\Order;
 use App\Interfaces\PaymentInterface;
-use App\Services\Tips\TipsManager;
+use App\Services\Tips\TipsDistributor;
 
 /**
  * The class is a decorator that adds a tip amount to a cash payment.
@@ -13,9 +13,9 @@ use App\Services\Tips\TipsManager;
 class TipsCashPaymentDecorator implements PaymentInterface
 {
     /**
-     * @var TipsManager
+     * @var TipsDistributor
      */
-    private $processingTips;
+    private $tipsDistributor;
 
     /**
      * @var CashPaymentProcessor
@@ -23,14 +23,14 @@ class TipsCashPaymentDecorator implements PaymentInterface
     private $cashPayment;
 
     /**
-     * @param TipsManager $processingTips
+     * @param TipsDistributor $tipsDistributor
      * @param CashPaymentProcessor $cashPayment
      */
     public function __construct(
-        TipsManager $processingTips,
+        TipsDistributor      $tipsDistributor,
         CashPaymentProcessor $cashPayment
     ) {
-        $this->processingTips = $processingTips;
+        $this->tipsDistributor = $tipsDistributor;
         $this->cashPayment = $cashPayment;
     }
 
@@ -40,7 +40,7 @@ class TipsCashPaymentDecorator implements PaymentInterface
     public function pay(Client $client, Order $order): void
     {
         $this->cashPayment->pay($client, $order);
-        $processingTips = $this->processingTips;
-        $processingTips($order);
+        $tipsDistributor = $this->tipsDistributor;
+        $tipsDistributor($order);
     }
 }

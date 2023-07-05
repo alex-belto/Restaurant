@@ -35,7 +35,7 @@ class TipsDistributor
     /**
      * @throws \Exception
      */
-    public function __invoke(Order $order): void
+    public function splitTips(Order $order): void
     {
         $restaurant = $order->getWaiter()->getRestaurant();
         $tipsStrategy = match ($restaurant->getTipsStrategy()) {

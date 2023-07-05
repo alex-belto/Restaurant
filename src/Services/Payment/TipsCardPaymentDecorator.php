@@ -40,7 +40,6 @@ class TipsCardPaymentDecorator implements PaymentInterface
     public function pay(Client $client, Order $order): void
     {
         $this->cardPayment->pay($client, $order);
-        $tipsDistributor = $this->tipsDistributor;
-        $tipsDistributor($order);
+        $this->tipsDistributor->splitTips($order);
     }
 }

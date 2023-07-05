@@ -3,6 +3,7 @@
 namespace App\Services\Tips;
 
 use App\Entity\Order;
+use App\Entity\Restaurant;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -10,12 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class TipsManager
 {
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
     /**
      * @var TipsStandardStrategy
      */
@@ -27,16 +22,13 @@ class TipsManager
     private $tipsWaiterStrategy;
 
     /**
-     * @param EntityManagerInterface $em
      * @param TipsStandardStrategy $tipsStandardStrategy
      * @param TipsWaiterStrategy $tipsWaiterStrategy
      */
     public function __construct(
-        EntityManagerInterface $em,
         TipsStandardStrategy $tipsStandardStrategy,
         TipsWaiterStrategy $tipsWaiterStrategy
     ) {
-        $this->em = $em;
         $this->tipsStandardStrategy = $tipsStandardStrategy;
         $this->tipsWaiterStrategy = $tipsWaiterStrategy;
     }
@@ -48,8 +40,8 @@ class TipsManager
     {
         $restaurant = $order->getWaiter()->getRestaurant();
         $tipsStrategy = match ($restaurant->getTipsStrategy()) {
-            1 => $this->tipsStandardStrategy,
-            2 => $this->tipsWaiterStrategy
+            Restaurant::TIPS_STANDARD_STRATEGY => $this->tipsStandardStrategy,
+            Restaurant::TIPS_WAITER_STRATEGY => $this->tipsWaiterStrategy
         };
         $tipsStrategy->splitTips($order);
     }

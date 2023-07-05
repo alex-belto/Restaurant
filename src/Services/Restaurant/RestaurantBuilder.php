@@ -70,7 +70,7 @@ class RestaurantBuilder
         }
 
         $restaurantId = file_get_contents($this->filePath);
-        return $this->restaurantRepository->findOneBy(['id' => $restaurantId]);
+        return $this->restaurantRepository->find($restaurantId);
     }
 
     /**

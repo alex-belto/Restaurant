@@ -44,7 +44,6 @@ class TipsStandardStrategy implements TipsStrategyInterface
             $kitchenerTips = $kitchener->getTips() + $tipsForEach;
             $kitchener->setTips($kitchenerTips);
         }
-        $this->em->flush();
 
         /** @var Waiter $waiter */
         foreach ($waiters as $waiter) {

@@ -6,7 +6,7 @@ use App\Entity\Order;
 use App\Entity\Restaurant;
 
 /**
- * The class selects a tip distribution strategy and distributes the tips among the staff members.
+ * Selects a tip distribution strategy and distributes the tips among the staff members.
  */
 class TipsDistributor
 {

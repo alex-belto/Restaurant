@@ -8,7 +8,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * A class for creating the main menu.
+ * Creating the main menu.
  */
 class MenuFixtures extends Fixture
 {

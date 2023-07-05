@@ -6,7 +6,7 @@ use App\Entity\Client;
 use App\Entity\Order;
 
 /**
- * The class handles the payment processing for an order.
+ * Handles the payment processing for an order.
  */
 class Payment
 {

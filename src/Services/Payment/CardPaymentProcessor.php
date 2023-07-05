@@ -7,7 +7,7 @@ use App\Entity\Order;
 use App\Interfaces\PaymentInterface;
 
 /**
- * The class handles card payment transactions.
+ * Handles card payment transactions.
  */
 class CardPaymentProcessor implements PaymentInterface
 {

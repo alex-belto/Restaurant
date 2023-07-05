@@ -8,7 +8,7 @@ use App\Interfaces\PaymentInterface;
 use App\Services\Tips\TipsDistributor;
 
 /**
- * The class is a decorator that adds a tip amount to a cash payment.
+ * Decorator that adds a tip amount to a cash payment.
  */
 class TipsCashPaymentDecorator implements PaymentInterface
 {

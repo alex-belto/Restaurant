@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 
 /**
- * The class is responsible for creating clients and managing their orders.
+ * Responsible for creating clients and managing their orders.
  */
 class ClientManager
 {
@@ -21,17 +21,10 @@ class ClientManager
      */
     private $em;
 
-    /**
-     * @var MenuItemRepository
-     */
-    private $menuItemRepository;
-
     public function __construct(
         EntityManagerInterface $em,
-        MenuItemRepository $menuItemRepository
     ) {
         $this->em = $em;
-        $this->menuItemRepository = $menuItemRepository;
     }
 
     public function addClient(bool $card = false): Client

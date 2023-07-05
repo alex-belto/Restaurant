@@ -9,7 +9,7 @@ use App\Services\Staff\StaffManager;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * The class handles order processing on the chef's side.
+ * Handles order processing on the chef's side.
  */
 class KitchenerManager implements OrderManagerInterface
 {

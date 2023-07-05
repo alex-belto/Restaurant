@@ -7,7 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * A class for creating staff members.
+ * Creating staff members.
  */
 class StaffFixtures extends Fixture
 {

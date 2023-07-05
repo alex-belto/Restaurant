@@ -10,7 +10,7 @@ use App\Repository\RestaurantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * The class constructs a restaurant by hiring staff,
+ * Constructs a restaurant by hiring staff,
  * creating a menu for the restaurant, and retrieving the restaurant object.
  */
 class RestaurantBuilder

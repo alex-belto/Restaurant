@@ -9,6 +9,9 @@ use App\Services\Restaurant\RestaurantBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 
+/**
+ * Responsible for creating staff and choose staff to restaurant.
+ */
 class StaffManager
 {
     /**

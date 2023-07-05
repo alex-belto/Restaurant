@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
 /**
- * The class selects a random payment method and processes the payment for an order.
+ * Selects a random payment method and processes the payment for an order.
  */
 class PaymentManager
 {

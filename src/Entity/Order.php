@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * The "Order" entity stores information about orders,
+ * Stores information about orders,
  * including the menu item, client, waiter, chef, order status, and price.
  */
 #[ORM\Entity(repositoryClass: OrderRepository::class)]

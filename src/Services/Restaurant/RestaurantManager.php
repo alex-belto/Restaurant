@@ -59,9 +59,6 @@ class RestaurantManager
             for ($j = 1; $j <= $visitorsPerDay; $j++) {
                 $this->clientManager->addClient(true);
             }
-            $days --;
-            $restaurant->setDays($days);
-            $this->em->flush();
         }
 
         $visitorsWithTips = $this->clientRepository->getAmountOfClientsWithTips();

@@ -51,8 +51,8 @@ class RestaurantBuilder
 
         $restaurant = new Restaurant();
 
-        $this->hireStaff($restaurant, 3, 'kitchener');
-        $this->hireStaff($restaurant, 7, 'waiter');
+        $this->hireKitcheners($restaurant, 3);
+        $this->hireWaiters($restaurant, 7);
         $this->fillUpMenu($restaurant, 15, 'dish');
         $this->fillUpMenu($restaurant,  4, 'drink');
         $restaurant->setDays($days);
@@ -74,33 +74,36 @@ class RestaurantBuilder
     }
 
     /**
+     * @param Restaurant $restaurant
+     * @param int $amount
      * @throws \Exception
      */
-    public function hireStaff(Restaurant $restaurant, int $amount, string $type): void
+    public function hireWaiters(Restaurant $restaurant, int $amount): void
     {
-        switch ($type) {
-            case 'waiter':
-                $waiters = $this->em->getRepository(Waiter::class)->findAll();
-                if (count($waiters) >= $amount) {
-                    for ($i = 0; $i < $amount; $i++) {
-                        $restaurant->addWaiter($waiters[$i]);
-                    }
-                } else {
-                    throw new \Exception('U dont have enough staff in pull');
-                }
-                break;
-            case 'kitchener':
-                $kitcheners = $this->em->getRepository(Kitchener::class)->findAll();
-                if (count($kitcheners) >= $amount) {
-                    for ($i = 0; $i < $amount; $i++) {
-                        $restaurant->addKitchener($kitcheners[$i]);
-                    }
-                } else {
-                    throw new \Exception('U dont have enough staff in pull');
-                }
-                break;
-            default:
-                throw new \Exception('Wrong stuff type!');
+        $waiters = $this->em->getRepository(Waiter::class)->findAll();
+        if (count($waiters) >= $amount) {
+            for ($i = 0; $i < $amount; $i++) {
+                $restaurant->addWaiter($waiters[$i]);
+            }
+        } else {
+            throw new \Exception('U dont have enough staff in pull');
+        }
+    }
+
+    /**
+     * @param Restaurant $restaurant
+     * @param int $amount
+     * @throws \Exception
+     */
+    public function hireKitcheners(Restaurant $restaurant, int $amount): void
+    {
+        $kitcheners = $this->em->getRepository(Kitchener::class)->findAll();
+        if (count($kitcheners) >= $amount) {
+            for ($i = 0; $i < $amount; $i++) {
+                $restaurant->addKitchener($kitcheners[$i]);
+            }
+        } else {
+            throw new \Exception('U dont have enough staff in pull');
         }
     }
 

@@ -19,12 +19,12 @@ class PaymentManager
     /**
      * @var CashPaymentProcessor
      */
-    private $cashPayment;
+    private $cashPaymentProcessor;
 
     /**
      * @var CardPaymentProcessor
      */
-    private $cardPayment;
+    private $cardPaymentProcessor;
 
     /**
      * @var TipsCashPaymentDecorator
@@ -43,23 +43,23 @@ class PaymentManager
 
     /**
      * @param EntityManagerInterface $em
-     * @param CashPaymentProcessor $cashPayment
-     * @param CardPaymentProcessor $cardPayment
+     * @param CashPaymentProcessor $cashPaymentProcessor
+     * @param CardPaymentProcessor $cardPaymentProcessor
      * @param TipsCashPaymentDecorator $tipsCashPayment
      * @param TipsCardPaymentDecorator $tipsCardPayment
      * @param OrderValue $orderValue
      */
     public function __construct(
         EntityManagerInterface   $em,
-        CashPaymentProcessor     $cashPayment,
-        CardPaymentProcessor     $cardPayment,
+        CashPaymentProcessor     $cashPaymentProcessor,
+        CardPaymentProcessor     $cardPaymentProcessor,
         TipsCashPaymentDecorator $tipsCashPayment,
         TipsCardPaymentDecorator $tipsCardPayment,
         OrderValue               $orderValue
     ) {
         $this->em = $em;
-        $this->cashPayment = $cashPayment;
-        $this->cardPayment = $cardPayment;
+        $this->cashPaymentProcessor = $cashPaymentProcessor;
+        $this->cardPaymentProcessor = $cardPaymentProcessor;
         $this->tipsCashPayment = $tipsCashPayment;
         $this->tipsCardPayment = $tipsCardPayment;
         $this->orderValue = $orderValue;
@@ -75,11 +75,11 @@ class PaymentManager
 
         switch ($payment['paymentStrategy']) {
             case 'cash':
-                $paymentStrategy = $this->cashPayment;
+                $paymentStrategy = $this->cashPaymentProcessor;
                 $isEnoughMoney = $this->orderValue->isEnoughMoney($client);
                 break;
             case 'card':
-                $paymentStrategy = $this->cardPayment;
+                $paymentStrategy = $this->cardPaymentProcessor;
                 $isEnoughMoney = $this->orderValue->isEnoughMoney($client);
                 break;
             case 'cash_tips':

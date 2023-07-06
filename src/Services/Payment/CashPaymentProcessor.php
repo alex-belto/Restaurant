@@ -27,7 +27,6 @@ class CashPaymentProcessor implements PaymentInterface
      */
     public function pay(Client $client, Order $order): void
     {
-       $processingPayment = $this->processingPayment;
-       $processingPayment($client, $order);
+       $this->processingPayment->payOrder($client, $order);
     }
 }

@@ -22,18 +22,18 @@ class WaiterManager implements OrderManagerInterface
     /**
      * @var StaffManager
      */
-    private $chooseStaff;
+    private $staffManager;
 
     /**
      * @param EntityManagerInterface $em
-     * @param StaffManager $chooseStaff
+     * @param StaffManager $staffManager
      */
     public function __construct(
         EntityManagerInterface $em,
-        StaffManager $chooseStaff
+        StaffManager $staffManager
     ) {
         $this->em = $em;
-        $this->chooseStaff = $chooseStaff;
+        $this->staffManager = $staffManager;
     }
 
     /**
@@ -42,7 +42,7 @@ class WaiterManager implements OrderManagerInterface
     public function processingOrder(Order $order): void
     {
         /** @var Waiter $waiter */
-        $waiter = $this->chooseStaff->chooseStaff('waiter');
+        $waiter = $this->staffManager->chooseStaff('waiter');
         $waiter->addOrder($order);
         $order->setStatus(Order::READY_TO_KITCHEN);
         $this->em->flush();

@@ -21,18 +21,18 @@ class KitchenerManager implements OrderManagerInterface
     /**
      * @var StaffManager
      */
-    private $chooseStaff;
+    private $staffManager;
 
     /**
      * @param EntityManagerInterface $em
-     * @param StaffManager $chooseStaff
+     * @param StaffManager $staffManager
      */
     public function __construct(
         EntityManagerInterface $em,
-        StaffManager $chooseStaff
+        StaffManager $staffManager
     ) {
         $this->em = $em;
-        $this->chooseStaff = $chooseStaff;
+        $this->staffManager = $staffManager;
     }
 
     /**
@@ -41,7 +41,7 @@ class KitchenerManager implements OrderManagerInterface
     public function processingOrder(Order $order): void
     {
         /** @var Kitchener $kitchener */
-        $kitchener = $this->chooseStaff->chooseStaff('kitchener');
+        $kitchener = $this->staffManager->chooseStaff('kitchener');
         $kitchener->addOrder($order);
         $order->setStatus(Order::READY_TO_WAITER);
         $this->em->flush();

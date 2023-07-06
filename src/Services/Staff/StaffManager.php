@@ -22,18 +22,18 @@ class StaffManager
     /**
      * @var RestaurantBuilder
      */
-    private $buildRestaurant;
+    private $restaurantBuilder;
 
     /**
      * @param EntityManagerInterface $em
-     * @param RestaurantBuilder $buildRestaurant
+     * @param RestaurantBuilder $restaurantBuilder
      */
     public function __construct(
         EntityManagerInterface $em,
-        RestaurantBuilder $buildRestaurant
+        RestaurantBuilder $restaurantBuilder
     ) {
         $this->em = $em;
-        $this->buildRestaurant = $buildRestaurant;
+        $this->restaurantBuilder = $restaurantBuilder;
     }
 
     /**
@@ -41,7 +41,7 @@ class StaffManager
      */
     public function chooseStaff(string $type): StaffInterface
     {
-        $restaurant = $this->buildRestaurant->getRestaurant();
+        $restaurant = $this->restaurantBuilder->getRestaurant();
 
         $staffs = match ($type) {
             'waiter' => $restaurant->getWaiters(),

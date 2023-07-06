@@ -15,7 +15,7 @@ class Payment
      * @param Order $order
      * @throws \Exception
      */
-    public function __invoke(
+    public function payOrder(
         Client $client,
         Order $order
     ) {

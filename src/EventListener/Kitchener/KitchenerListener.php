@@ -13,21 +13,21 @@ class KitchenerListener
     /**
      * @var KitchenerManager
      */
-    private $kitchenerService;
+    private $kitchenerManager;
 
     /**
-     * @param KitchenerManager $kitchenerService
+     * @param KitchenerManager $kitchenerManager
      */
     public function __construct(
-        KitchenerManager $kitchenerService
+        KitchenerManager $kitchenerManager
     ) {
-        $this->kitchenerService = $kitchenerService;
+        $this->kitchenerManager = $kitchenerManager;
     }
 
     public function processingOrderByKitchen(Order $order) {
 
         if ($order->getStatus() === Order::READY_TO_KITCHEN) {
-            $this->kitchenerService->processingOrder($order);
+            $this->kitchenerManager->processingOrder($order);
         }
     }
 

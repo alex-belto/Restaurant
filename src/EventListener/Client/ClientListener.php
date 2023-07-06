@@ -19,18 +19,18 @@ class ClientListener
     /**
      * @var RestaurantBuilder
      */
-    private $buildRestaurant;
+    private $restaurantBuilder;
 
     /**
      * @param ClientManager $clientManager
-     * @param RestaurantBuilder $buildRestaurant
+     * @param RestaurantBuilder $restaurantBuilder
      */
     public function __construct(
         ClientManager $clientManager,
-        RestaurantBuilder $buildRestaurant
+        RestaurantBuilder $restaurantBuilder
     ) {
         $this->clientManager = $clientManager;
-        $this->buildRestaurant = $buildRestaurant;
+        $this->restaurantBuilder = $restaurantBuilder;
     }
 
     /**
@@ -38,7 +38,7 @@ class ClientListener
      */
     public function makeOrder(Client $client) {
 
-        $restaurant = $this->buildRestaurant->getRestaurant();
+        $restaurant = $this->restaurantBuilder->getRestaurant();
         $this->clientManager->makeOrder($client, $restaurant);
     }
 

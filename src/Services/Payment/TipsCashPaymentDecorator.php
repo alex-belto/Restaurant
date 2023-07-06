@@ -20,18 +20,18 @@ class TipsCashPaymentDecorator implements PaymentInterface
     /**
      * @var CashPaymentProcessor
      */
-    private $cashPayment;
+    private $cashPaymentProcessor;
 
     /**
      * @param TipsDistributor $tipsDistributor
-     * @param CashPaymentProcessor $cashPayment
+     * @param CashPaymentProcessor $cashPaymentProcessor
      */
     public function __construct(
         TipsDistributor      $tipsDistributor,
-        CashPaymentProcessor $cashPayment
+        CashPaymentProcessor $cashPaymentProcessor
     ) {
         $this->tipsDistributor = $tipsDistributor;
-        $this->cashPayment = $cashPayment;
+        $this->cashPaymentProcessor = $cashPaymentProcessor;
     }
 
     /**
@@ -39,7 +39,7 @@ class TipsCashPaymentDecorator implements PaymentInterface
      */
     public function pay(Client $client, Order $order): void
     {
-        $this->cashPayment->pay($client, $order);
+        $this->cashPaymentProcessor->pay($client, $order);
         $this->tipsDistributor->splitTips($order);
     }
 }

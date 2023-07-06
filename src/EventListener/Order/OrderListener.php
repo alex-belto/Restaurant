@@ -13,10 +13,10 @@ class OrderListener
     /**
      * @var PaymentManager
      */
-    private $payOrder;
+    private $paymentManager;
 
-    public function __construct(PaymentManager $payOrder) {
-        $this->payOrder = $payOrder;
+    public function __construct(PaymentManager $paymentManager) {
+        $this->paymentManager = $paymentManager;
     }
 
     public function payOrder(Order $order) {
@@ -24,7 +24,7 @@ class OrderListener
         if ($order->getStatus() === Order::DONE) {
             $client = $order->getClient();
             $order->setTips(rand(0, 20));
-            $this->payOrder->payOrder($client);
+            $this->paymentManager->payOrder($client);
         }
     }
 

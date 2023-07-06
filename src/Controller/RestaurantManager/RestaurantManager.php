@@ -25,7 +25,7 @@ class RestaurantManager extends AbstractController
     /**
      * @var RestaurantBuilder
      */
-    private $buildRestaurant;
+    private $restaurantBuilder;
 
     /**
      * @var ClientRepository
@@ -51,7 +51,7 @@ class RestaurantManager extends AbstractController
      * @param Manager $restaurantManager
      * @param ClientRepository $clientRepository
      * @param EntityManagerInterface $em
-     * @param RestaurantBuilder $buildRestaurant
+     * @param RestaurantBuilder $restaurantBuilder
      * @param OrderRepository $orderRepository
      * @param RestaurantRepository $restaurantRepository
      */
@@ -59,14 +59,14 @@ class RestaurantManager extends AbstractController
         Manager                $restaurantManager,
         ClientRepository       $clientRepository,
         EntityManagerInterface $em,
-        RestaurantBuilder      $buildRestaurant,
+        RestaurantBuilder      $restaurantBuilder,
         OrderRepository        $orderRepository,
         RestaurantRepository   $restaurantRepository
     ) {
         $this->restaurantManager = $restaurantManager;
         $this->clientRepository = $clientRepository;
         $this->em = $em;
-        $this->buildRestaurant = $buildRestaurant;
+        $this->restaurantBuilder = $restaurantBuilder;
         $this->orderRepository = $orderRepository;
         $this->restaurantRepository = $restaurantRepository;
     }
@@ -78,7 +78,7 @@ class RestaurantManager extends AbstractController
     public function openRestaurant(int $days): JsonResponse
     {
         set_time_limit(1200);
-        $restaurant = $this->buildRestaurant->getRestaurant($days);
+        $restaurant = $this->restaurantBuilder->getRestaurant($days);
 
         $result = $this->restaurantManager->startRestaurant($restaurant);
         $this->orderRepository->removeAllOrders();

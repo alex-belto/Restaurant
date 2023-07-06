@@ -24,21 +24,21 @@ class CardPaymentProcessor implements PaymentInterface
     /**
      * @var CashPaymentProcessor
      */
-    private $cashPayment;
+    private $cashPaymentProcessor;
 
     /**
      * @param Payment $processingPayment
      * @param CardValidation $cardValidation
-     * @param CashPaymentProcessor $cashPayment
+     * @param CashPaymentProcessor $cashPaymentProcessor
      */
     public function __construct(
         Payment        $processingPayment,
         CardValidation $cardValidation,
-        CashPaymentProcessor $cashPayment
+        CashPaymentProcessor $cashPaymentProcessor
     ) {
         $this->processingPayment = $processingPayment;
         $this->cardValidation = $cardValidation;
-        $this->cashPayment = $cashPayment;
+        $this->cashPaymentProcessor = $cashPaymentProcessor;
     }
 
     /**
@@ -47,10 +47,9 @@ class CardPaymentProcessor implements PaymentInterface
     public function pay(Client $client, Order $order): void
     {
         if ($this->cardValidation->isCardValid($client)) {
-            $processingPayment = $this->processingPayment;
-            $processingPayment($client, $order);
+           $this->processingPayment->payOrder($client, $order);
         } else {
-            $this->cashPayment->pay($client, $order);
+            $this->cashPaymentProcessor->pay($client, $order);
         }
     }
 }

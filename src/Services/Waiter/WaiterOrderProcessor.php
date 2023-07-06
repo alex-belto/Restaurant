@@ -5,13 +5,13 @@ namespace App\Services\Waiter;
 use App\Entity\Order;
 use App\Entity\Waiter;
 use App\Interfaces\OrderManagerInterface;
-use App\Services\Staff\StaffManager;
+use App\Services\Staff\StaffResolver;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Handles order processing on the waiter's side.
  */
-class WaiterManager implements OrderManagerInterface
+class WaiterOrderProcessor implements OrderManagerInterface
 {
 
     /**
@@ -20,20 +20,20 @@ class WaiterManager implements OrderManagerInterface
     private $em;
 
     /**
-     * @var StaffManager
+     * @var StaffResolver
      */
-    private $staffManager;
+    private $staffResolver;
 
     /**
      * @param EntityManagerInterface $em
-     * @param StaffManager $staffManager
+     * @param StaffResolver $staffResolver
      */
     public function __construct(
         EntityManagerInterface $em,
-        StaffManager $staffManager
+        StaffResolver $staffResolver
     ) {
         $this->em = $em;
-        $this->staffManager = $staffManager;
+        $this->staffResolver = $staffResolver;
     }
 
     /**
@@ -42,7 +42,7 @@ class WaiterManager implements OrderManagerInterface
     public function processingOrder(Order $order): void
     {
         /** @var Waiter $waiter */
-        $waiter = $this->staffManager->chooseStaff('waiter');
+        $waiter = $this->staffResolver->chooseStaff('waiter');
         $waiter->addOrder($order);
         $order->setStatus(Order::READY_TO_KITCHEN);
         $this->em->flush();

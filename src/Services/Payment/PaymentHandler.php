@@ -9,7 +9,7 @@ use Exception;
 /**
  * Selects a random payment method and processes the payment for an order.
  */
-class PaymentManager
+class PaymentHandler
 {
     /**
      * @var EntityManagerInterface

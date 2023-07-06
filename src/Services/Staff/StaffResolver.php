@@ -12,7 +12,7 @@ use Faker\Factory;
 /**
  * Responsible for creating staff and choose staff to restaurant.
  */
-class StaffManager
+class StaffResolver
 {
     /**
      * @var EntityManagerInterface

@@ -7,7 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * The "Client" entity stores information about clients, including their name,
+ * Stores information about clients, including their name,
  * card details, order history, and available funds.
  */
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
@@ -44,7 +44,7 @@ class Client
     private ?Order $connectedOrder = null;
 
     #[ORM\Column]
-    private int $status = 1;
+    private int $status = self::WITHOUT_ORDER;
 
     public function getId(): ?int
     {

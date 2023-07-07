@@ -7,7 +7,7 @@ use App\Entity\Order;
 use App\Entity\Restaurant;
 
 /**
- * The Payment interface provides a blueprint for payment-related classes, defining methods to process payments.
+ * Provides a blueprint for payment-related classes, defining methods to process payments.
  */
 interface PaymentInterface
 {

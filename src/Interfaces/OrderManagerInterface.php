@@ -6,7 +6,7 @@ use App\Entity\Client;
 use App\Entity\Order;
 
 /**
- * The Order interface defines methods for processing orders.
+ * Defines methods for processing orders.
  */
 interface OrderManagerInterface
 {

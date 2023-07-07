@@ -10,7 +10,7 @@ use App\Services\Client\ClientManager;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * The class is responsible for executing the overall logic and operations of a restaurant.
+ * Responsible for executing the overall logic and operations of a restaurant.
  */
 class RestaurantManager
 {
@@ -59,9 +59,6 @@ class RestaurantManager
             for ($j = 1; $j <= $visitorsPerDay; $j++) {
                 $this->clientManager->addClient(true);
             }
-            $days --;
-            $restaurant->setDays($days);
-            $this->em->flush();
         }
 
         $visitorsWithTips = $this->clientRepository->getAmountOfClientsWithTips();

@@ -10,7 +10,7 @@ use App\Repository\RestaurantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * The class constructs a restaurant by hiring staff,
+ * Constructs a restaurant by hiring staff,
  * creating a menu for the restaurant, and retrieving the restaurant object.
  */
 class RestaurantBuilder
@@ -46,15 +46,16 @@ class RestaurantBuilder
     /**
      * @throws \Exception
      */
-    public function buildRestaurant(): Restaurant
+    public function buildRestaurant(int $days): Restaurant
     {
 
         $restaurant = new Restaurant();
 
-        $this->hireStaff($restaurant, 3, 'kitchener');
-        $this->hireStaff($restaurant, 7, 'waiter');
+        $this->hireKitcheners($restaurant, 3);
+        $this->hireWaiters($restaurant, 7);
         $this->fillUpMenu($restaurant, 15, 'dish');
         $this->fillUpMenu($restaurant,  4, 'drink');
+        $restaurant->setDays($days);
         $this->em->persist($restaurant);
         $this->em->flush();
         file_put_contents($this->filePath, $restaurant->getId());
@@ -62,44 +63,47 @@ class RestaurantBuilder
         return $restaurant;
     }
 
-    public function getRestaurant(): Restaurant
+    public function getRestaurant(?int $days = null): Restaurant
     {
         if (!file_exists($this->filePath)) {
-            $this->buildRestaurant();
+            $this->buildRestaurant($days);
         }
 
         $restaurantId = file_get_contents($this->filePath);
-        return $this->restaurantRepository->findOneBy(['id' => $restaurantId]);
+        return $this->restaurantRepository->find($restaurantId);
     }
 
     /**
+     * @param Restaurant $restaurant
+     * @param int $amount
      * @throws \Exception
      */
-    public function hireStaff(Restaurant $restaurant, int $amount, string $type): void
+    public function hireWaiters(Restaurant $restaurant, int $amount): void
     {
-        switch ($type) {
-            case 'waiter':
-                $waiters = $this->em->getRepository(Waiter::class)->findAll();
-                if (count($waiters) >= $amount) {
-                    for ($i = 0; $i < $amount; $i++) {
-                        $restaurant->addWaiter($waiters[$i]);
-                    }
-                } else {
-                    throw new \Exception('U dont have enough staff in pull');
-                }
-                break;
-            case 'kitchener':
-                $kitcheners = $this->em->getRepository(Kitchener::class)->findAll();
-                if (count($kitcheners) >= $amount) {
-                    for ($i = 0; $i < $amount; $i++) {
-                        $restaurant->addKitchener($kitcheners[$i]);
-                    }
-                } else {
-                    throw new \Exception('U dont have enough staff in pull');
-                }
-                break;
-            default:
-                throw new \Exception('Wrong stuff type!');
+        $waiters = $this->em->getRepository(Waiter::class)->findAll();
+        if (count($waiters) >= $amount) {
+            for ($i = 0; $i < $amount; $i++) {
+                $restaurant->addWaiter($waiters[$i]);
+            }
+        } else {
+            throw new \Exception('U dont have enough staff in pull');
+        }
+    }
+
+    /**
+     * @param Restaurant $restaurant
+     * @param int $amount
+     * @throws \Exception
+     */
+    public function hireKitcheners(Restaurant $restaurant, int $amount): void
+    {
+        $kitcheners = $this->em->getRepository(Kitchener::class)->findAll();
+        if (count($kitcheners) >= $amount) {
+            for ($i = 0; $i < $amount; $i++) {
+                $restaurant->addKitchener($kitcheners[$i]);
+            }
+        } else {
+            throw new \Exception('U dont have enough staff in pull');
         }
     }
 

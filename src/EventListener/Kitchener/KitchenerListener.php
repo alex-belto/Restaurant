@@ -3,7 +3,7 @@
 namespace App\EventListener\Kitchener;
 
 use App\Entity\Order;
-use App\Services\Kitchener\KitchenerManager;
+use App\Services\Kitchener\KitchenerOrderProcessor;
 
 /**
  * Listening to the order, after we update its status to "READY_TO_KITCHEN" and proceed with the processing.
@@ -11,23 +11,23 @@ use App\Services\Kitchener\KitchenerManager;
 class KitchenerListener
 {
     /**
-     * @var KitchenerManager
+     * @var KitchenerOrderProcessor
      */
-    private $kitchenerService;
+    private $kitchenerOrderProcessor;
 
     /**
-     * @param KitchenerManager $kitchenerService
+     * @param KitchenerOrderProcessor $kitchenerOrderProcessor
      */
     public function __construct(
-        KitchenerManager $kitchenerService
+        KitchenerOrderProcessor $kitchenerOrderProcessor
     ) {
-        $this->kitchenerService = $kitchenerService;
+        $this->kitchenerOrderProcessor = $kitchenerOrderProcessor;
     }
 
-    public function postUpdateOrder(Order $order) {
+    public function processingOrderByKitchen(Order $order) {
 
         if ($order->getStatus() === Order::READY_TO_KITCHEN) {
-            $this->kitchenerService->processingOrder($order);
+            $this->kitchenerOrderProcessor->processingOrder($order);
         }
     }
 

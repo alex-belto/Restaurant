@@ -6,7 +6,7 @@ use App\Entity\Client;
 use DateTime;
 
 /**
- * The class checks the validity of a credit or debit card.
+ * Checks the validity of a credit or debit card.
  */
 class CardValidation
 {

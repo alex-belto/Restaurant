@@ -6,7 +6,7 @@ use App\Entity\MenuItem;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * The class is responsible for creating menu items.
+ * Responsible for creating menu items.
  */
 class MenuItemCreator
 {

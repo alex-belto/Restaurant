@@ -3,19 +3,13 @@
 namespace App\Services\Tips;
 
 use App\Entity\Order;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Restaurant;
 
 /**
- * The class selects a tip distribution strategy and distributes the tips among the staff members.
+ * Selects a tip distribution strategy and distributes the tips among the staff members.
  */
-class TipsManager
+class TipsDistributor
 {
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
     /**
      * @var TipsStandardStrategy
      */
@@ -27,16 +21,13 @@ class TipsManager
     private $tipsWaiterStrategy;
 
     /**
-     * @param EntityManagerInterface $em
      * @param TipsStandardStrategy $tipsStandardStrategy
      * @param TipsWaiterStrategy $tipsWaiterStrategy
      */
     public function __construct(
-        EntityManagerInterface $em,
         TipsStandardStrategy $tipsStandardStrategy,
         TipsWaiterStrategy $tipsWaiterStrategy
     ) {
-        $this->em = $em;
         $this->tipsStandardStrategy = $tipsStandardStrategy;
         $this->tipsWaiterStrategy = $tipsWaiterStrategy;
     }
@@ -44,12 +35,12 @@ class TipsManager
     /**
      * @throws \Exception
      */
-    public function __invoke(Order $order): void
+    public function splitTips(Order $order): void
     {
         $restaurant = $order->getWaiter()->getRestaurant();
         $tipsStrategy = match ($restaurant->getTipsStrategy()) {
-            1 => $this->tipsStandardStrategy,
-            2 => $this->tipsWaiterStrategy
+            Restaurant::TIPS_STANDARD_STRATEGY => $this->tipsStandardStrategy,
+            Restaurant::TIPS_WAITER_STRATEGY => $this->tipsWaiterStrategy
         };
         $tipsStrategy->splitTips($order);
     }

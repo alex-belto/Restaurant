@@ -9,7 +9,7 @@ use App\Interfaces\TipsStrategyInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * The class represents a tip distribution strategy where the waiter who served the order
+ * Represents a tip distribution strategy where the waiter who served the order
  * receives 60% of the total tips, and the remaining amount is distributed among all staff members.
  */
 class TipsWaiterStrategy implements TipsStrategyInterface

@@ -3,7 +3,7 @@
 namespace App\EventListener\Order;
 
 use App\Entity\Order;
-use App\Services\Payment\PaymentManager;
+use App\Services\Payment\PaymentHandler;
 
 /**
  * Once we receive notification of the order status changing to "DONE," we proceed with processing the payment.
@@ -11,20 +11,27 @@ use App\Services\Payment\PaymentManager;
 class OrderListener
 {
     /**
-     * @var PaymentManager
+     * @var PaymentHandler
      */
-    private $payOrder;
+    private $paymentHandler;
 
-    public function __construct(PaymentManager $payOrder) {
-        $this->payOrder = $payOrder;
+    /**
+     * @param PaymentHandler $paymentHandler
+     */
+    public function __construct(PaymentHandler $paymentHandler) {
+        $this->paymentHandler = $paymentHandler;
     }
 
-    public function postUpdate(Order $order) {
+    /**
+     * @param Order $order
+     * @throws \Exception
+     */
+    public function payOrder(Order $order) {
 
         if ($order->getStatus() === Order::DONE) {
             $client = $order->getClient();
-            $order->setTips(rand(5, 20));
-            $this->payOrder->payOrder($client);
+            $order->setTips(rand(0, 20));
+            $this->paymentHandler->payOrder($client);
         }
     }
 

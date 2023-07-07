@@ -5,13 +5,13 @@ namespace App\Services\Kitchener;
 use App\Entity\Kitchener;
 use App\Entity\Order;
 use App\Interfaces\OrderManagerInterface;
-use App\Services\Staff\StaffManager;
+use App\Services\Staff\StaffResolver;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * The class handles order processing on the chef's side.
+ * Handles order processing on the chef's side.
  */
-class KitchenerManager implements OrderManagerInterface
+class KitchenerOrderProcessor implements OrderManagerInterface
 {
     /**
      * @var EntityManagerInterface
@@ -19,20 +19,20 @@ class KitchenerManager implements OrderManagerInterface
     private $em;
 
     /**
-     * @var StaffManager
+     * @var StaffResolver
      */
-    private $chooseStaff;
+    private $staffResolver;
 
     /**
      * @param EntityManagerInterface $em
-     * @param StaffManager $chooseStaff
+     * @param StaffResolver $staffResolver
      */
     public function __construct(
         EntityManagerInterface $em,
-        StaffManager $chooseStaff
+        StaffResolver $staffResolver
     ) {
         $this->em = $em;
-        $this->chooseStaff = $chooseStaff;
+        $this->staffResolver = $staffResolver;
     }
 
     /**
@@ -41,7 +41,7 @@ class KitchenerManager implements OrderManagerInterface
     public function processingOrder(Order $order): void
     {
         /** @var Kitchener $kitchener */
-        $kitchener = $this->chooseStaff->chooseStaff('kitchener');
+        $kitchener = $this->staffResolver->chooseStaff('kitchener');
         $kitchener->addOrder($order);
         $order->setStatus(Order::READY_TO_WAITER);
         $this->em->flush();

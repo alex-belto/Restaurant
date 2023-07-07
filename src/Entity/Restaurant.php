@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * The "Restaurant" entity stores and manages data about the staff working in it,
+ * Stores and manages data about the staff working in it,
  * menu items, tip distribution strategy, and the restaurant's balance.
  */
 #[ORM\Entity(repositoryClass: RestaurantRepository::class)]
@@ -28,16 +28,16 @@ class Restaurant
     private Collection $waiters;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Kitchener::class)]
-    private Collection $Kitcheners;
+    private Collection $kitcheners;
 
     #[ORM\Column(nullable: true)]
     private ?float $balance = 0;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: MenuItem::class)]
-    private Collection $MenuItems;
+    private Collection $menuItems;
 
     #[ORM\Column]
-    private ?int $tipsStrategy = 1;
+    private ?int $tipsStrategy = self::TIPS_STANDARD_STRATEGY;
 
     private static ?Restaurant $instance = null;
 
@@ -47,8 +47,8 @@ class Restaurant
     public function __construct()
     {
         $this->waiters = new ArrayCollection();
-        $this->Kitcheners = new ArrayCollection();
-        $this->MenuItems = new ArrayCollection();
+        $this->kitcheners = new ArrayCollection();
+        $this->menuItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -91,13 +91,13 @@ class Restaurant
      */
     public function getKitcheners(): Collection
     {
-        return $this->Kitcheners;
+        return $this->kitcheners;
     }
 
     public function addKitchener(Kitchener $kitchener): static
     {
-        if (!$this->Kitcheners->contains($kitchener)) {
-            $this->Kitcheners->add($kitchener);
+        if (!$this->kitcheners->contains($kitchener)) {
+            $this->kitcheners->add($kitchener);
             $kitchener->setRestaurant($this);
         }
 
@@ -106,7 +106,7 @@ class Restaurant
 
     public function removeKitchener(Kitchener $kitchener): static
     {
-        if ($this->Kitcheners->removeElement($kitchener)) {
+        if ($this->kitcheners->removeElement($kitchener)) {
             // set the owning side to null (unless already changed)
             if ($kitchener->getRestaurant() === $this) {
                 $kitchener->setRestaurant(null);
@@ -133,13 +133,13 @@ class Restaurant
      */
     public function getMenuItems(): Collection
     {
-        return $this->MenuItems;
+        return $this->menuItems;
     }
 
     public function addMenuItem(MenuItem $menuItem): static
     {
-        if (!$this->MenuItems->contains($menuItem)) {
-            $this->MenuItems->add($menuItem);
+        if (!$this->menuItems->contains($menuItem)) {
+            $this->menuItems->add($menuItem);
             $menuItem->setRestaurant($this);
         }
 
@@ -148,7 +148,7 @@ class Restaurant
 
     public function removeMenuItem(MenuItem $menuItem): static
     {
-        if ($this->MenuItems->removeElement($menuItem)) {
+        if ($this->menuItems->removeElement($menuItem)) {
             // set the owning side to null (unless already changed)
             if ($menuItem->getRestaurant() === $this) {
                 $menuItem->setRestaurant(null);

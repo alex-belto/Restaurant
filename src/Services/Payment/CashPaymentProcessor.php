@@ -7,7 +7,7 @@ use App\Entity\Order;
 use App\Interfaces\PaymentInterface;
 
 /**
- * The class handles cash payment transactions.
+ * Handles cash payment transactions.
  */
 class CashPaymentProcessor implements PaymentInterface
 {
@@ -27,7 +27,6 @@ class CashPaymentProcessor implements PaymentInterface
      */
     public function pay(Client $client, Order $order): void
     {
-       $processingPayment = $this->processingPayment;
-       $processingPayment($client, $order);
+       $this->processingPayment->payOrder($client, $order);
     }
 }

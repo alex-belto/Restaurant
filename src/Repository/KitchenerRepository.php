@@ -40,7 +40,7 @@ class KitchenerRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return KitchenerManager[] Returns an array of KitchenerManager objects
+//     * @return KitchenerOrderProcessor[] Returns an array of KitchenerOrderProcessor objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class KitchenerRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?KitchenerManager
+//    public function findOneBySomeField($value): ?KitchenerOrderProcessor
 //    {
 //        return $this->createQueryBuilder('k')
 //            ->andWhere('k.exampleField = :val')

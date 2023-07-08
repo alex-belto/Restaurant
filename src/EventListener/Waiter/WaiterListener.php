@@ -50,11 +50,16 @@ class WaiterListener
     public function deliveryOrder(Order $order): void
     {
         if ($order->getStatus() === Order::READY_TO_WAITER) {
-            $order->setStatus(Order::READY_TO_EAT);
-            $kitchener = $order->getKitchener();
-            $kitchener->removeOrder($order);
-            $this->waiterOrderProcessor->bringFood($order);
-            $this->em->flush();
+            $this->deliveryProcess($order);
         }
+    }
+
+    public function deliveryProcess(Order $order): void
+    {
+        $order->setStatus(Order::READY_TO_EAT);
+        $kitchener = $order->getKitchener();
+        $kitchener->removeOrder($order);
+        $this->waiterOrderProcessor->bringFood($order);
+        $this->em->flush();
     }
 }

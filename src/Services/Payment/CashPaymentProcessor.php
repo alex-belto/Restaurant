@@ -11,10 +11,7 @@ use App\Interfaces\PaymentInterface;
  */
 class CashPaymentProcessor implements PaymentInterface
 {
-    /**
-     * @var Payment
-     */
-    private $processingPayment;
+    private Payment $processingPayment;
 
     public function __construct(Payment $processingPayment) {
         $this->processingPayment = $processingPayment;

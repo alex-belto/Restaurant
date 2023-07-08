@@ -12,15 +12,9 @@ use App\Services\Tips\TipsDistributor;
  */
 class TipsCashPaymentDecorator implements PaymentInterface
 {
-    /**
-     * @var TipsDistributor
-     */
-    private $tipsDistributor;
+    private TipsDistributor $tipsDistributor;
 
-    /**
-     * @var CashPaymentProcessor
-     */
-    private $cashPaymentProcessor;
+    private CashPaymentProcessor $cashPaymentProcessor;
 
     /**
      * @param TipsDistributor $tipsDistributor

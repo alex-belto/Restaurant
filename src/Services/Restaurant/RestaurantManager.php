@@ -14,33 +14,19 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class RestaurantManager
 {
-    /**
-     * @var ClientManager
-     */
-    private $clientManager;
+    private ClientManager $clientManager;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * @var ClientRepository
-     */
-    private $clientRepository;
+    private ClientRepository $clientRepository;
 
     /**
      * @param ClientManager $clientManager
-     * @param EntityManagerInterface $em
      * @param ClientRepository $clientRepository
      */
     public function __construct(
         ClientManager $clientManager,
-        EntityManagerInterface $em,
         ClientRepository $clientRepository
     ) {
         $this->clientManager = $clientManager;
-        $this->em = $em;
         $this->clientRepository = $clientRepository;
     }
 

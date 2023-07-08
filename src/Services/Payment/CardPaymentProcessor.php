@@ -11,20 +11,11 @@ use App\Interfaces\PaymentInterface;
  */
 class CardPaymentProcessor implements PaymentInterface
 {
-    /**
-     * @var Payment
-     */
-    private $processingPayment;
+    private Payment $processingPayment;
 
-    /**
-     * @var CardValidation
-     */
-    private $cardValidation;
+    private CardValidation $cardValidation;
 
-    /**
-     * @var CashPaymentProcessor
-     */
-    private $cashPaymentProcessor;
+    private CashPaymentProcessor $cashPaymentProcessor;
 
     /**
      * @param Payment $processingPayment

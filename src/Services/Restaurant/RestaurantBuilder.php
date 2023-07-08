@@ -15,20 +15,11 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class RestaurantBuilder
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /**
-     * @var RestaurantRepository
-     */
-    private $restaurantRepository;
+    private RestaurantRepository $restaurantRepository;
 
-    /**
-     * @var int
-     */
-    private $filePath;
+    private string $filePath;
 
     /**
      * @param EntityManagerInterface $em

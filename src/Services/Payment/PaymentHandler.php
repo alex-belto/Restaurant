@@ -11,35 +11,17 @@ use Exception;
  */
 class PaymentHandler
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /**
-     * @var CashPaymentProcessor
-     */
-    private $cashPaymentProcessor;
+    private CashPaymentProcessor $cashPaymentProcessor;
 
-    /**
-     * @var CardPaymentProcessor
-     */
-    private $cardPaymentProcessor;
+    private CardPaymentProcessor $cardPaymentProcessor;
 
-    /**
-     * @var TipsCashPaymentDecorator
-     */
-    private $tipsCashPayment;
+    private TipsCashPaymentDecorator $tipsCashPayment;
 
-    /**
-     * @var TipsCardPaymentDecorator
-     */
-    private $tipsCardPayment;
+    private TipsCardPaymentDecorator $tipsCardPayment;
 
-    /**
-     * @var OrderValue
-     */
-    private $orderValue;
+    private OrderValue $orderValue;
 
     /**
      * @param EntityManagerInterface $em

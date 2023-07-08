@@ -14,15 +14,9 @@ use Faker\Factory;
  */
 class StaffResolver
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /**
-     * @var RestaurantBuilder
-     */
-    private $restaurantBuilder;
+    private RestaurantBuilder $restaurantBuilder;
 
     /**
      * @param EntityManagerInterface $em

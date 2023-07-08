@@ -17,40 +17,19 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class RestaurantManager extends AbstractController
 {
-    /**
-     * @var Manager
-     */
-    private $restaurantManager;
+    private Manager $restaurantManager;
 
-    /**
-     * @var RestaurantBuilder
-     */
-    private $restaurantBuilder;
+    private RestaurantBuilder $restaurantBuilder;
 
-    /**
-     * @var ClientRepository
-     */
-    private $clientRepository;
+    private ClientRepository $clientRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private OrderRepository $orderRepository;
 
-    /**
-     * @var OrderRepository
-     */
-    private $orderRepository;
-
-    /**
-     * @var RestaurantRepository
-     */
-    private $restaurantRepository;
+    private RestaurantRepository $restaurantRepository;
 
     /**
      * @param Manager $restaurantManager
      * @param ClientRepository $clientRepository
-     * @param EntityManagerInterface $em
      * @param RestaurantBuilder $restaurantBuilder
      * @param OrderRepository $orderRepository
      * @param RestaurantRepository $restaurantRepository
@@ -58,14 +37,12 @@ class RestaurantManager extends AbstractController
     public function __construct(
         Manager                $restaurantManager,
         ClientRepository       $clientRepository,
-        EntityManagerInterface $em,
         RestaurantBuilder      $restaurantBuilder,
         OrderRepository        $orderRepository,
         RestaurantRepository   $restaurantRepository
     ) {
         $this->restaurantManager = $restaurantManager;
         $this->clientRepository = $clientRepository;
-        $this->em = $em;
         $this->restaurantBuilder = $restaurantBuilder;
         $this->orderRepository = $orderRepository;
         $this->restaurantRepository = $restaurantRepository;

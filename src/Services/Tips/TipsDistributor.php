@@ -10,15 +10,9 @@ use App\Entity\Restaurant;
  */
 class TipsDistributor
 {
-    /**
-     * @var TipsStandardStrategy
-     */
-    private $tipsStandardStrategy;
+    private TipsStandardStrategy $tipsStandardStrategy;
 
-    /**
-     * @var TipsWaiterStrategy
-     */
-    private $tipsWaiterStrategy;
+    private TipsWaiterStrategy $tipsWaiterStrategy;
 
     /**
      * @param TipsStandardStrategy $tipsStandardStrategy

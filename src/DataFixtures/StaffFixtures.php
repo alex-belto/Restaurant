@@ -11,10 +11,7 @@ use Doctrine\Persistence\ObjectManager;
  */
 class StaffFixtures extends Fixture
 {
-    /**
-     * @var StaffResolver
-     */
-    private $staffResolver;
+    private StaffResolver $staffResolver;
 
     /**
      * @param StaffResolver $staffResolver

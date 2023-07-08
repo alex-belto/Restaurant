@@ -16,10 +16,7 @@ use Faker\Factory;
  */
 class ClientManager
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private EntityManagerInterface $em;
 
     public function __construct(
         EntityManagerInterface $em,

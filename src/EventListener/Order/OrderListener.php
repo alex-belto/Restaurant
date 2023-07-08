@@ -10,10 +10,7 @@ use App\Services\Payment\PaymentHandler;
  */
 class OrderListener
 {
-    /**
-     * @var PaymentHandler
-     */
-    private $paymentHandler;
+    private PaymentHandler $paymentHandler;
 
     /**
      * @param PaymentHandler $paymentHandler

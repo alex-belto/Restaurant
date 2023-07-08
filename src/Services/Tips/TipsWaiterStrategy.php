@@ -14,10 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class TipsWaiterStrategy implements TipsStrategyInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private EntityManagerInterface $em;
 
     /**
      * @param EntityManagerInterface $em

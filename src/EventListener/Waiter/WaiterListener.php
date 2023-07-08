@@ -14,15 +14,9 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
  */
 class WaiterListener
 {
-    /**
-     * @var WaiterOrderProcessor
-     */
-    private $waiterOrderProcessor;
+    private WaiterOrderProcessor $waiterOrderProcessor;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private EntityManagerInterface $em;
 
     /**
      * @param WaiterOrderProcessor $waiterOrderProcessor

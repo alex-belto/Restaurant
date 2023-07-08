@@ -11,15 +11,9 @@ use App\Services\Restaurant\RestaurantBuilder;
  */
 class ClientListener
 {
-    /**
-     * @var ClientManager
-     */
-    private $clientManager;
+    private ClientManager $clientManager;
 
-    /**
-     * @var RestaurantBuilder
-     */
-    private $restaurantBuilder;
+    private RestaurantBuilder $restaurantBuilder;
 
     /**
      * @param ClientManager $clientManager

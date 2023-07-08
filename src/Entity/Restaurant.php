@@ -22,7 +22,7 @@ class Restaurant
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Waiter::class)]
     private Collection $waiters;
@@ -30,19 +30,17 @@ class Restaurant
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Kitchener::class)]
     private Collection $kitcheners;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $balance = 0;
+    #[ORM\Column]
+    private float $balance = 0;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: MenuItem::class)]
     private Collection $menuItems;
 
     #[ORM\Column]
-    private ?int $tipsStrategy = self::TIPS_STANDARD_STRATEGY;
-
-    private static ?Restaurant $instance = null;
+    private int $tipsStrategy = self::TIPS_STANDARD_STRATEGY;
 
     #[ORM\Column]
-    private ?int $days = 0;
+    private int $days = 0;
 
     public function __construct()
     {
@@ -51,7 +49,7 @@ class Restaurant
         $this->menuItems = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -116,12 +114,12 @@ class Restaurant
         return $this;
     }
 
-    public function getBalance(): ?float
+    public function getBalance(): float
     {
         return $this->balance;
     }
 
-    public function setBalance(?float $balance): static
+    public function setBalance(float $balance): static
     {
         $this->balance = $balance;
 
@@ -158,7 +156,7 @@ class Restaurant
         return $this;
     }
 
-    public function getTipsStrategy(): ?int
+    public function getTipsStrategy(): int
     {
         return $this->tipsStrategy;
     }
@@ -170,7 +168,7 @@ class Restaurant
         return $this;
     }
 
-    public function getDays(): ?int
+    public function getDays(): int
     {
         return $this->days;
     }

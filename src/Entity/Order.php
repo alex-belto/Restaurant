@@ -23,19 +23,19 @@ class Order
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\OneToMany(mappedBy: 'connectedOrder', targetEntity: MenuItem::class)]
     private Collection $menuItems;
 
     #[ORM\OneToOne(inversedBy: 'connectedOrder', cascade: ['persist', 'remove'])]
-    private ?Client $client = null;
+    private Client $client;
 
     #[ORM\ManyToOne(inversedBy: 'orders')]
     private ?Waiter $waiter = null;
 
     #[ORM\Column]
-    private ?int $status = null;
+    private int $status;
 
     #[ORM\ManyToOne(inversedBy: 'orders')]
     private ?Kitchener $kitchener = null;
@@ -51,7 +51,7 @@ class Order
         $this->menuItems = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -88,12 +88,12 @@ class Order
         return $this;
     }
 
-    public function getClient(): ?Client
+    public function getClient(): Client
     {
         return $this->client;
     }
 
-    public function setClient(?Client $client): static
+    public function setClient(Client $client): static
     {
         $this->client = $client;
 
@@ -112,7 +112,7 @@ class Order
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): int
     {
         return $this->status;
     }

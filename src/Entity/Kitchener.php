@@ -18,7 +18,7 @@ class Kitchener implements StaffInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(nullable: true)]
     private ?float $tips = null;
@@ -27,10 +27,10 @@ class Kitchener implements StaffInterface
     private Collection $orders;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\ManyToOne(cascade: ['persist', 'remove'], inversedBy: 'Kitcheners')]
-    private ?Restaurant $restaurant = null;
+    private Restaurant $restaurant;
 
     public function __construct()
     {
@@ -96,12 +96,12 @@ class Kitchener implements StaffInterface
         return $this;
     }
 
-    public function getRestaurant(): ?Restaurant
+    public function getRestaurant(): Restaurant
     {
         return $this->restaurant;
     }
 
-    public function setRestaurant(?Restaurant $restaurant): static
+    public function setRestaurant(Restaurant $restaurant): static
     {
         $this->restaurant = $restaurant;
 

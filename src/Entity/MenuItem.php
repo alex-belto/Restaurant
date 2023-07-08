@@ -18,19 +18,19 @@ class MenuItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255)]
-    protected ?string $name = null;
+    protected string $name;
 
     #[ORM\Column]
-    protected ?float $price = null;
+    protected float $price;
 
     #[ORM\Column(length: 255)]
-    protected ?string $time = null;
+    protected string $time;
 
     #[ORM\Column(length: 255)]
-    private ?int $type = null;
+    private int $type;
 
     #[ORM\ManyToOne(inversedBy: 'menuItems')]
     private ?Order $connectedOrder = null;
@@ -38,12 +38,12 @@ class MenuItem
     #[ORM\ManyToOne(inversedBy: 'MenuItems')]
     private ?Restaurant $restaurant = null;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -55,7 +55,7 @@ class MenuItem
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): float
     {
         return $this->price;
     }
@@ -79,7 +79,7 @@ class MenuItem
         return $this;
     }
 
-    public function getType(): ?int
+    public function getType(): int
     {
         return $this->type;
     }

@@ -44,11 +44,7 @@ class OrderValue extends AbstractController
 
         $customersMoney = $client->getMoney();
 
-        if ($customersMoney >= $orderValue) {
-            return true;
-        }
-
-        return false;
+        return $customersMoney >= $orderValue;
     }
 
 }

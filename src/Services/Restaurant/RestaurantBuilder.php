@@ -71,12 +71,12 @@ class RestaurantBuilder
     public function hireWaiters(Restaurant $restaurant, int $amount): void
     {
         $waiters = $this->em->getRepository(Waiter::class)->findAll();
-        if (count($waiters) >= $amount) {
-            for ($i = 0; $i < $amount; $i++) {
-                $restaurant->addWaiter($waiters[$i]);
-            }
-        } else {
+        if (!count($waiters) >= $amount) {
             throw new \Exception('U dont have enough staff in pull');
+        }
+
+        for ($i = 0; $i < $amount; $i++) {
+            $restaurant->addWaiter($waiters[$i]);
         }
     }
 
@@ -88,12 +88,12 @@ class RestaurantBuilder
     public function hireKitcheners(Restaurant $restaurant, int $amount): void
     {
         $kitcheners = $this->em->getRepository(Kitchener::class)->findAll();
-        if (count($kitcheners) >= $amount) {
-            for ($i = 0; $i < $amount; $i++) {
-                $restaurant->addKitchener($kitcheners[$i]);
-            }
-        } else {
+        if (!count($kitcheners) >= $amount) {
             throw new \Exception('U dont have enough staff in pull');
+        }
+
+        for ($i = 0; $i < $amount; $i++) {
+            $restaurant->addKitchener($kitcheners[$i]);
         }
     }
 

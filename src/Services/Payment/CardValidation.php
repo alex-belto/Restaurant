@@ -13,10 +13,8 @@ class CardValidation
     public function isCardValid(Client $client): bool
     {
         $expirationDate = $client->getCardExpirationDate();
-        if ($expirationDate < new DateTime()) {
-            return false;
-        }
-        return true;
+
+        return $expirationDate < new DateTime();
     }
 
 }

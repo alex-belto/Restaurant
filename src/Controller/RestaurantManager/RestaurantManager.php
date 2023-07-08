@@ -71,7 +71,8 @@ class RestaurantManager extends AbstractController
     #[Route('restaurant/close', name: 'close_restaurant', methods: ['GET'])]
     public function dropRestaurant(): JsonResponse
     {
-        $filePath = '/var/www/app/public/restaurant.txt';
+        $basePath = realpath(__DIR__ . '/../../..');
+        $filePath = $basePath . $_ENV['FILE_PATH'];
 
         if (file_exists($filePath)) {
             unlink($filePath);

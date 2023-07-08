@@ -31,7 +31,7 @@ class RestaurantBuilder
     ) {
         $this->em = $em;
         $this->restaurantRepository = $restaurantRepository;
-        $this->filePath = '/var/www/app/public/restaurant.txt';
+        $this->filePath = realpath(__DIR__ . '/../../..') . $_ENV['FILE_PATH'];
     }
 
     /**
@@ -39,7 +39,6 @@ class RestaurantBuilder
      */
     public function buildRestaurant(int $days): Restaurant
     {
-
         $restaurant = new Restaurant();
 
         $this->hireKitcheners($restaurant, 3);

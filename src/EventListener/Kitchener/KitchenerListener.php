@@ -24,7 +24,7 @@ class KitchenerListener
     /**
      * @throws \Exception
      */
-    public function processingOrderByKitchen(Order $order) {
+    public function processOrderByKitchen(Order $order) {
 
         if ($order->getStatus() !== Order::READY_TO_KITCHEN) {
             return;

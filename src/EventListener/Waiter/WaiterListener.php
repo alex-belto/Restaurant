@@ -35,7 +35,7 @@ class WaiterListener
      * @param LifecycleEventArgs $eventArgs
      * @throws \Exception
      */
-    public function processingOrderByWaiter(Client $client, LifecycleEventArgs $eventArgs): void
+    public function processOrderByWaiter(Client $client, LifecycleEventArgs $eventArgs): void
     {
         $changeSet = $eventArgs->getObjectManager()->getUnitOfWork()->getEntityChangeSet($client);
 

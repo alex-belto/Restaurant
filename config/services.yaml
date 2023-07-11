@@ -32,12 +32,12 @@ services:
 
     App\EventListener\Waiter\WaiterListener:
         tags:
-            - { name: 'doctrine.orm.entity_listener', event: 'postUpdate', entity: 'App\Entity\Client', method: 'processingOrderByWaiter'}
+            - { name: 'doctrine.orm.entity_listener', event: 'postUpdate', entity: 'App\Entity\Client', method: 'processOrderByWaiter'}
             - { name: 'doctrine.orm.entity_listener', event: 'postUpdate', entity: 'App\Entity\Order', method: 'deliveryOrder' }
 
     App\EventListener\Kitchener\KitchenerListener:
         tags:
-            - { name: 'doctrine.orm.entity_listener', event: 'postUpdate', entity: 'App\Entity\Order', method: 'processingOrderByKitchen' }
+            - { name: 'doctrine.orm.entity_listener', event: 'postUpdate', entity: 'App\Entity\Order', method: 'processOrderByKitchen' }
 
     App\EventListener\Client\ClientListener:
         tags:

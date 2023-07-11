@@ -5,7 +5,7 @@ namespace App\Services\Staff;
 use App\Entity\Kitchener;
 use App\Entity\Waiter;
 use App\Interfaces\StaffInterface;
-use App\Services\Restaurant\RestaurantBuilder;
+use App\Services\Restaurant\RestaurantProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 
@@ -16,18 +16,18 @@ class StaffResolver
 {
     private EntityManagerInterface $em;
 
-    private RestaurantBuilder $restaurantBuilder;
+    private RestaurantProvider $restaurantProvider;
 
     /**
      * @param EntityManagerInterface $em
-     * @param RestaurantBuilder $restaurantBuilder
+     * @param RestaurantProvider $restaurantProvider
      */
     public function __construct(
         EntityManagerInterface $em,
-        RestaurantBuilder $restaurantBuilder
+        RestaurantProvider $restaurantProvider
     ) {
         $this->em = $em;
-        $this->restaurantBuilder = $restaurantBuilder;
+        $this->restaurantProvider = $restaurantProvider;
     }
 
     /**
@@ -35,7 +35,7 @@ class StaffResolver
      */
     public function chooseStaff(string $type): StaffInterface
     {
-        $restaurant = $this->restaurantBuilder->getRestaurant();
+        $restaurant = $this->restaurantProvider->getRestaurant();
 
         $staffs = match ($type) {
             'waiter' => $restaurant->getWaiters(),

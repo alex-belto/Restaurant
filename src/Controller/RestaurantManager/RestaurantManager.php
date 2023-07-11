@@ -5,9 +5,8 @@ namespace App\Controller\RestaurantManager;
 use App\Repository\ClientRepository;
 use App\Repository\OrderRepository;
 use App\Repository\RestaurantRepository;
-use App\Services\Restaurant\RestaurantBuilder;
 use \App\Services\Restaurant\RestaurantManager as Manager;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Services\Restaurant\RestaurantProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,7 +18,7 @@ class RestaurantManager extends AbstractController
 {
     private Manager $restaurantManager;
 
-    private RestaurantBuilder $restaurantBuilder;
+    private RestaurantProvider $restaurantProvider;
 
     private ClientRepository $clientRepository;
 
@@ -30,20 +29,20 @@ class RestaurantManager extends AbstractController
     /**
      * @param Manager $restaurantManager
      * @param ClientRepository $clientRepository
-     * @param RestaurantBuilder $restaurantBuilder
+     * @param RestaurantProvider $restaurantProvider
      * @param OrderRepository $orderRepository
      * @param RestaurantRepository $restaurantRepository
      */
     public function __construct(
         Manager                $restaurantManager,
         ClientRepository       $clientRepository,
-        RestaurantBuilder      $restaurantBuilder,
+        RestaurantProvider     $restaurantProvider,
         OrderRepository        $orderRepository,
         RestaurantRepository   $restaurantRepository
     ) {
         $this->restaurantManager = $restaurantManager;
         $this->clientRepository = $clientRepository;
-        $this->restaurantBuilder = $restaurantBuilder;
+        $this->restaurantProvider = $restaurantProvider;
         $this->orderRepository = $orderRepository;
         $this->restaurantRepository = $restaurantRepository;
     }
@@ -55,7 +54,7 @@ class RestaurantManager extends AbstractController
     public function openRestaurant(int $days): JsonResponse
     {
         set_time_limit(1200);
-        $restaurant = $this->restaurantBuilder->getRestaurant($days);
+        $restaurant = $this->restaurantProvider->getRestaurant($days);
 
         $result = $this->restaurantManager->startRestaurant($restaurant);
         $this->orderRepository->removeAllOrders();

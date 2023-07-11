@@ -68,7 +68,7 @@ class RestaurantBuilder
      * @param int $amount
      * @throws \Exception
      */
-    public function hireWaiters(Restaurant $restaurant, int $amount): void
+    private function hireWaiters(Restaurant $restaurant, int $amount): void
     {
         $waiters = $this->em->getRepository(Waiter::class)->findAll();
         if (!count($waiters) >= $amount) {
@@ -85,7 +85,7 @@ class RestaurantBuilder
      * @param int $amount
      * @throws \Exception
      */
-    public function hireKitcheners(Restaurant $restaurant, int $amount): void
+    private function hireKitcheners(Restaurant $restaurant, int $amount): void
     {
         $kitcheners = $this->em->getRepository(Kitchener::class)->findAll();
         if (!count($kitcheners) >= $amount) {
@@ -100,7 +100,7 @@ class RestaurantBuilder
     /**
      * @throws \Exception
      */
-    public function fillUpMenu(Restaurant $restaurant, int $amount, string $type): void
+    private function fillUpMenu(Restaurant $restaurant, int $amount, string $type): void
     {
         switch ($type) {
             case 'dish':

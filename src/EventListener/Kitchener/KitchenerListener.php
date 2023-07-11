@@ -26,9 +26,11 @@ class KitchenerListener
      */
     public function processingOrderByKitchen(Order $order) {
 
-        if ($order->getStatus() === Order::READY_TO_KITCHEN) {
-            $this->kitchenerOrderProcessor->processingOrder($order);
+        if ($order->getStatus() !== Order::READY_TO_KITCHEN) {
+            return;
         }
+
+        $this->kitchenerOrderProcessor->processingOrder($order);
     }
 
 }

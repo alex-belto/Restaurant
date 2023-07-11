@@ -105,24 +105,26 @@ class RestaurantBuilder
         switch ($type) {
             case 'dish':
                 $dish = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItem::DISH]);
-                if (count($dish) >= $amount) {
-                    for ($i = 0; $i < $amount; $i++) {
-                        $restaurant->addMenuItem($dish[$i]);
-                    }
-                } else {
+                if (count($dish) < $amount) {
                     throw new \Exception('U dont have enough dish in pull');
                 }
-                break;
-            case 'drink':
-                $drink = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItem::DRINK]);
-                if (count($drink) >= $amount) {
-                    for ($i = 0; $i < $amount; $i++) {
-                        $restaurant->addMenuItem($drink[$i]);
-                    }
-                } else {
-                    throw new \Exception('U dont have enough drink in pull');
+
+                for ($i = 0; $i < $amount; $i++) {
+                    $restaurant->addMenuItem($dish[$i]);
                 }
                 break;
+
+            case 'drink':
+                $drink = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItem::DRINK]);
+                if (count($drink) < $amount) {
+                    throw new \Exception('U dont have enough drink in pull');
+                }
+
+                for ($i = 0; $i < $amount; $i++) {
+                    $restaurant->addMenuItem($drink[$i]);
+                }
+                break;
+
             default:
                 throw new \Exception('Wrong menuItem type!');
         }

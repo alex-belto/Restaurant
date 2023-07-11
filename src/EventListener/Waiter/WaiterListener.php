@@ -49,13 +49,10 @@ class WaiterListener
      */
     public function deliveryOrder(Order $order): void
     {
-        if ($order->getStatus() === Order::READY_TO_WAITER) {
-            $this->deliveryProcess($order);
+        if ($order->getStatus() !== Order::READY_TO_WAITER) {
+            return;
         }
-    }
 
-    public function deliveryProcess(Order $order): void
-    {
         $order->setStatus(Order::READY_TO_EAT);
         $kitchener = $order->getKitchener();
         $kitchener->removeOrder($order);

@@ -25,11 +25,13 @@ class OrderListener
      */
     public function payOrder(Order $order) {
 
-        if ($order->getStatus() === Order::DONE) {
-            $client = $order->getClient();
-            $order->setTips(rand(0, 20));
-            $this->paymentHandler->payOrder($client);
+        if ($order->getStatus() !== Order::DONE) {
+            return;
         }
+
+        $client = $order->getClient();
+        $order->setTips(rand(0, 20));
+        $this->paymentHandler->payOrder($client);
     }
 
 }

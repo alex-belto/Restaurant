@@ -41,9 +41,6 @@ class RestaurantBuilder
         $this->restaurantMenuFiller->fillUpMenu($restaurant, 15, 'dish');
         $this->restaurantMenuFiller->fillUpMenu($restaurant,  4, 'drink');
         $restaurant->setDays($days);
-        $this->em->persist($restaurant);
-        $this->em->flush();
-        file_put_contents($this->filePath, $restaurant->getId());
 
         return $restaurant;
     }

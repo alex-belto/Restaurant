@@ -2,27 +2,24 @@
 
 namespace App\Services\Restaurant;
 
-use App\Entity\Kitchener;
 use App\Entity\Restaurant;
-use App\Entity\Waiter;
 use App\Repository\ClientRepository;
-use App\Services\Client\ClientManager;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Services\Client\ClientFactory;
 
 /**
  * Responsible for executing the overall logic and operations of a restaurant.
  */
 class RestaurantManager
 {
-    private ClientManager $clientManager;
+    private ClientFactory $clientFactory;
 
     private ClientRepository $clientRepository;
 
     public function __construct(
-        ClientManager $clientManager,
+        ClientFactory $clientFactory,
         ClientRepository $clientRepository
     ) {
-        $this->clientManager = $clientManager;
+        $this->clientFactory = $clientFactory;
         $this->clientRepository = $clientRepository;
     }
 
@@ -39,7 +36,7 @@ class RestaurantManager
             $visitorsForAllTime += $visitorsPerDay;
 
             for ($j = 1; $j <= $visitorsPerDay; $j++) {
-                $this->clientManager->addClient(true);
+                $this->clientFactory->createClient(true);
             }
         }
 

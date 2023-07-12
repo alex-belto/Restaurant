@@ -17,10 +17,6 @@ class WaiterOrderProcessor implements OrderManagerInterface
 
     private StaffResolver $staffResolver;
 
-    /**
-     * @param EntityManagerInterface $em
-     * @param StaffResolver $staffResolver
-     */
     public function __construct(
         EntityManagerInterface $em,
         StaffResolver $staffResolver

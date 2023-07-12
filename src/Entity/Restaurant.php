@@ -55,7 +55,7 @@ class Restaurant
     }
 
     /**
-     * @return Collection<int, Waiter>
+     * @return Collection<int, Waiter>| Waiter[]
      */
     public function getWaiters(): Collection
     {
@@ -85,7 +85,7 @@ class Restaurant
     }
 
     /**
-     * @return Collection<int, Kitchener>
+     * @return Collection<int, Kitchener>| Kitchener[]
      */
     public function getKitcheners(): Collection
     {
@@ -127,7 +127,7 @@ class Restaurant
     }
 
     /**
-     * @return Collection<int, MenuItem>
+     * @return Collection<int, MenuItem>| MenuItem[]
      */
     public function getMenuItems(): Collection
     {

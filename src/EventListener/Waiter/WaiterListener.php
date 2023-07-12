@@ -18,10 +18,6 @@ class WaiterListener
 
     private EntityManagerInterface $em;
 
-    /**
-     * @param WaiterOrderProcessor $waiterOrderProcessor
-     * @param EntityManagerInterface $em
-     */
     public function __construct(
         WaiterOrderProcessor   $waiterOrderProcessor,
         EntityManagerInterface $em,
@@ -30,11 +26,6 @@ class WaiterListener
         $this->em = $em;
     }
 
-    /**
-     * @param Client $client
-     * @param LifecycleEventArgs $eventArgs
-     * @throws \Exception
-     */
     public function processOrderByWaiter(Client $client, LifecycleEventArgs $eventArgs): void
     {
         $changeSet = $eventArgs->getObjectManager()->getUnitOfWork()->getEntityChangeSet($client);
@@ -44,9 +35,6 @@ class WaiterListener
         }
     }
 
-    /**
-     * @param Order $order
-     */
     public function deliveryOrder(Order $order): void
     {
         if ($order->getStatus() !== Order::READY_TO_WAITER) {

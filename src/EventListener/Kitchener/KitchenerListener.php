@@ -12,9 +12,6 @@ class KitchenerListener
 {
     private KitchenerOrderProcessor $kitchenerOrderProcessor;
 
-    /**
-     * @param KitchenerOrderProcessor $kitchenerOrderProcessor
-     */
     public function __construct(
         KitchenerOrderProcessor $kitchenerOrderProcessor
     ) {

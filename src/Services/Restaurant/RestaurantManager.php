@@ -18,10 +18,6 @@ class RestaurantManager
 
     private ClientRepository $clientRepository;
 
-    /**
-     * @param ClientManager $clientManager
-     * @param ClientRepository $clientRepository
-     */
     public function __construct(
         ClientManager $clientManager,
         ClientRepository $clientRepository
@@ -50,7 +46,6 @@ class RestaurantManager
         $visitorsWithTips = $this->clientRepository->getAmountOfClientsWithTips();
 
         $waiterBalance = [];
-        /** @var Waiter $waiter */
         foreach ($restaurant->getWaiters() as $waiter) {
             $waiterBalance[] = [
                 'waiter_name' => $waiter->getName(),
@@ -59,7 +54,6 @@ class RestaurantManager
         }
 
         $kitchenersBalance = [];
-        /** @var Kitchener $kitchener */
         foreach ($restaurant->getKitcheners() as $kitchener) {
             $kitchenersBalance[] = [
                 'kitchener_name' => $kitchener->getName(),

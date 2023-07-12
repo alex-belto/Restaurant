@@ -14,10 +14,6 @@ class TipsDistributor
 
     private TipsWaiterStrategy $tipsWaiterStrategy;
 
-    /**
-     * @param TipsStandardStrategy $tipsStandardStrategy
-     * @param TipsWaiterStrategy $tipsWaiterStrategy
-     */
     public function __construct(
         TipsStandardStrategy $tipsStandardStrategy,
         TipsWaiterStrategy $tipsWaiterStrategy

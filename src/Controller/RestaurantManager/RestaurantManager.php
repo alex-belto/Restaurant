@@ -26,13 +26,6 @@ class RestaurantManager extends AbstractController
 
     private RestaurantRepository $restaurantRepository;
 
-    /**
-     * @param Manager $restaurantManager
-     * @param ClientRepository $clientRepository
-     * @param RestaurantProvider $restaurantProvider
-     * @param OrderRepository $orderRepository
-     * @param RestaurantRepository $restaurantRepository
-     */
     public function __construct(
         Manager                $restaurantManager,
         ClientRepository       $clientRepository,

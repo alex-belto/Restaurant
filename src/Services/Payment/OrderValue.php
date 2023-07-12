@@ -3,7 +3,6 @@
 namespace App\Services\Payment;
 
 use App\Entity\Client;
-use App\Entity\MenuItem;
 
 /**
  * Calculates the total cost of an order,
@@ -11,17 +10,11 @@ use App\Entity\MenuItem;
  */
 class OrderValue
 {
-    /**
-     * @param Client $client
-     * @param int|null $tips
-     * @return float
-     */
     public function getOrderValue(Client $client, int $tips = null): float
     {
         $orderItems = $client->getConnectedOrder();
         $orderPrice = 0;
 
-        /** @var MenuItem $orderItem */
         foreach ($orderItems->getMenuItems() as $orderItem)
         {
             $price = $orderItem->getPrice();

@@ -16,10 +16,6 @@ class TipsCashPaymentDecorator implements PaymentInterface
 
     private CashPaymentProcessor $cashPaymentProcessor;
 
-    /**
-     * @param TipsDistributor $tipsDistributor
-     * @param CashPaymentProcessor $cashPaymentProcessor
-     */
     public function __construct(
         TipsDistributor      $tipsDistributor,
         CashPaymentProcessor $cashPaymentProcessor

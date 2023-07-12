@@ -12,17 +12,10 @@ class OrderListener
 {
     private PaymentHandler $paymentHandler;
 
-    /**
-     * @param PaymentHandler $paymentHandler
-     */
     public function __construct(PaymentHandler $paymentHandler) {
         $this->paymentHandler = $paymentHandler;
     }
 
-    /**
-     * @param Order $order
-     * @throws \Exception
-     */
     public function payOrder(Order $order) {
 
         if ($order->getStatus() !== Order::DONE) {

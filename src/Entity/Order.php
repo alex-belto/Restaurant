@@ -57,7 +57,7 @@ class Order
     }
 
     /**
-     * @return Collection<int, MenuItem>
+     * @return Collection<int, MenuItem>| MenuItem[]
      */
     public function getMenuItems(): Collection
     {

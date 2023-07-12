@@ -16,9 +16,6 @@ class TipsWaiterStrategy implements TipsStrategyInterface
 {
     private EntityManagerInterface $em;
 
-    /**
-     * @param EntityManagerInterface $em
-     */
     public function __construct(
         EntityManagerInterface $em
     ) {
@@ -26,7 +23,6 @@ class TipsWaiterStrategy implements TipsStrategyInterface
     }
 
     /**
-     * @param Order $order
      * @throws \Exception
      */
     public function splitTips(Order $order): void

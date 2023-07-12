@@ -21,8 +21,6 @@ class RestaurantProvider
     }
 
     /**
-     * @param int|null $days
-     * @return Restaurant
      * @throws \Exception
      */
     public function getRestaurant(?int $days = null): Restaurant

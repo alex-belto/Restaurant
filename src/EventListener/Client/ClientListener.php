@@ -15,10 +15,6 @@ class ClientListener
 
     private RestaurantProvider $restaurantProvider;
 
-    /**
-     * @param ClientManager $clientManager
-     * @param RestaurantProvider $restaurantProvider
-     */
     public function __construct(
         ClientManager $clientManager,
         RestaurantProvider $restaurantProvider

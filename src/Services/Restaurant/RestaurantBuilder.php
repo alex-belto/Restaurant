@@ -18,11 +18,6 @@ class RestaurantBuilder
     private EmployeeRecruiter $employeeRecruiter;
     private string $filePath;
 
-    /**
-     * @param EntityManagerInterface $em
-     * @param RestaurantMenuFiller $restaurantMenuFiller
-     * @param EmployeeRecruiter $employeeRecruiter
-     */
     public function __construct(
         EntityManagerInterface $em,
         RestaurantMenuFiller $restaurantMenuFiller,

@@ -19,11 +19,6 @@ class EmployeeRecruiter
         $this->kitchenerRepository = $kitchenerRepository;
     }
 
-    /**
-     * @param Restaurant $restaurant
-     * @param int $amount
-     * @throws \Exception
-     */
     public function hireWaiters(Restaurant $restaurant, int $amount): void
     {
         $waiters = $this->waiterRepository->findAll();
@@ -36,11 +31,6 @@ class EmployeeRecruiter
         }
     }
 
-    /**
-     * @param Restaurant $restaurant
-     * @param int $amount
-     * @throws \Exception
-     */
     public function hireKitcheners(Restaurant $restaurant, int $amount): void
     {
         $kitcheners = $this->kitchenerRepository->findAll();

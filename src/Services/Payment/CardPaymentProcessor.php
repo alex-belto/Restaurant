@@ -17,11 +17,6 @@ class CardPaymentProcessor implements PaymentInterface
 
     private CashPaymentProcessor $cashPaymentProcessor;
 
-    /**
-     * @param Payment $processingPayment
-     * @param CardValidation $cardValidation
-     * @param CashPaymentProcessor $cashPaymentProcessor
-     */
     public function __construct(
         Payment        $processingPayment,
         CardValidation $cardValidation,

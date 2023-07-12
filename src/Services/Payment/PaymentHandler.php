@@ -12,25 +12,12 @@ use Exception;
 class PaymentHandler
 {
     private EntityManagerInterface $em;
-
     private CashPaymentProcessor $cashPaymentProcessor;
-
     private CardPaymentProcessor $cardPaymentProcessor;
-
     private TipsCashPaymentDecorator $tipsCashPayment;
-
     private TipsCardPaymentDecorator $tipsCardPayment;
-
     private OrderValue $orderValue;
 
-    /**
-     * @param EntityManagerInterface $em
-     * @param CashPaymentProcessor $cashPaymentProcessor
-     * @param CardPaymentProcessor $cardPaymentProcessor
-     * @param TipsCashPaymentDecorator $tipsCashPayment
-     * @param TipsCardPaymentDecorator $tipsCardPayment
-     * @param OrderValue $orderValue
-     */
     public function __construct(
         EntityManagerInterface   $em,
         CashPaymentProcessor     $cashPaymentProcessor,

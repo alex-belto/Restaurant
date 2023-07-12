@@ -13,9 +13,6 @@ class StaffFixtures extends Fixture
 {
     private StaffFactory $staffFactory;
 
-    /**
-     * @param StaffFactory $staffFactory
-     */
     public function __construct(StaffFactory $staffFactory) {
         $this->staffFactory = $staffFactory;
     }

@@ -54,7 +54,6 @@ class ClientManager
 
         for ($i = 0; $i < 5; $i++) {
             $item = rand(0, 18);
-            /** @var MenuItem $menuItem */
             $menuItem = $menu[$item];
             $order->addMenuItem($menuItem);
             $this->em->persist($order);

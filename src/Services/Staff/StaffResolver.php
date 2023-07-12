@@ -12,9 +12,6 @@ class StaffResolver
 {
     private RestaurantProvider $restaurantProvider;
 
-    /**
-     * @param RestaurantProvider $restaurantProvider
-     */
     public function __construct(
         RestaurantProvider $restaurantProvider
     ) {

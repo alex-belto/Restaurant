@@ -17,11 +17,6 @@ class CashPaymentProcessor implements PaymentInterface
         $this->processingPayment = $processingPayment;
     }
 
-    /**
-     * @param Client $client
-     * @param Order $order
-     * @throws \Exception
-     */
     public function pay(Client $client, Order $order): void
     {
        $this->processingPayment->payOrder($client, $order);

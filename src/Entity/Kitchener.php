@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Stores information about chefs, including their orders,
+ * Stores information about kitchiners, including their orders,
  * restaurant affiliation, and tip records.
  */
 #[ORM\Entity(repositoryClass: KitchenerRepository::class)]

@@ -19,6 +19,8 @@ services:
       - ./:/var/www/app
     networks:
       - internal
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   db:
     image: postgres:14.1-alpine

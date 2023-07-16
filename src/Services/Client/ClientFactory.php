@@ -23,7 +23,7 @@ class ClientFactory
 
         $client = new Client();
         $client->setName($faker->name());
-        $client->setMoney(rand(20, 150));
+        $client->setMoney(rand(100, 150));
         if ($card) {
             $cardNumber = rand(2910000000000000, 4800000000000000);
             $client->setCardNumber("$cardNumber");

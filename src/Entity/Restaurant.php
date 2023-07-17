@@ -16,8 +16,8 @@ class Restaurant
 {
     public const TIPS_STANDARD_STRATEGY = 1;
     public const TIPS_WAITER_STRATEGY = 2;
-    public const WORK_HOURS = 8;
-    public const MAX_VISITORS_PER_HOUR = 50;
+    private const WORK_HOURS = 8;
+    private const MAX_VISITORS_PER_HOUR = 50;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -179,4 +179,10 @@ class Restaurant
 
         return $this;
     }
+
+    public function getMaxVisitorsPerDay(): int
+    {
+        return Restaurant::WORK_HOURS * Restaurant::MAX_VISITORS_PER_HOUR;
+    }
+
 }

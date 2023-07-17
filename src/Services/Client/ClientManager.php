@@ -24,18 +24,18 @@ class ClientManager
     {
         $order = new Order();
         $order->setClient($client);
-        $order->setStatus(Order::READY_TO_KITCHEN);
         $menu = $restaurant->getMenuItems()->toArray();
+        $amountOfMenuItems = count($menu) - 1;
 
-        for ($i = 0; $i < 5; $i++) {
-            $item = rand(0, 18);
+        for ($i = 0; $i < 3; $i++) {
+            $item = rand(0, $amountOfMenuItems);
             $menuItem = $menu[$item];
             $order->addMenuItem($menuItem);
-            $this->em->persist($order);
         }
 
         $client->setStatus(Client::ORDER_PLACED);
         $client->setConnectedOrder($order);
+        $this->em->persist($order);
         $this->em->flush();
         return $order;
     }

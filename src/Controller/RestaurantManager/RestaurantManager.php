@@ -48,10 +48,7 @@ class RestaurantManager extends AbstractController
     {
         set_time_limit(1200);
         $restaurant = $this->restaurantProvider->getRestaurant($days);
-
         $result = $this->restaurantManager->startRestaurant($restaurant);
-        $this->orderRepository->removeAllOrders();
-        $this->clientRepository->removeAllClients();
 
         return $this->json($result);
     }
@@ -68,6 +65,8 @@ class RestaurantManager extends AbstractController
 
         if (file_exists($filePath)) {
             unlink($filePath);
+            $this->orderRepository->removeAllOrders();
+            $this->clientRepository->removeAllClients();
             $message = 'Restaurant closed!';
         } else {
             $message = 'Restaurant not found!';

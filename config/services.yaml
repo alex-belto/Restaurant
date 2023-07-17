@@ -26,9 +26,21 @@ services:
     App\DataFixtures\MenuFixtures:
         tags: ['doctrine.fixture.orm']
 
-    App\Services\Payment\PayOrder:
+    App\Services\Payment\Payment:
         arguments:
             - '@doctrine.orm.default_entity_manager'
+
+    App\Services\Payment\CashPaymentProcessor:
+        public: true
+
+    App\Services\Payment\CardPaymentProcessor:
+        public: true
+
+    App\Services\Payment\TipsCardPaymentDecorator:
+        public: true
+
+    App\Services\Payment\TipsCashPaymentDecorator:
+        public: true
 
     App\EventListener\Waiter\WaiterListener:
         tags:

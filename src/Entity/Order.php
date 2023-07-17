@@ -15,10 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: '`order`')]
 class Order
 {
-    public const READY_TO_EAT = 1;
-    public const READY_TO_WAITER = 2;
-    public const READY_TO_KITCHEN = 3;
-    public const DONE = 4;
+    public const READY_TO_WAITER = 1;
+    public const READY_TO_KITCHEN = 2;
+    public const DONE = 3;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -34,14 +33,11 @@ class Order
     #[ORM\ManyToOne(inversedBy: 'orders')]
     private ?Waiter $waiter = null;
 
-    #[ORM\Column]
-    private int $status;
+    #[ORM\Column(nullable: true)]
+    private ?int $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'orders')]
     private ?Kitchener $kitchener = null;
-
-    #[ORM\Column]
-    private ?float $price = 0;
 
     #[ORM\Column(nullable: true)]
     private ?int $tips = null;
@@ -66,11 +62,8 @@ class Order
 
     public function addMenuItem(MenuItem $menuItem): static
     {
-        if (!$this->menuItems->contains($menuItem)) {
-            $this->menuItems->add($menuItem);
-            $menuItem->setConnectedOrder($this);
-            $this->price += $menuItem->getPrice();
-        }
+        $this->menuItems->add($menuItem);
+        $menuItem->setConnectedOrder($this);
 
         return $this;
     }
@@ -81,7 +74,6 @@ class Order
             // set the owning side to null (unless already changed)
             if ($menuItem->getConnectedOrder() === $this) {
                 $menuItem->setConnectedOrder(null);
-                $this->price -= $menuItem->getPrice();
             }
         }
 
@@ -112,12 +104,12 @@ class Order
         return $this;
     }
 
-    public function getStatus(): int
+    public function getStatus(): ?int
     {
         return $this->status;
     }
 
-    public function setStatus(int $status): static
+    public function setStatus(?int $status): static
     {
         $this->status = $status;
 
@@ -138,19 +130,21 @@ class Order
 
     public function getPrice(): ?float
     {
-        return $this->price;
-    }
+        $orderItems = $this->menuItems;
+        $orderPrice = 0;
 
-    public function setPrice(float $price): static
-    {
-        $this->price = $price;
+        foreach ($orderItems as $orderItem)
+        {
+            $price = $orderItem->getPrice();
+            $orderPrice += $price;
+        }
 
-        return $this;
+        return $orderPrice;
     }
 
     public function getTips(): ?int
     {
-        return $this->tips;
+        return $this->getPrice()/100 * $this->tips;
     }
 
     public function setTips(?int $tips): static

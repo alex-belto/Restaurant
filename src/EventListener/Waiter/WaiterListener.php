@@ -28,9 +28,7 @@ class WaiterListener
 
     public function processOrderByWaiter(Client $client, LifecycleEventArgs $eventArgs): void
     {
-        $changeSet = $eventArgs->getObjectManager()->getUnitOfWork()->getEntityChangeSet($client);
-
-        if (isset($changeSet['status'])) {
+        if ($client->getStatus() === Client::ORDER_PLACED) {
             $this->waiterOrderProcessor->processingOrder($client->getConnectedOrder());
         }
     }
@@ -41,7 +39,6 @@ class WaiterListener
             return;
         }
 
-        $order->setStatus(Order::READY_TO_EAT);
         $kitchener = $order->getKitchener();
         $kitchener->removeOrder($order);
         $this->waiterOrderProcessor->bringFood($order);

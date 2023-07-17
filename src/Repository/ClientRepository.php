@@ -56,7 +56,7 @@ class ClientRepository extends ServiceEntityRepository
         return $qb
             ->select('coalesce(count(o), 0)')
             ->innerJoin('c.connectedOrder', 'o')
-            ->where('o.tips IS NOT NULL')
+            ->where('o.tips != 0')
             ->getQuery()
             ->getSingleScalarResult();
     }

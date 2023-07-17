@@ -5,6 +5,7 @@ namespace App\Services\Tips;
 use App\Entity\Kitchener;
 use App\Entity\Order;
 use App\Entity\Waiter;
+use App\Interfaces\StaffInterface;
 use App\Interfaces\TipsStrategyInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -31,27 +32,17 @@ class TipsWaiterStrategy implements TipsStrategyInterface
         $restaurant = $order->getWaiter()->getRestaurant();
         $headWaiter = $order->getWaiter();
         $orderOwnerTips = ($tips / 100) * 60;
-        $waiters = $restaurant->getWaiters();
-        $kitcheners = $restaurant->getKitcheners();
-        $amountOfStaff = count($waiters) + count($kitcheners) - 1;
+        $staffs = array_merge($restaurant->getWaiters(), $restaurant->getKitcheners());
+        $amountOfStaff = count($staffs) - 1;
         $tipsForEach = ($tips - $orderOwnerTips) / $amountOfStaff;
 
-        /** @var Kitchener $kitchener */
-        foreach ($kitcheners as $kitchener) {
-            $kitchenerTips = $kitchener->getTips() + $tipsForEach;
-            $kitchener->setTips($kitchenerTips);
-        }
-        $this->em->flush();
-
-        /** @var Waiter $waiter */
-        foreach ($waiters as $waiter) {
-            if ($waiter === $headWaiter) {
-                $waiter->setTips($orderOwnerTips);
+        /** @var StaffInterface $staff */
+        foreach ($staffs as $staff) {
+            if ($staff === $headWaiter) {
+                $staff->setTips($orderOwnerTips);
             }
-            $waiterTips = $waiter->getTips() + $tipsForEach;
-            $waiter->setTips($waiterTips);
+            $staffTips = $staff->getTips() + $tipsForEach;
+            $staff->setTips($staffTips);
         }
-        $this->em->flush();
-
     }
 }

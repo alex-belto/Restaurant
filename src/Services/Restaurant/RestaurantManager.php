@@ -12,7 +12,6 @@ use App\Services\Client\ClientFactory;
 class RestaurantManager
 {
     private ClientFactory $clientFactory;
-
     private ClientRepository $clientRepository;
 
     public function __construct(
@@ -32,7 +31,7 @@ class RestaurantManager
         $visitorsForAllTime = 0;
 
         for ($i = 1; $i <= $days; $i++) {
-            $visitorsPerDay = rand(50, 400);
+            $visitorsPerDay = rand(10, 40);
             $visitorsForAllTime += $visitorsPerDay;
 
             for ($j = 1; $j <= $visitorsPerDay; $j++) {

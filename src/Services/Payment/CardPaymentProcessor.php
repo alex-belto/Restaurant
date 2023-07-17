@@ -34,7 +34,9 @@ class CardPaymentProcessor implements PaymentInterface
     {
         if (!$this->cardValidation->isCardValid($client)) {
             $this->cashPaymentProcessor->pay($client, $order);
+        } else {
+            $this->processingPayment->payOrder($client, $order);
         }
-        $this->processingPayment->payOrder($client, $order);
+
     }
 }

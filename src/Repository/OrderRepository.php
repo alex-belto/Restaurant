@@ -39,27 +39,4 @@ class OrderRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
-    public function removeAllOrders(): void
-    {
-        $qb = $this->createQueryBuilder('o');
-        $qbOrderItem = $this->createQueryBuilder('oi');
-
-        $qbOrderItem
-            ->update(OrderItem::class, 'oi')
-            ->set('oi.connectedOrder', 'NULL')
-            ->getQuery()
-            ->execute();
-
-        $qb
-            ->update(Order::class, 'o')
-            ->set('o.client', 'NULL')
-            ->getQuery()
-            ->execute();
-
-        $qb
-            ->delete(Order::class)
-            ->getQuery()
-            ->execute();
-    }
 }

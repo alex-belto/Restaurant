@@ -2,9 +2,9 @@
 
 namespace App\Controller\RestaurantManager;
 
-use App\Repository\ClientRepository;
-use App\Repository\OrderRepository;
 use App\Repository\RestaurantRepository;
+use App\Services\Cleaner\ClientCleaner;
+use App\Services\Cleaner\OrderCleaner;
 use \App\Services\Restaurant\RestaurantManager as Manager;
 use App\Services\Restaurant\RestaurantProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,23 +20,23 @@ class RestaurantManager extends AbstractController
 
     private RestaurantProvider $restaurantProvider;
 
-    private ClientRepository $clientRepository;
+    private ClientCleaner $clientCleaner;
 
-    private OrderRepository $orderRepository;
+    private OrderCleaner $orderCleaner;
 
     private RestaurantRepository $restaurantRepository;
 
     public function __construct(
         Manager                $restaurantManager,
-        ClientRepository       $clientRepository,
+        ClientCleaner          $clientCleaner,
         RestaurantProvider     $restaurantProvider,
-        OrderRepository        $orderRepository,
+        OrderCleaner           $orderCleaner,
         RestaurantRepository   $restaurantRepository
     ) {
         $this->restaurantManager = $restaurantManager;
-        $this->clientRepository = $clientRepository;
+        $this->clientCleaner = $clientCleaner;
         $this->restaurantProvider = $restaurantProvider;
-        $this->orderRepository = $orderRepository;
+        $this->orderCleaner = $orderCleaner;
         $this->restaurantRepository = $restaurantRepository;
     }
 
@@ -65,8 +65,8 @@ class RestaurantManager extends AbstractController
 
         if (file_exists($filePath)) {
             unlink($filePath);
-            $this->orderRepository->removeAllOrders();
-            $this->clientRepository->removeAllClients();
+            $this->orderCleaner->removeAllOrders();
+            $this->clientCleaner->removeAllClients();
             $message = 'Restaurant closed!';
         } else {
             $message = 'Restaurant not found!';

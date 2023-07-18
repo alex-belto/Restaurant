@@ -14,4 +14,9 @@ RUN docker-php-ext-install zip \
     pdo_pgsql\
     pgsql
 
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
+
+COPY ./docker/php/xdebug.ini "${PHP_INI_DIR}/conf.d"
+
 WORKDIR /var/www/app

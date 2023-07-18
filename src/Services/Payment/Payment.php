@@ -10,11 +10,6 @@ use App\Entity\Order;
  */
 class Payment
 {
-    /**
-     * @param Client $client
-     * @param Order $order
-     * @throws \Exception
-     */
     public function payOrder(
         Client $client,
         Order $order
@@ -25,5 +20,4 @@ class Payment
         $restaurantBalance = $restaurant->getBalance() + $order->getPrice();
         $restaurant->setBalance($restaurantBalance);
     }
-
 }

@@ -11,26 +11,12 @@ use App\Interfaces\PaymentInterface;
  */
 class CardPaymentProcessor implements PaymentInterface
 {
-    /**
-     * @var Payment
-     */
-    private $processingPayment;
+    private Payment $processingPayment;
 
-    /**
-     * @var CardValidation
-     */
-    private $cardValidation;
+    private CardValidation $cardValidation;
 
-    /**
-     * @var CashPaymentProcessor
-     */
-    private $cashPaymentProcessor;
+    private CashPaymentProcessor $cashPaymentProcessor;
 
-    /**
-     * @param Payment $processingPayment
-     * @param CardValidation $cardValidation
-     * @param CashPaymentProcessor $cashPaymentProcessor
-     */
     public function __construct(
         Payment        $processingPayment,
         CardValidation $cardValidation,
@@ -46,10 +32,11 @@ class CardPaymentProcessor implements PaymentInterface
      */
     public function pay(Client $client, Order $order): void
     {
-        if ($this->cardValidation->isCardValid($client)) {
-           $this->processingPayment->payOrder($client, $order);
-        } else {
+        if (!$this->cardValidation->isCardValid($client)) {
             $this->cashPaymentProcessor->pay($client, $order);
+        } else {
+            $this->processingPayment->payOrder($client, $order);
         }
+
     }
 }

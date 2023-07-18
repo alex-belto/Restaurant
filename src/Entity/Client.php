@@ -20,13 +20,13 @@ class Client
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column]
-    private ?float $money = null;
+    private float $money;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\Column(nullable: true)]
     private ?string $cardNumber = null;
@@ -46,12 +46,12 @@ class Client
     #[ORM\Column]
     private int $status = self::WITHOUT_ORDER;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getMoney(): ?float
+    public function getMoney(): float
     {
         return $this->money;
     }
@@ -63,7 +63,7 @@ class Client
         return $this;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -146,5 +146,11 @@ class Client
         $this->status = $status;
 
         return $this;
+    }
+
+    public function isEnoughMoney(): bool
+    {
+        $orderAmountSum = $this->connectedOrder->getPrice() + $this->connectedOrder->getTips();
+        return $this->money >= $orderAmountSum;
     }
 }

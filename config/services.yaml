@@ -26,18 +26,30 @@ services:
     App\DataFixtures\MenuFixtures:
         tags: ['doctrine.fixture.orm']
 
-    App\Services\Payment\PayOrder:
+    App\Services\Payment\Payment:
         arguments:
             - '@doctrine.orm.default_entity_manager'
 
+    App\Services\Payment\CashPaymentProcessor:
+        public: true
+
+    App\Services\Payment\CardPaymentProcessor:
+        public: true
+
+    App\Services\Payment\TipsCardPaymentDecorator:
+        public: true
+
+    App\Services\Payment\TipsCashPaymentDecorator:
+        public: true
+
     App\EventListener\Waiter\WaiterListener:
         tags:
-            - { name: 'doctrine.orm.entity_listener', event: 'postUpdate', entity: 'App\Entity\Client', method: 'processingOrderByWaiter'}
+            - { name: 'doctrine.orm.entity_listener', event: 'postUpdate', entity: 'App\Entity\Client', method: 'processOrderByWaiter'}
             - { name: 'doctrine.orm.entity_listener', event: 'postUpdate', entity: 'App\Entity\Order', method: 'deliveryOrder' }
 
     App\EventListener\Kitchener\KitchenerListener:
         tags:
-            - { name: 'doctrine.orm.entity_listener', event: 'postUpdate', entity: 'App\Entity\Order', method: 'processingOrderByKitchen' }
+            - { name: 'doctrine.orm.entity_listener', event: 'postUpdate', entity: 'App\Entity\Order', method: 'processOrderByKitchen' }
 
     App\EventListener\Client\ClientListener:
         tags:

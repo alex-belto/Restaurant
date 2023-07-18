@@ -39,16 +39,6 @@ class ClientRepository extends ServiceEntityRepository
         }
     }
 
-    public function dropClients(): void
-    {
-        $qb = $this->createQueryBuilder('c');
-
-        $qb
-            ->delete(Client::class, 'c')
-            ->getQuery()
-            ->execute();
-    }
-
     public function getAmountOfClientsWithTips(): int
     {
         $qb = $this->createQueryBuilder('c');
@@ -56,43 +46,8 @@ class ClientRepository extends ServiceEntityRepository
         return $qb
             ->select('coalesce(count(o), 0)')
             ->innerJoin('c.connectedOrder', 'o')
-            ->where('o.tips IS NOT NULL')
+            ->where('o.tips != 0')
             ->getQuery()
             ->getSingleScalarResult();
     }
-
-    public function removeAllClients(): void
-    {
-        $qb = $this->createQueryBuilder('c');
-
-        $qb
-            ->delete(Client::class)
-            ->getQuery()
-            ->execute();
-    }
-
-//    /**
-//     * @return Client[] Returns an array of Client objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Client
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

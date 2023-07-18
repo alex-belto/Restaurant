@@ -18,19 +18,19 @@ class Waiter implements StaffInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\OneToMany(mappedBy: 'waiter', targetEntity: Client::class)]
     private Collection $clients;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $tips = null;
+    #[ORM\Column]
+    private float $tips = 0;
 
     #[ORM\OneToMany(mappedBy: 'waiter', targetEntity: Order::class)]
     private Collection $orders;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\ManyToOne(cascade: ['persist', 'remove'], inversedBy: 'waiters')]
     private ?Restaurant $restaurant = null;
@@ -76,12 +76,12 @@ class Waiter implements StaffInterface
         return $this;
     }
 
-    public function getTips(): ?float
+    public function getTips(): float
     {
         return $this->tips;
     }
 
-    public function setTips(?float $tips): static
+    public function setTips(float $tips): static
     {
         $this->tips = $tips;
 
@@ -118,7 +118,7 @@ class Waiter implements StaffInterface
         return $this;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }

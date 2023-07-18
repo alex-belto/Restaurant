@@ -38,29 +38,4 @@ class KitchenerRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
-//    /**
-//     * @return KitchenerOrderProcessor[] Returns an array of KitchenerOrderProcessor objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('k')
-//            ->andWhere('k.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('k.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?KitchenerOrderProcessor
-//    {
-//        return $this->createQueryBuilder('k')
-//            ->andWhere('k.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

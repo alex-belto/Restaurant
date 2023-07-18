@@ -13,21 +13,10 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class WaiterOrderProcessor implements OrderManagerInterface
 {
+    private EntityManagerInterface $em;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private StaffResolver $staffResolver;
 
-    /**
-     * @var StaffResolver
-     */
-    private $staffResolver;
-
-    /**
-     * @param EntityManagerInterface $em
-     * @param StaffResolver $staffResolver
-     */
     public function __construct(
         EntityManagerInterface $em,
         StaffResolver $staffResolver

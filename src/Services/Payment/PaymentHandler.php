@@ -3,66 +3,25 @@
 namespace App\Services\Payment;
 
 use App\Entity\Client;
+use App\Interfaces\PaymentInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Selects a random payment method and processes the payment for an order.
  */
 class PaymentHandler
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private EntityManagerInterface $em;
+    private ContainerInterface $container;
 
-    /**
-     * @var CashPaymentProcessor
-     */
-    private $cashPaymentProcessor;
-
-    /**
-     * @var CardPaymentProcessor
-     */
-    private $cardPaymentProcessor;
-
-    /**
-     * @var TipsCashPaymentDecorator
-     */
-    private $tipsCashPayment;
-
-    /**
-     * @var TipsCardPaymentDecorator
-     */
-    private $tipsCardPayment;
-
-    /**
-     * @var OrderValue
-     */
-    private $orderValue;
-
-    /**
-     * @param EntityManagerInterface $em
-     * @param CashPaymentProcessor $cashPaymentProcessor
-     * @param CardPaymentProcessor $cardPaymentProcessor
-     * @param TipsCashPaymentDecorator $tipsCashPayment
-     * @param TipsCardPaymentDecorator $tipsCardPayment
-     * @param OrderValue $orderValue
-     */
     public function __construct(
         EntityManagerInterface   $em,
-        CashPaymentProcessor     $cashPaymentProcessor,
-        CardPaymentProcessor     $cardPaymentProcessor,
-        TipsCashPaymentDecorator $tipsCashPayment,
-        TipsCardPaymentDecorator $tipsCardPayment,
-        OrderValue               $orderValue
+        ContainerInterface       $container,
     ) {
         $this->em = $em;
-        $this->cashPaymentProcessor = $cashPaymentProcessor;
-        $this->cardPaymentProcessor = $cardPaymentProcessor;
-        $this->tipsCashPayment = $tipsCashPayment;
-        $this->tipsCardPayment = $tipsCardPayment;
-        $this->orderValue = $orderValue;
+        $this->container = $container;
     }
 
     /**
@@ -70,42 +29,35 @@ class PaymentHandler
      */
     public function payOrder(Client $client): void
     {
-        $orderValue = $this->orderValue->getOrderValue($client);
-        $payment = $this->getPaymentMethod();
-
-        switch ($payment['paymentStrategy']) {
-            case 'cash':
-                $paymentStrategy = $this->cashPaymentProcessor;
-                $isEnoughMoney = $this->orderValue->isEnoughMoney($client);
-                break;
-            case 'card':
-                $paymentStrategy = $this->cardPaymentProcessor;
-                $isEnoughMoney = $this->orderValue->isEnoughMoney($client);
-                break;
-            case 'cash_tips':
-                $paymentStrategy = $this->tipsCashPayment;
-                $isEnoughMoney = $this->orderValue->isEnoughMoney($client, $orderValue);
-                break;
-            case 'card_tips':
-                $paymentStrategy = $this->tipsCardPayment;
-                $isEnoughMoney = $this->orderValue->isEnoughMoney($client, $orderValue);
-                break;
-            default:
-                throw new Exception('wrong payment strategy');
+        if ($client->getStatus() === Client::ORDER_PAYED) {
+            return;
         }
 
+        $payment = $this->getPaymentMethod();
+        $paymentStrategy = match ($payment['paymentStrategy']) {
+            'cash' => $this->container->get('App\Services\Payment\CashPaymentProcessor'),
+            'card' => $this->container->get('App\Services\Payment\CardPaymentProcessor'),
+            'cash_tips' => $this->container->get('App\Services\Payment\TipsCashPaymentDecorator'),
+            'card_tips' => $this->container->get('App\Services\Payment\TipsCardPaymentDecorator'),
+            default => throw new Exception('wrong payment strategy'),
+        };
+
         try {
-            if ($isEnoughMoney) {
-                $paymentStrategy->pay($client, $client->getConnectedOrder());
-                $client->setStatus(Client::ORDER_PAYED);
-                $this->em->flush();
+            if (!$client->isEnoughMoney()) {
+                throw new \Exception('Client dont have enough money!');
             }
+
+            /** @var PaymentInterface $paymentStrategy */
+            $paymentStrategy->pay($client, $client->getConnectedOrder());
+            $client->setStatus(Client::ORDER_PAYED);
+            $this->em->flush();
+
         } catch(\Throwable $e) {
             throw new Exception($e->getMessage());
         }
     }
 
-    public function getPaymentMethod(): array
+    private function getPaymentMethod(): array
     {
         $strategyNumber = rand(1,4);
 
@@ -119,6 +71,5 @@ class PaymentHandler
         return [
             'paymentStrategy' => $paymentStrategy
         ];
-
     }
 }

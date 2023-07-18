@@ -16,13 +16,13 @@ class Restaurant
 {
     public const TIPS_STANDARD_STRATEGY = 1;
     public const TIPS_WAITER_STRATEGY = 2;
-    public const WORK_HOURS = 8;
-    public const MAX_VISITORS_PER_HOUR = 50;
+    private const WORK_HOURS = 8;
+    private const MAX_VISITORS_PER_HOUR = 50;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Waiter::class)]
     private Collection $waiters;
@@ -30,19 +30,17 @@ class Restaurant
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Kitchener::class)]
     private Collection $kitcheners;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $balance = 0;
+    #[ORM\Column]
+    private float $balance = 0;
 
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: MenuItem::class)]
     private Collection $menuItems;
 
     #[ORM\Column]
-    private ?int $tipsStrategy = self::TIPS_STANDARD_STRATEGY;
-
-    private static ?Restaurant $instance = null;
+    private int $tipsStrategy = self::TIPS_STANDARD_STRATEGY;
 
     #[ORM\Column]
-    private ?int $days = 0;
+    private int $days = 0;
 
     public function __construct()
     {
@@ -51,13 +49,13 @@ class Restaurant
         $this->menuItems = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
-     * @return Collection<int, Waiter>
+     * @return Collection<int, Waiter>| Waiter[]
      */
     public function getWaiters(): Collection
     {
@@ -87,7 +85,7 @@ class Restaurant
     }
 
     /**
-     * @return Collection<int, Kitchener>
+     * @return Collection<int, Kitchener>| Kitchener[]
      */
     public function getKitcheners(): Collection
     {
@@ -116,12 +114,12 @@ class Restaurant
         return $this;
     }
 
-    public function getBalance(): ?float
+    public function getBalance(): float
     {
         return $this->balance;
     }
 
-    public function setBalance(?float $balance): static
+    public function setBalance(float $balance): static
     {
         $this->balance = $balance;
 
@@ -129,7 +127,7 @@ class Restaurant
     }
 
     /**
-     * @return Collection<int, MenuItem>
+     * @return Collection<int, MenuItem>| MenuItem[]
      */
     public function getMenuItems(): Collection
     {
@@ -158,7 +156,7 @@ class Restaurant
         return $this;
     }
 
-    public function getTipsStrategy(): ?int
+    public function getTipsStrategy(): int
     {
         return $this->tipsStrategy;
     }
@@ -170,7 +168,7 @@ class Restaurant
         return $this;
     }
 
-    public function getDays(): ?int
+    public function getDays(): int
     {
         return $this->days;
     }
@@ -181,4 +179,10 @@ class Restaurant
 
         return $this;
     }
+
+    public function getMaxVisitorsPerDay(): int
+    {
+        return Restaurant::WORK_HOURS * Restaurant::MAX_VISITORS_PER_HOUR;
+    }
+
 }

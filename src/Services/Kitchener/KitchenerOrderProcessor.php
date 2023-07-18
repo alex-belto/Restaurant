@@ -13,15 +13,9 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class KitchenerOrderProcessor implements OrderManagerInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /**
-     * @var StaffResolver
-     */
-    private $staffResolver;
+    private StaffResolver $staffResolver;
 
     /**
      * @param EntityManagerInterface $em

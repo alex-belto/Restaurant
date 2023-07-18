@@ -11,20 +11,12 @@ use App\Interfaces\PaymentInterface;
  */
 class CashPaymentProcessor implements PaymentInterface
 {
-    /**
-     * @var Payment
-     */
-    private $processingPayment;
+    private Payment $processingPayment;
 
     public function __construct(Payment $processingPayment) {
         $this->processingPayment = $processingPayment;
     }
 
-    /**
-     * @param Client $client
-     * @param Order $order
-     * @throws \Exception
-     */
     public function pay(Client $client, Order $order): void
     {
        $this->processingPayment->payOrder($client, $order);

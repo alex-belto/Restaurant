@@ -10,25 +10,24 @@ use App\Services\Kitchener\KitchenerOrderProcessor;
  */
 class KitchenerListener
 {
-    /**
-     * @var KitchenerOrderProcessor
-     */
-    private $kitchenerOrderProcessor;
+    private KitchenerOrderProcessor $kitchenerOrderProcessor;
 
-    /**
-     * @param KitchenerOrderProcessor $kitchenerOrderProcessor
-     */
     public function __construct(
         KitchenerOrderProcessor $kitchenerOrderProcessor
     ) {
         $this->kitchenerOrderProcessor = $kitchenerOrderProcessor;
     }
 
-    public function processingOrderByKitchen(Order $order) {
+    /**
+     * @throws \Exception
+     */
+    public function processOrderByKitchen(Order $order) {
 
-        if ($order->getStatus() === Order::READY_TO_KITCHEN) {
-            $this->kitchenerOrderProcessor->processingOrder($order);
+        if ($order->getStatus() !== Order::READY_TO_KITCHEN) {
+            return;
         }
+
+        $this->kitchenerOrderProcessor->processingOrder($order);
     }
 
 }

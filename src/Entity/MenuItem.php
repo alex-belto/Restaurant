@@ -6,7 +6,7 @@ use App\Repository\MenuItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Stores information about menu items, including their name,
+ * Represents menu item, including their name,
  * preparation time, price, associated restaurant, and related order.
  */
 #[ORM\Entity(repositoryClass: MenuItemRepository::class)]
@@ -18,32 +18,32 @@ class MenuItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255)]
-    protected ?string $name = null;
+    protected string $name;
 
     #[ORM\Column]
-    protected ?float $price = null;
+    protected float $price;
 
     #[ORM\Column(length: 255)]
-    protected ?string $time = null;
+    protected string $time;
 
     #[ORM\Column(length: 255)]
-    private ?int $type = null;
-
-    #[ORM\ManyToOne(inversedBy: 'menuItems')]
-    private ?Order $connectedOrder = null;
+    private int $type;
 
     #[ORM\ManyToOne(inversedBy: 'MenuItems')]
     private ?Restaurant $restaurant = null;
 
-    public function getId(): ?int
+    #[ORM\ManyToOne(inversedBy: 'menuItem')]
+    private ?OrderItem $orderItem = null;
+
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -55,7 +55,7 @@ class MenuItem
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): float
     {
         return $this->price;
     }
@@ -79,7 +79,7 @@ class MenuItem
         return $this;
     }
 
-    public function getType(): ?int
+    public function getType(): int
     {
         return $this->type;
     }
@@ -87,18 +87,6 @@ class MenuItem
     public function setType(int $type): static
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    public function getConnectedOrder(): ?Order
-    {
-        return $this->connectedOrder;
-    }
-
-    public function setConnectedOrder(?Order $connectedOrder): static
-    {
-        $this->connectedOrder = $connectedOrder;
 
         return $this;
     }
@@ -111,6 +99,18 @@ class MenuItem
     public function setRestaurant(?Restaurant $restaurant): static
     {
         $this->restaurant = $restaurant;
+
+        return $this;
+    }
+
+    public function getOrderItem(): ?OrderItem
+    {
+        return $this->orderItem;
+    }
+
+    public function setOrderItem(?OrderItem $orderItem): static
+    {
+        $this->orderItem = $orderItem;
 
         return $this;
     }

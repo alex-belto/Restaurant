@@ -2,12 +2,11 @@
 
 namespace App\Controller\RestaurantManager;
 
-use App\Repository\ClientRepository;
-use App\Repository\OrderRepository;
 use App\Repository\RestaurantRepository;
-use App\Services\Restaurant\RestaurantBuilder;
+use App\Services\Cleaner\ClientCleaner;
+use App\Services\Cleaner\OrderCleaner;
 use \App\Services\Restaurant\RestaurantManager as Manager;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Services\Restaurant\RestaurantProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,57 +16,27 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class RestaurantManager extends AbstractController
 {
-    /**
-     * @var Manager
-     */
-    private $restaurantManager;
+    private Manager $restaurantManager;
 
-    /**
-     * @var RestaurantBuilder
-     */
-    private $restaurantBuilder;
+    private RestaurantProvider $restaurantProvider;
 
-    /**
-     * @var ClientRepository
-     */
-    private $clientRepository;
+    private ClientCleaner $clientCleaner;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private OrderCleaner $orderCleaner;
 
-    /**
-     * @var OrderRepository
-     */
-    private $orderRepository;
+    private RestaurantRepository $restaurantRepository;
 
-    /**
-     * @var RestaurantRepository
-     */
-    private $restaurantRepository;
-
-    /**
-     * @param Manager $restaurantManager
-     * @param ClientRepository $clientRepository
-     * @param EntityManagerInterface $em
-     * @param RestaurantBuilder $restaurantBuilder
-     * @param OrderRepository $orderRepository
-     * @param RestaurantRepository $restaurantRepository
-     */
     public function __construct(
         Manager                $restaurantManager,
-        ClientRepository       $clientRepository,
-        EntityManagerInterface $em,
-        RestaurantBuilder      $restaurantBuilder,
-        OrderRepository        $orderRepository,
+        ClientCleaner          $clientCleaner,
+        RestaurantProvider     $restaurantProvider,
+        OrderCleaner           $orderCleaner,
         RestaurantRepository   $restaurantRepository
     ) {
         $this->restaurantManager = $restaurantManager;
-        $this->clientRepository = $clientRepository;
-        $this->em = $em;
-        $this->restaurantBuilder = $restaurantBuilder;
-        $this->orderRepository = $orderRepository;
+        $this->clientCleaner = $clientCleaner;
+        $this->restaurantProvider = $restaurantProvider;
+        $this->orderCleaner = $orderCleaner;
         $this->restaurantRepository = $restaurantRepository;
     }
 
@@ -78,11 +47,8 @@ class RestaurantManager extends AbstractController
     public function openRestaurant(int $days): JsonResponse
     {
         set_time_limit(1200);
-        $restaurant = $this->restaurantBuilder->getRestaurant($days);
-
+        $restaurant = $this->restaurantProvider->getRestaurant($days);
         $result = $this->restaurantManager->startRestaurant($restaurant);
-        $this->orderRepository->removeAllOrders();
-        $this->clientRepository->removeAllClients();
 
         return $this->json($result);
     }
@@ -94,10 +60,13 @@ class RestaurantManager extends AbstractController
     #[Route('restaurant/close', name: 'close_restaurant', methods: ['GET'])]
     public function dropRestaurant(): JsonResponse
     {
-        $filePath = '/var/www/app/public/restaurant.txt';
+        $basePath = realpath(__DIR__ . '/../../..');
+        $filePath = $basePath . $_ENV['FILE_PATH'];
 
         if (file_exists($filePath)) {
             unlink($filePath);
+            $this->orderCleaner->removeAllOrders();
+            $this->clientCleaner->removeAllClients();
             $message = 'Restaurant closed!';
         } else {
             $message = 'Restaurant not found!';

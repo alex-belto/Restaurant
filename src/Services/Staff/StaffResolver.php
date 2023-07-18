@@ -2,38 +2,20 @@
 
 namespace App\Services\Staff;
 
-use App\Entity\Kitchener;
-use App\Entity\Waiter;
 use App\Interfaces\StaffInterface;
-use App\Services\Restaurant\RestaurantBuilder;
-use Doctrine\ORM\EntityManagerInterface;
-use Faker\Factory;
+use App\Services\Restaurant\RestaurantProvider;
 
 /**
  * Responsible for creating staff and choose staff to restaurant.
  */
 class StaffResolver
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private RestaurantProvider $restaurantProvider;
 
-    /**
-     * @var RestaurantBuilder
-     */
-    private $restaurantBuilder;
-
-    /**
-     * @param EntityManagerInterface $em
-     * @param RestaurantBuilder $restaurantBuilder
-     */
     public function __construct(
-        EntityManagerInterface $em,
-        RestaurantBuilder $restaurantBuilder
+        RestaurantProvider $restaurantProvider
     ) {
-        $this->em = $em;
-        $this->restaurantBuilder = $restaurantBuilder;
+        $this->restaurantProvider = $restaurantProvider;
     }
 
     /**
@@ -41,7 +23,7 @@ class StaffResolver
      */
     public function chooseStaff(string $type): StaffInterface
     {
-        $restaurant = $this->restaurantBuilder->getRestaurant();
+        $restaurant = $this->restaurantProvider->getRestaurant();
 
         $staffs = match ($type) {
             'waiter' => $restaurant->getWaiters(),
@@ -52,21 +34,5 @@ class StaffResolver
         $amountOfStaffs = count($staffs);
         $randomStaffId = rand(0, $amountOfStaffs - 1);
         return $staffs[$randomStaffId];
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function createStaff(string $type): void
-    {
-        $faker = Factory::create();
-        $staff = match ($type) {
-            'waiter' => new Waiter(),
-            'kitchener' => new Kitchener(),
-            default => throw new \Exception('wrong type' . $type)
-        };
-        $staff->setName($faker->name());
-        $this->em->persist($staff);
-        $this->em->flush();
     }
 }

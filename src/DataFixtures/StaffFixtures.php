@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Services\Staff\StaffResolver;
+use App\Services\Staff\StaffFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -11,26 +11,20 @@ use Doctrine\Persistence\ObjectManager;
  */
 class StaffFixtures extends Fixture
 {
-    /**
-     * @var StaffResolver
-     */
-    private $staffResolver;
+    private StaffFactory $staffFactory;
 
-    /**
-     * @param StaffResolver $staffResolver
-     */
-    public function __construct(StaffResolver $staffResolver) {
-        $this->staffResolver = $staffResolver;
+    public function __construct(StaffFactory $staffFactory) {
+        $this->staffFactory = $staffFactory;
     }
 
     public function load(ObjectManager $manager)
     {
         for ($i = 1; $i <= 7; $i++) {
-            $this->staffResolver->createStaff('waiter');
+            $this->staffFactory->createWaiter();
         }
 
         for ($i = 1; $i <= 3; $i++) {
-            $this->staffResolver->createStaff('kitchener');
+            $this->staffFactory->createKitchener();
         }
 
     }

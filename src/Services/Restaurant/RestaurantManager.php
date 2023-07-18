@@ -2,45 +2,23 @@
 
 namespace App\Services\Restaurant;
 
-use App\Entity\Kitchener;
 use App\Entity\Restaurant;
-use App\Entity\Waiter;
 use App\Repository\ClientRepository;
-use App\Services\Client\ClientManager;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Services\Client\ClientFactory;
 
 /**
  * Responsible for executing the overall logic and operations of a restaurant.
  */
 class RestaurantManager
 {
-    /**
-     * @var ClientManager
-     */
-    private $clientManager;
+    private ClientFactory $clientFactory;
+    private ClientRepository $clientRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * @var ClientRepository
-     */
-    private $clientRepository;
-
-    /**
-     * @param ClientManager $clientManager
-     * @param EntityManagerInterface $em
-     * @param ClientRepository $clientRepository
-     */
     public function __construct(
-        ClientManager $clientManager,
-        EntityManagerInterface $em,
+        ClientFactory $clientFactory,
         ClientRepository $clientRepository
     ) {
-        $this->clientManager = $clientManager;
-        $this->em = $em;
+        $this->clientFactory = $clientFactory;
         $this->clientRepository = $clientRepository;
     }
 
@@ -53,18 +31,17 @@ class RestaurantManager
         $visitorsForAllTime = 0;
 
         for ($i = 1; $i <= $days; $i++) {
-            $visitorsPerDay = rand(50, 400);
+            $visitorsPerDay = rand(10, $restaurant->getMaxVisitorsPerDay());
             $visitorsForAllTime += $visitorsPerDay;
 
             for ($j = 1; $j <= $visitorsPerDay; $j++) {
-                $this->clientManager->addClient(true);
+                $this->clientFactory->createClient(true);
             }
         }
 
         $visitorsWithTips = $this->clientRepository->getAmountOfClientsWithTips();
 
         $waiterBalance = [];
-        /** @var Waiter $waiter */
         foreach ($restaurant->getWaiters() as $waiter) {
             $waiterBalance[] = [
                 'waiter_name' => $waiter->getName(),
@@ -73,7 +50,6 @@ class RestaurantManager
         }
 
         $kitchenersBalance = [];
-        /** @var Kitchener $kitchener */
         foreach ($restaurant->getKitcheners() as $kitchener) {
             $kitchenersBalance[] = [
                 'kitchener_name' => $kitchener->getName(),

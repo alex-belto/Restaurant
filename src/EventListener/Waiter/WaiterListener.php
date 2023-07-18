@@ -14,20 +14,10 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
  */
 class WaiterListener
 {
-    /**
-     * @var WaiterOrderProcessor
-     */
-    private $waiterOrderProcessor;
+    private WaiterOrderProcessor $waiterOrderProcessor;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /**
-     * @param WaiterOrderProcessor $waiterOrderProcessor
-     * @param EntityManagerInterface $em
-     */
     public function __construct(
         WaiterOrderProcessor   $waiterOrderProcessor,
         EntityManagerInterface $em,
@@ -36,31 +26,22 @@ class WaiterListener
         $this->em = $em;
     }
 
-    /**
-     * @param Client $client
-     * @param LifecycleEventArgs $eventArgs
-     * @throws \Exception
-     */
-    public function processingOrderByWaiter(Client $client, LifecycleEventArgs $eventArgs): void
+    public function processOrderByWaiter(Client $client, LifecycleEventArgs $eventArgs): void
     {
-        $changeSet = $eventArgs->getObjectManager()->getUnitOfWork()->getEntityChangeSet($client);
-
-        if (isset($changeSet['status'])) {
+        if ($client->getStatus() === Client::ORDER_PLACED) {
             $this->waiterOrderProcessor->processingOrder($client->getConnectedOrder());
         }
     }
 
-    /**
-     * @param Order $order
-     */
     public function deliveryOrder(Order $order): void
     {
-        if ($order->getStatus() === Order::READY_TO_WAITER) {
-            $order->setStatus(Order::READY_TO_EAT);
-            $kitchener = $order->getKitchener();
-            $kitchener->removeOrder($order);
-            $this->waiterOrderProcessor->bringFood($order);
-            $this->em->flush();
+        if ($order->getStatus() !== Order::READY_TO_WAITER) {
+            return;
         }
+
+        $kitchener = $order->getKitchener();
+        $kitchener->removeOrder($order);
+        $this->waiterOrderProcessor->bringFood($order);
+        $this->em->flush();
     }
 }

@@ -10,20 +10,10 @@ use App\Entity\Restaurant;
  */
 class TipsDistributor
 {
-    /**
-     * @var TipsStandardStrategy
-     */
-    private $tipsStandardStrategy;
+    private TipsStandardStrategy $tipsStandardStrategy;
 
-    /**
-     * @var TipsWaiterStrategy
-     */
-    private $tipsWaiterStrategy;
+    private TipsWaiterStrategy $tipsWaiterStrategy;
 
-    /**
-     * @param TipsStandardStrategy $tipsStandardStrategy
-     * @param TipsWaiterStrategy $tipsWaiterStrategy
-     */
     public function __construct(
         TipsStandardStrategy $tipsStandardStrategy,
         TipsWaiterStrategy $tipsWaiterStrategy
@@ -40,7 +30,8 @@ class TipsDistributor
         $restaurant = $order->getWaiter()->getRestaurant();
         $tipsStrategy = match ($restaurant->getTipsStrategy()) {
             Restaurant::TIPS_STANDARD_STRATEGY => $this->tipsStandardStrategy,
-            Restaurant::TIPS_WAITER_STRATEGY => $this->tipsWaiterStrategy
+            Restaurant::TIPS_WAITER_STRATEGY => $this->tipsWaiterStrategy,
+            default => 'wrong tips strategy type!'
         };
         $tipsStrategy->splitTips($order);
     }

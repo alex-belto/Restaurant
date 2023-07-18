@@ -24,9 +24,6 @@ class Order
     #[ORM\Column]
     private int $id;
 
-    #[ORM\OneToMany(mappedBy: 'connectedOrder', targetEntity: MenuItem::class)]
-    private Collection $menuItems;
-
     #[ORM\OneToOne(inversedBy: 'connectedOrder', cascade: ['persist', 'remove'])]
     private Client $client;
 
@@ -42,42 +39,17 @@ class Order
     #[ORM\Column(nullable: true)]
     private ?int $tips = null;
 
+    #[ORM\OneToMany(mappedBy: 'connectedOrder', targetEntity: OrderItem::class)]
+    private Collection $orderItems;
+
     public function __construct()
     {
-        $this->menuItems = new ArrayCollection();
+        $this->orderItems = new ArrayCollection();
     }
 
     public function getId(): int
     {
         return $this->id;
-    }
-
-    /**
-     * @return Collection<int, MenuItem>| MenuItem[]
-     */
-    public function getMenuItems(): Collection
-    {
-        return $this->menuItems;
-    }
-
-    public function addMenuItem(MenuItem $menuItem): static
-    {
-        $this->menuItems->add($menuItem);
-        $menuItem->setConnectedOrder($this);
-
-        return $this;
-    }
-
-    public function removeMenuItem(MenuItem $menuItem): static
-    {
-        if ($this->menuItems->removeElement($menuItem)) {
-            // set the owning side to null (unless already changed)
-            if ($menuItem->getConnectedOrder() === $this) {
-                $menuItem->setConnectedOrder(null);
-            }
-        }
-
-        return $this;
     }
 
     public function getClient(): Client
@@ -130,7 +102,7 @@ class Order
 
     public function getPrice(): ?float
     {
-        $orderItems = $this->menuItems;
+        $orderItems = $this->orderItems;
         $orderPrice = 0;
 
         foreach ($orderItems as $orderItem)
@@ -150,6 +122,36 @@ class Order
     public function setTips(?int $tips): static
     {
         $this->tips = $tips;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OrderItem>
+     */
+    public function getOrderItems(): Collection
+    {
+        return $this->orderItems;
+    }
+
+    public function addOrderItem(OrderItem $orderItem): static
+    {
+        if (!$this->orderItems->contains($orderItem)) {
+            $this->orderItems->add($orderItem);
+            $orderItem->setConnectedOrder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderItem(OrderItem $orderItem): static
+    {
+        if ($this->orderItems->removeElement($orderItem)) {
+            // set the owning side to null (unless already changed)
+            if ($orderItem->getConnectedOrder() === $this) {
+                $orderItem->setConnectedOrder(null);
+            }
+        }
 
         return $this;
     }

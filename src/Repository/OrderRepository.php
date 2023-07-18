@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\MenuItem;
 use App\Entity\Order;
+use App\Entity\OrderItem;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -43,11 +43,11 @@ class OrderRepository extends ServiceEntityRepository
     public function removeAllOrders(): void
     {
         $qb = $this->createQueryBuilder('o');
-        $qbMenuItem = $this->createQueryBuilder('mi');
+        $qbOrderItem = $this->createQueryBuilder('oi');
 
-        $qbMenuItem
-            ->update(MenuItem::class, 'mi')
-            ->set('mi.connectedOrder', 'NULL')
+        $qbOrderItem
+            ->update(OrderItem::class, 'oi')
+            ->set('oi.connectedOrder', 'NULL')
             ->getQuery()
             ->execute();
 

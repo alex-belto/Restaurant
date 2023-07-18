@@ -5,6 +5,7 @@ namespace App\Services\Client;
 use App\Entity\Client;
 use App\Entity\Order;
 use App\Entity\Restaurant;
+use App\Services\OrderItem\OrderItemFactory;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -13,11 +14,14 @@ use Doctrine\ORM\EntityManagerInterface;
 class ClientManager
 {
     private EntityManagerInterface $em;
+    private OrderItemFactory $orderItemFactory;
 
     public function __construct(
         EntityManagerInterface $em,
+        OrderItemFactory $orderItemFactory
     ) {
         $this->em = $em;
+        $this->orderItemFactory = $orderItemFactory;
     }
 
     public function makeOrder(Client $client, Restaurant $restaurant): Order
@@ -30,7 +34,9 @@ class ClientManager
         for ($i = 0; $i < 3; $i++) {
             $item = rand(0, $amountOfMenuItems);
             $menuItem = $menu[$item];
-            $order->addMenuItem($menuItem);
+            $orderItem = $this->orderItemFactory->createOrderItem($menuItem, $order);
+            $this->em->persist($orderItem);
+            $order->addOrderItem($orderItem);
         }
 
         $client->setStatus(Client::ORDER_PLACED);

@@ -42,19 +42,9 @@ class PaymentHandler
             default => throw new Exception('wrong payment strategy'),
         };
 
-        try {
-            if (!$client->isEnoughMoney()) {
-                throw new \Exception('Client dont have enough money!');
-            }
-
             /** @var PaymentInterface $paymentStrategy */
             $paymentStrategy->pay($client, $client->getConnectedOrder());
-            $client->setStatus(Client::ORDER_PAYED);
-            $this->em->flush();
 
-        } catch(\Throwable $e) {
-            throw new Exception($e->getMessage());
-        }
     }
 
     private function getPaymentMethod(): array

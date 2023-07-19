@@ -4,17 +4,10 @@ namespace App\Services\Client;
 
 use App\Entity\Client;
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 
 class ClientFactory
 {
-    private EntityManagerInterface $em;
-
-    public function __construct(EntityManagerInterface $em) {
-        $this->em = $em;
-    }
-
     public function createClient(bool $card = false): Client
     {
         $faker = Factory::create();
@@ -29,8 +22,6 @@ class ClientFactory
             $client->setCardExpirationDate($cardExpiration);
             $client->setCardCvv(rand(001, 999));
         }
-        $this->em->persist($client);
-        $this->em->flush();
 
         return $client;
     }

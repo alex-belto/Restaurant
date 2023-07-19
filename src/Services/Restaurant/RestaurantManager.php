@@ -5,6 +5,7 @@ namespace App\Services\Restaurant;
 use App\Entity\Restaurant;
 use App\Repository\ClientRepository;
 use App\Services\Client\ClientFactory;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Responsible for executing the overall logic and operations of a restaurant.
@@ -13,13 +14,16 @@ class RestaurantManager
 {
     private ClientFactory $clientFactory;
     private ClientRepository $clientRepository;
+    private EntityManagerInterface $em;
 
     public function __construct(
         ClientFactory $clientFactory,
-        ClientRepository $clientRepository
+        ClientRepository $clientRepository,
+        EntityManagerInterface $em
     ) {
         $this->clientFactory = $clientFactory;
         $this->clientRepository = $clientRepository;
+        $this->em = $em;
     }
 
     /**
@@ -35,7 +39,9 @@ class RestaurantManager
             $visitorsForAllTime += $visitorsPerDay;
 
             for ($j = 1; $j <= $visitorsPerDay; $j++) {
-                $this->clientFactory->createClient(true);
+                $client = $this->clientFactory->createClient(true);
+                $this->em->persist($client);
+                $this->em->flush();
             }
         }
 

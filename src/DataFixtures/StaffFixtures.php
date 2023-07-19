@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Services\Staff\StaffFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 
 /**
@@ -12,20 +13,29 @@ use Doctrine\Persistence\ObjectManager;
 class StaffFixtures extends Fixture
 {
     private StaffFactory $staffFactory;
+    private EntityManagerInterface $em;
 
-    public function __construct(StaffFactory $staffFactory) {
+    public function __construct(
+        StaffFactory $staffFactory,
+        EntityManagerInterface $em
+    ) {
         $this->staffFactory = $staffFactory;
+        $this->em = $em;
     }
 
     public function load(ObjectManager $manager)
     {
         for ($i = 1; $i <= 7; $i++) {
-            $this->staffFactory->createWaiter();
+            $waiter = $this->staffFactory->createWaiter();
+            $this->em->persist($waiter);
         }
 
         for ($i = 1; $i <= 3; $i++) {
-            $this->staffFactory->createKitchener();
+            $kitchener = $this->staffFactory->createKitchener();
+            $this->em->persist($kitchener);
         }
+
+        $this->em->flush();
 
     }
 

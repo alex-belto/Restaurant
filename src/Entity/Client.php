@@ -31,8 +31,8 @@ class Client
     #[ORM\Column(nullable: true)]
     private ?string $cardNumber = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $cardExpirationDate = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTime $cardExpirationDate = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $cardCvv = null;
@@ -87,12 +87,12 @@ class Client
         return $this;
     }
 
-    public function getCardExpirationDate(): ?\DateTimeInterface
+    public function getCardExpirationDate(): ?\DateTime
     {
         return $this->cardExpirationDate;
     }
 
-    public function setCardExpirationDate(?\DateTimeInterface $cardExpirationDate): static
+    public function setCardExpirationDate(?\DateTime $cardExpirationDate): static
     {
         $this->cardExpirationDate = $cardExpirationDate;
 
@@ -152,5 +152,13 @@ class Client
     {
         $orderAmountSum = $this->connectedOrder->getPrice() + $this->connectedOrder->getTips();
         return $this->money >= $orderAmountSum;
+    }
+
+    public function isCardValid(): bool
+    {
+        if (!$this->cardExpirationDate) {
+            return false;
+        }
+        return $this->cardExpirationDate > new \DateTime();
     }
 }

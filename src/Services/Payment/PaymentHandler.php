@@ -3,8 +3,8 @@
 namespace App\Services\Payment;
 
 use App\Entity\Client;
+use App\Exception\CardValidationException;
 use App\Interfaces\PaymentInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -13,15 +13,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class PaymentHandler
 {
-    private EntityManagerInterface $em;
     private ContainerInterface $container;
+    private CashPaymentProcessor $cashPaymentProcessor;
 
     public function __construct(
-        EntityManagerInterface   $em,
         ContainerInterface       $container,
+        CashPaymentProcessor     $cashPaymentProcessor
     ) {
-        $this->em = $em;
         $this->container = $container;
+        $this->cashPaymentProcessor = $cashPaymentProcessor;
     }
 
     /**
@@ -43,18 +43,12 @@ class PaymentHandler
         };
 
         try {
-            if (!$client->isEnoughMoney()) {
-                throw new \Exception('Client dont have enough money!');
-            }
-
             /** @var PaymentInterface $paymentStrategy */
             $paymentStrategy->pay($client, $client->getConnectedOrder());
-            $client->setStatus(Client::ORDER_PAYED);
-            $this->em->flush();
-
-        } catch(\Throwable $e) {
-            throw new Exception($e->getMessage());
+        } catch (CardValidationException $e) {
+            $this->cashPaymentProcessor->pay($client, $client->getConnectedOrder());
         }
+
     }
 
     private function getPaymentMethod(): array

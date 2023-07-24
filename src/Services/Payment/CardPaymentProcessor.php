@@ -4,7 +4,10 @@ namespace App\Services\Payment;
 
 use App\Entity\Client;
 use App\Entity\Order;
+use App\Exception\CardValidationException;
 use App\Interfaces\PaymentInterface;
+use Doctrine\DBAL\Exception;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Handles card payment transactions.
@@ -12,30 +15,37 @@ use App\Interfaces\PaymentInterface;
 class CardPaymentProcessor implements PaymentInterface
 {
     private Payment $processingPayment;
-
-    private CardValidation $cardValidation;
-
-    private CashPaymentProcessor $cashPaymentProcessor;
+    private EntityManagerInterface $em;
 
     public function __construct(
         Payment        $processingPayment,
-        CardValidation $cardValidation,
-        CashPaymentProcessor $cashPaymentProcessor
+        EntityManagerInterface $em
     ) {
         $this->processingPayment = $processingPayment;
-        $this->cardValidation = $cardValidation;
-        $this->cashPaymentProcessor = $cashPaymentProcessor;
+        $this->em = $em;
     }
 
-    /**
-     * @throws \Exception
-     */
     public function pay(Client $client, Order $order): void
     {
-        if (!$this->cardValidation->isCardValid($client)) {
-            $this->cashPaymentProcessor->pay($client, $order);
-        } else {
+        if (!$client->isCardValid()) {
+            throw new CardValidationException('Card not valid!');
+        }
+
+        try {
+            if (!$client->isEnoughMoney()) {
+                throw new Exception('Client dont have enough money!');
+            }
+
+            $this->em->getConnection()->beginTransaction();
+
             $this->processingPayment->payOrder($client, $order);
+            $client->setStatus(Client::ORDER_PAYED);
+            $this->em->flush();
+            $this->em->getConnection()->commit();
+
+        } catch (Exception $e) {
+            $this->em->getConnection()->rollBack();
+            throw $e;
         }
 
     }

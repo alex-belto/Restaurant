@@ -15,43 +15,34 @@ use Doctrine\ORM\EntityManagerInterface;
 class CardPaymentProcessor implements PaymentInterface
 {
     private Payment $processingPayment;
-    private CardValidation $cardValidation;
-    private CashPaymentProcessor $cashPaymentProcessor;
     private EntityManagerInterface $em;
 
     public function __construct(
         Payment        $processingPayment,
-        CardValidation $cardValidation,
-        CashPaymentProcessor $cashPaymentProcessor,
         EntityManagerInterface $em
     ) {
         $this->processingPayment = $processingPayment;
-        $this->cardValidation = $cardValidation;
-        $this->cashPaymentProcessor = $cashPaymentProcessor;
         $this->em = $em;
     }
 
     public function pay(Client $client, Order $order): void
     {
-        $this->em->getConnection()->beginTransaction();
+        if (!$client->isCardValid()) {
+            throw new CardValidationException('Card not valid!');
+        }
 
         try {
-
-            if (!$this->cardValidation->isCardValid($client)) {
-                throw new CardValidationException('Card not valid!');
-            }
-
             if (!$client->isEnoughMoney()) {
                 throw new Exception('Client dont have enough money!');
             }
+
+            $this->em->getConnection()->beginTransaction();
 
             $this->processingPayment->payOrder($client, $order);
             $client->setStatus(Client::ORDER_PAYED);
             $this->em->flush();
             $this->em->getConnection()->commit();
 
-        } catch (CardValidationException $e) {
-            $this->cashPaymentProcessor->pay($client, $order);
         } catch (Exception $e) {
             $this->em->getConnection()->rollBack();
             throw $e;

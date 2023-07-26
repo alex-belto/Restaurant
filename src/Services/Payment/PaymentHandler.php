@@ -26,6 +26,10 @@ class PaymentHandler
      */
     public function payOrder(Client $client): void
     {
+        if ($client->getStatus() === Client::ORDER_PAYED) {
+            return;
+        }
+
         $payment = $this->getPaymentMethod();
         $paymentStrategy = match ($payment['paymentStrategy']) {
             'cash' => $this->container->get('App\Services\Payment\CashPaymentProcessor'),

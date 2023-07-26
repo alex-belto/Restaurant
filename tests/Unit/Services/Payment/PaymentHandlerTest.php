@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Services\Payment;
+namespace App\Tests\Unit\Services\Payment;
 
 use App\Entity\Client;
 use App\Entity\Order;
@@ -9,8 +9,7 @@ use App\Services\Payment\CashPaymentProcessor;
 use App\Services\Payment\PaymentHandler;
 use App\Services\Payment\TipsCardPaymentDecorator;
 use App\Services\Payment\TipsCashPaymentDecorator;
-use App\Services\Tips\TipsDistributor;
-use Doctrine\DBAL\Exception;
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

@@ -40,7 +40,7 @@ class PaymentHandler
         };
 
         if (!$client->isEnoughMoney()) {
-            throw new \Doctrine\DBAL\Exception('Client dont have enough money!');
+            throw new Exception('Client dont have enough money!');
         }
 
         try {

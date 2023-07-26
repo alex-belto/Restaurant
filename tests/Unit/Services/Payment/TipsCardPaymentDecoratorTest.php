@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Services\Payment;
+namespace App\Tests\Unit\Services\Payment;
 
 use App\Entity\Client;
 use App\Entity\Order;

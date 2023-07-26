@@ -26,12 +26,8 @@ class CashPaymentProcessor implements PaymentInterface
 
     public function pay(Client $client, Order $order): void
     {
-        $this->em->getConnection()->beginTransaction();
-
         try {
-            if (!$client->isEnoughMoney()) {
-                throw new Exception('Client dont have enough money!');
-            }
+            $this->em->getConnection()->beginTransaction();
             $this->processingPayment->payOrder($client, $order);
             $client->setStatus(Client::ORDER_PAYED);
             $this->em->flush();

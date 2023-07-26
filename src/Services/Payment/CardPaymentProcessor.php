@@ -32,10 +32,6 @@ class CardPaymentProcessor implements PaymentInterface
         }
 
         try {
-            if (!$client->isEnoughMoney()) {
-                throw new Exception('Client dont have enough money!');
-            }
-
             $this->em->getConnection()->beginTransaction();
 
             $this->processingPayment->payOrder($client, $order);

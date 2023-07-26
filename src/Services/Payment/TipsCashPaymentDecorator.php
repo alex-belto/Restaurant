@@ -13,7 +13,6 @@ use App\Services\Tips\TipsDistributor;
 class TipsCashPaymentDecorator implements PaymentInterface
 {
     private TipsDistributor $tipsDistributor;
-
     private CashPaymentProcessor $cashPaymentProcessor;
 
     public function __construct(

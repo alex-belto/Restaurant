@@ -10,7 +10,7 @@
 ###< symfony/framework-bundle ###
 
 ###< composer ###
-/.composer.lock
+composer.lock
 ###< composer ###
 
 ###> phpunit/phpunit ###

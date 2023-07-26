@@ -14,14 +14,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class PaymentHandler
 {
     private ContainerInterface $container;
-    private CashPaymentProcessor $cashPaymentProcessor;
 
     public function __construct(
-        ContainerInterface       $container,
-        CashPaymentProcessor     $cashPaymentProcessor
+        ContainerInterface       $container
     ) {
         $this->container = $container;
-        $this->cashPaymentProcessor = $cashPaymentProcessor;
     }
 
     /**
@@ -29,10 +26,6 @@ class PaymentHandler
      */
     public function payOrder(Client $client): void
     {
-        if ($client->getStatus() === Client::ORDER_PAYED) {
-            return;
-        }
-
         $payment = $this->getPaymentMethod();
         $paymentStrategy = match ($payment['paymentStrategy']) {
             'cash' => $this->container->get('App\Services\Payment\CashPaymentProcessor'),
@@ -42,11 +35,16 @@ class PaymentHandler
             default => throw new Exception('wrong payment strategy'),
         };
 
+        if (!$client->isEnoughMoney()) {
+            throw new \Doctrine\DBAL\Exception('Client dont have enough money!');
+        }
+
         try {
             /** @var PaymentInterface $paymentStrategy */
             $paymentStrategy->pay($client, $client->getConnectedOrder());
         } catch (CardValidationException $e) {
-            $this->cashPaymentProcessor->pay($client, $client->getConnectedOrder());
+            $cashPaymentProcessor = $this->container->get('App\Services\Payment\CashPaymentProcessor');
+            $cashPaymentProcessor->pay($client, $client->getConnectedOrder());
         }
 
     }

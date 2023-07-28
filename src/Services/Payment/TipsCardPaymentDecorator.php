@@ -3,7 +3,6 @@
 namespace App\Services\Payment;
 
 use App\Entity\Client;
-use App\Entity\Order;
 use App\Interfaces\PaymentInterface;
 use App\Services\Tips\TipsDistributor;
 
@@ -27,9 +26,9 @@ class TipsCardPaymentDecorator implements PaymentInterface
     /**
      * @throws \Exception
      */
-    public function pay(Client $client, Order $order): void
+    public function pay(Client $client): void
     {
-        $this->cardPaymentProcessor->pay($client, $order);
-        $this->tipsDistributor->splitTips($order);
+        $this->cardPaymentProcessor->pay($client);
+        $this->tipsDistributor->splitTips($client->getConnectedOrder());
     }
 }

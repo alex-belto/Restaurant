@@ -30,7 +30,7 @@ class CardPaymentProcessorTest extends TestCase
 
         $processingPayment->expects($this->once())
             ->method('payOrder')
-            ->with($this->equalTo($client), $this->equalTo($order));
+            ->with($this->equalTo($client));
 
         $em->expects($this->atLeastOnce())
             ->method('getConnection')
@@ -49,26 +49,22 @@ class CardPaymentProcessorTest extends TestCase
         $em->expects($this->once())
             ->method('commit');
 
-        $cardPaymentProcessor->pay($client, $order);
+        $cardPaymentProcessor->pay($client);
     }
 
     public function testCardValidationException(): void
     {
+        $client = $this->createMock(Client::class);
+        $em = $this->createMock(EntityManagerInterface::class);
         $processingPayment = $this->getMockBuilder(Payment::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $em = $this->createMock(EntityManagerInterface::class);
-
-        $cardPaymentProcessor = new CardPaymentProcessor($processingPayment, $em);
-
-        $order = $this->createMock(Order::class);
-        $client = $this->createMock(Client::class);
-
         $client->method('isCardValid')->willReturn(false);
         $this->expectException(CardValidationException::class);
 
-        $cardPaymentProcessor->pay($client, $order);
+        $cardPaymentProcessor = new CardPaymentProcessor($processingPayment, $em);
+        $cardPaymentProcessor->pay($client);
     }
 
 }

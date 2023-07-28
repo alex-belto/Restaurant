@@ -4,21 +4,20 @@ namespace App\Services\Payment;
 
 use App\Entity\Client;
 use App\Exception\CardValidationException;
-use App\Interfaces\PaymentInterface;
 use Exception;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Selects a random payment method and processes the payment for an order.
  */
 class PaymentHandler
 {
-    private ContainerInterface $container;
+    private ContainerInterface $paymentStrategies;
 
     public function __construct(
-        ContainerInterface       $container
+        ContainerInterface $paymentStrategies
     ) {
-        $this->container = $container;
+        $this->paymentStrategies = $paymentStrategies;
     }
 
     /**
@@ -30,42 +29,20 @@ class PaymentHandler
             return;
         }
 
-        $payment = $this->getPaymentMethod();
-        $paymentStrategy = match ($payment['paymentStrategy']) {
-            'cash' => $this->container->get('App\Services\Payment\CashPaymentProcessor'),
-            'card' => $this->container->get('App\Services\Payment\CardPaymentProcessor'),
-            'cash_tips' => $this->container->get('App\Services\Payment\TipsCashPaymentDecorator'),
-            'card_tips' => $this->container->get('App\Services\Payment\TipsCardPaymentDecorator'),
-            default => throw new Exception('wrong payment strategy'),
-        };
+        $restaurant = $client->getRestaurant();
+
+        $paymentStrategy = $this->paymentStrategies->get($client->getPaymentMethod());
 
         if (!$client->isEnoughMoney()) {
             throw new Exception('Client dont have enough money!');
         }
 
         try {
-            /** @var PaymentInterface $paymentStrategy */
             $paymentStrategy->pay($client, $client->getConnectedOrder());
         } catch (CardValidationException $e) {
-            $cashPaymentProcessor = $this->container->get('App\Services\Payment\CashPaymentProcessor');
+            $cashPaymentProcessor = $this->paymentStrategies->get($restaurant->getPaymentMethod());
             $cashPaymentProcessor->pay($client, $client->getConnectedOrder());
         }
 
-    }
-
-    private function getPaymentMethod(): array
-    {
-        $strategyNumber = rand(1,4);
-
-        $paymentStrategy = match ($strategyNumber) {
-            1 => 'card',
-            2 => 'cash',
-            3 => 'cash_tips',
-            4 => 'card_tips'
-        };
-
-        return [
-            'paymentStrategy' => $paymentStrategy
-        ];
     }
 }

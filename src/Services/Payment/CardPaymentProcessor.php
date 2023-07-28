@@ -3,7 +3,6 @@
 namespace App\Services\Payment;
 
 use App\Entity\Client;
-use App\Entity\Order;
 use App\Exception\CardValidationException;
 use App\Interfaces\PaymentInterface;
 use Doctrine\DBAL\Exception;
@@ -25,7 +24,7 @@ class CardPaymentProcessor implements PaymentInterface
         $this->em = $em;
     }
 
-    public function pay(Client $client, Order $order): void
+    public function pay(Client $client): void
     {
         if (!$client->isCardValid()) {
             throw new CardValidationException('Card not valid!');
@@ -34,7 +33,7 @@ class CardPaymentProcessor implements PaymentInterface
         try {
             $this->em->getConnection()->beginTransaction();
 
-            $this->processingPayment->payOrder($client, $order);
+            $this->processingPayment->payOrder($client);
             $client->setStatus(Client::ORDER_PAYED);
             $this->em->flush();
             $this->em->getConnection()->commit();

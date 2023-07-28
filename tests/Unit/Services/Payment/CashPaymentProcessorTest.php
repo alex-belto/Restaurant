@@ -13,22 +13,17 @@ class CashPaymentProcessorTest extends TestCase
 {
     public function testCashPaymentProcess(): void
     {
+        $client = $this->createMock(Client::class);
+        $em = $this->createMock(EntityManagerInterface::class);
         $processingPayment = $this->getMockBuilder(Payment::class)
             ->disableOriginalConstructor()
             ->getMock();
-
-        $em = $this->createMock(EntityManagerInterface::class);
-
-        $cashPaymentProcessor = new CashPaymentProcessor($processingPayment, $em);
-
-        $client = $this->createMock(Client::class);
-        $order = $this->createMock(Order::class);
 
         $client->method('isEnoughMoney')->willReturn(true);
 
         $processingPayment->expects($this->once())
             ->method('payOrder')
-            ->with($this->equalTo($client), $this->equalTo($order));
+            ->with($this->equalTo($client));
 
         $em->expects($this->atLeastOnce())
             ->method('getConnection')
@@ -47,7 +42,8 @@ class CashPaymentProcessorTest extends TestCase
         $em->expects($this->once())
             ->method('commit');
 
-        $cashPaymentProcessor->pay($client, $order);
+        $cashPaymentProcessor = new CashPaymentProcessor($processingPayment, $em);
+        $cashPaymentProcessor->pay($client);
     }
 
 }

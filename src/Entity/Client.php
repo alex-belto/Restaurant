@@ -46,6 +46,9 @@ class Client
     #[ORM\Column]
     private int $status = self::WITHOUT_ORDER;
 
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $paymentMethod;
+
     public function getId(): int
     {
         return $this->id;
@@ -160,5 +163,22 @@ class Client
             return false;
         }
         return $this->cardExpirationDate > new \DateTime();
+    }
+
+    public function getPaymentMethod(): ?string
+    {
+        return $this->paymentMethod;
+    }
+
+    public function setPaymentMethod(string $paymentMethod): static
+    {
+        $this->paymentMethod = $paymentMethod;
+
+        return $this;
+    }
+
+    public function getRestaurant(): Restaurant
+    {
+        return $this->connectedOrder->getWaiter()->getRestaurant();
     }
 }

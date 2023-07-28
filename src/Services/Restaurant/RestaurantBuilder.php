@@ -13,20 +13,15 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class RestaurantBuilder
 {
-    private EntityManagerInterface $em;
     private  RestaurantMenuFiller $restaurantMenuFiller;
     private EmployeeRecruiter $employeeRecruiter;
-    private string $filePath;
 
     public function __construct(
-        EntityManagerInterface $em,
         RestaurantMenuFiller $restaurantMenuFiller,
         EmployeeRecruiter $employeeRecruiter
     ) {
-        $this->em = $em;
         $this->restaurantMenuFiller = $restaurantMenuFiller;
         $this->employeeRecruiter = $employeeRecruiter;
-        $this->filePath = realpath(__DIR__ . '/../../..') . $_ENV['FILE_PATH'];
     }
 
     /**

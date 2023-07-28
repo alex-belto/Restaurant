@@ -18,6 +18,7 @@ class Restaurant
     public const TIPS_WAITER_STRATEGY = 2;
     private const WORK_HOURS = 8;
     private const MAX_VISITORS_PER_HOUR = 50;
+    private const STANDARD_PAYMENT_STRATEGY = 'cashPayment';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -41,6 +42,9 @@ class Restaurant
 
     #[ORM\Column]
     private int $days = 0;
+
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $paymentMethod = self::STANDARD_PAYMENT_STRATEGY;
 
     public function __construct()
     {
@@ -183,6 +187,18 @@ class Restaurant
     public function getMaxVisitorsPerDay(): int
     {
         return Restaurant::WORK_HOURS * Restaurant::MAX_VISITORS_PER_HOUR;
+    }
+
+    public function getPaymentMethod(): ?string
+    {
+        return $this->paymentMethod;
+    }
+
+    public function setPaymentMethod(string $paymentMethod): static
+    {
+        $this->paymentMethod = $paymentMethod;
+
+        return $this;
     }
 
 }

@@ -23,16 +23,18 @@ class TipsCashPaymentDecoratorTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $client->method('getConnectedOrder')->willReturn($order);
+
         $cashPaymentProcessor->expects($this->once())
             ->method('pay')
-            ->with($this->equalTo($client), $this->equalTo($order));
+            ->with($this->equalTo($client));
 
         $tipsDistributor->expects($this->once())
             ->method('splitTips')
             ->with($this->equalTo($order));
 
         $tipsCashPaymentDecorator = new TipsCashPaymentDecorator($tipsDistributor, $cashPaymentProcessor);
-        $tipsCashPaymentDecorator->pay($client, $order);
+        $tipsCashPaymentDecorator->pay($client);
     }
 
 }

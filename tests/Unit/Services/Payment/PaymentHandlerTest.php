@@ -129,7 +129,7 @@ class PaymentHandlerTest extends TestCase
         $paymentHandler->payOrder($client);
     }
 
-    public function testIsEnoughMoney(): void
+    public function testClientDontHaveEnoughMoney(): void
     {
         $container = $this->createMock(ContainerInterface::class);
         $client = $this->createMock(Client::class);

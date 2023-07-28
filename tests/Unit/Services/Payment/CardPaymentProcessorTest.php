@@ -11,64 +11,59 @@ use PHPUnit\Framework\TestCase;
 
 class CardPaymentProcessorTest extends TestCase
 {
+    private EntityManagerInterface $em;
+    private Client $client;
+    private Payment $processingPayment;
+    private CardPaymentProcessor $cardPaymentProcessor;
+
+    protected function setUp(): void
+    {
+        $this->em = $this->createMock(EntityManagerInterface::class);
+        $this->client = $this->createMock(Client::class);
+        $this->processingPayment = $this->createMock(Payment::class);
+        $this->cardPaymentProcessor = new CardPaymentProcessor($this->processingPayment, $this->em);
+    }
     public function testCardPaymentProcess(): void
     {
-        $processingPayment = $this->getMockBuilder(Payment::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->client->method('isEnoughMoney')->willReturn(true);
+        $this->client->method('isCardValid')->willReturn(true);
 
-        $em = $this->createMock(EntityManagerInterface::class);
-
-        $cardPaymentProcessor = new CardPaymentProcessor($processingPayment, $em);
-
-        $client = $this->createMock(Client::class);
-
-        $client->method('isEnoughMoney')->willReturn(true);
-        $client->method('isCardValid')->willReturn(true);
-
-        $processingPayment
+        $this->processingPayment
             ->expects($this->once())
             ->method('payOrder')
-            ->with($this->equalTo($client));
+            ->with($this->equalTo($this->client));
 
-        $em
+        $this->em
             ->expects($this->atLeastOnce())
             ->method('getConnection')
             ->willReturnSelf();
 
-        $em
+        $this->em
             ->expects($this->once())
             ->method('beginTransaction');
 
-        $client
+        $this->client
             ->expects($this->once())
             ->method('setStatus')
             ->with(Client::ORDER_PAYED);
 
-        $em
+        $this->em
             ->expects($this->once())
             ->method('flush');
 
-        $em
+        $this->em
             ->expects($this->once())
             ->method('commit');
 
-        $cardPaymentProcessor->pay($client);
+        $this->cardPaymentProcessor->pay($this->client);
     }
 
     public function testCardValidationException(): void
     {
-        $client = $this->createMock(Client::class);
-        $em = $this->createMock(EntityManagerInterface::class);
-        $processingPayment = $this->getMockBuilder(Payment::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $client->method('isCardValid')->willReturn(false);
+        $this->client->method('isCardValid')->willReturn(false);
         $this->expectException(CardValidationException::class);
 
-        $cardPaymentProcessor = new CardPaymentProcessor($processingPayment, $em);
-        $cardPaymentProcessor->pay($client);
+        $this->cardPaymentProcessor->pay($this->client);
     }
 
 }

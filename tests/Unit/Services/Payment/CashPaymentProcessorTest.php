@@ -14,9 +14,7 @@ class CashPaymentProcessorTest extends TestCase
     {
         $client = $this->createMock(Client::class);
         $em = $this->createMock(EntityManagerInterface::class);
-        $processingPayment = $this->getMockBuilder(Payment::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $processingPayment = $this->createMock(Payment::class);
 
         $client->method('isEnoughMoney')->willReturn(true);
 

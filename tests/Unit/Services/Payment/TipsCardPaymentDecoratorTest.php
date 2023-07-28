@@ -15,13 +15,8 @@ class TipsCardPaymentDecoratorTest extends TestCase
     {
         $client = $this->createMock(Client::class);
         $order = $this->createMock(Order::class);
-        $cardPaymentProcessor = $this->getMockBuilder(CardPaymentProcessor::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $tipsDistributor = $this->getMockBuilder(TipsDistributor::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $cardPaymentProcessor = $this->createMock(CardPaymentProcessor::class);
+        $tipsDistributor = $this->createMock(TipsDistributor::class);
 
         $client->method('getConnectedOrder')->willReturn($order);
 

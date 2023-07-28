@@ -35,7 +35,8 @@ class PaymentHandlerTest extends TestCase
             ->with($this->equalTo($client->getPaymentMethod()))
             ->willReturn($cashPaymentProcessor);
 
-        $cashPaymentProcessor->expects($this->once())
+        $cashPaymentProcessor
+            ->expects($this->once())
             ->method('pay')
             ->with($this->equalTo($client), $this->equalTo($order));
 
@@ -63,7 +64,8 @@ class PaymentHandlerTest extends TestCase
             ->with($this->equalTo($client->getPaymentMethod()))
             ->willReturn($cardPaymentProcessor);
 
-        $cardPaymentProcessor->expects($this->once())
+        $cardPaymentProcessor
+            ->expects($this->once())
             ->method('pay')
             ->with($this->equalTo($client), $this->equalTo($order));
 
@@ -90,7 +92,8 @@ class PaymentHandlerTest extends TestCase
             ->with($this->equalTo($client->getPaymentMethod()))
             ->willReturn($tipsCashPaymentDecorator);
 
-        $tipsCashPaymentDecorator->expects($this->once())
+        $tipsCashPaymentDecorator
+            ->expects($this->once())
             ->method('pay')
             ->with($this->equalTo($client), $this->equalTo($order));
 
@@ -117,7 +120,8 @@ class PaymentHandlerTest extends TestCase
             ->with($this->equalTo($client->getPaymentMethod()))
             ->willReturn($tipsCardPaymentDecorator);
 
-        $tipsCardPaymentDecorator->expects($this->once())
+        $tipsCardPaymentDecorator
+            ->expects($this->once())
             ->method('pay')
             ->with($this->equalTo($client), $this->equalTo($order));
 

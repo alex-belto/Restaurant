@@ -25,11 +25,13 @@ class TipsCashPaymentDecoratorTest extends TestCase
 
         $client->method('getConnectedOrder')->willReturn($order);
 
-        $cashPaymentProcessor->expects($this->once())
+        $cashPaymentProcessor
+            ->expects($this->once())
             ->method('pay')
             ->with($this->equalTo($client));
 
-        $tipsDistributor->expects($this->once())
+        $tipsDistributor
+            ->expects($this->once())
             ->method('splitTips')
             ->with($this->equalTo($order));
 

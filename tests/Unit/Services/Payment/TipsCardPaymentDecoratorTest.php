@@ -25,11 +25,13 @@ class TipsCardPaymentDecoratorTest extends TestCase
 
         $client->method('getConnectedOrder')->willReturn($order);
 
-        $cardPaymentProcessor->expects($this->once())
+        $cardPaymentProcessor
+            ->expects($this->once())
             ->method('pay')
             ->with($this->equalTo($client));
 
-        $tipsDistributor->expects($this->once())
+        $tipsDistributor
+            ->expects($this->once())
             ->method('splitTips')
             ->with($this->equalTo($order));
 

@@ -3,7 +3,6 @@
 namespace App\Tests\Unit\Services\Payment;
 
 use App\Entity\Client;
-use App\Entity\Order;
 use App\Services\Payment\CashPaymentProcessor;
 use App\Services\Payment\Payment;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,25 +20,31 @@ class CashPaymentProcessorTest extends TestCase
 
         $client->method('isEnoughMoney')->willReturn(true);
 
-        $processingPayment->expects($this->once())
+        $processingPayment
+            ->expects($this->once())
             ->method('payOrder')
             ->with($this->equalTo($client));
 
-        $em->expects($this->atLeastOnce())
+        $em
+            ->expects($this->atLeastOnce())
             ->method('getConnection')
             ->willReturnSelf();
 
-        $em->expects($this->once())
+        $em
+            ->expects($this->once())
             ->method('beginTransaction');
 
-        $client->expects($this->once())
+        $client
+            ->expects($this->once())
             ->method('setStatus')
             ->with(Client::ORDER_PAYED);
 
-        $em->expects($this->once())
+        $em
+            ->expects($this->once())
             ->method('flush');
 
-        $em->expects($this->once())
+        $em
+            ->expects($this->once())
             ->method('commit');
 
         $cashPaymentProcessor = new CashPaymentProcessor($processingPayment, $em);

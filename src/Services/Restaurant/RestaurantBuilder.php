@@ -2,9 +2,10 @@
 
 namespace App\Services\Restaurant;
 
+use App\Entity\Kitchener;
+use App\Entity\MenuItem;
 use App\Entity\Restaurant;
-use App\Services\Menu\RestaurantMenuFiller;
-use App\Services\Staff\EmployeeRecruiter;
+use App\Entity\Waiter;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -14,19 +15,11 @@ use Doctrine\ORM\EntityManagerInterface;
 class RestaurantBuilder
 {
     private EntityManagerInterface $em;
-    private  RestaurantMenuFiller $restaurantMenuFiller;
-    private EmployeeRecruiter $employeeRecruiter;
-    private string $filePath;
 
     public function __construct(
-        EntityManagerInterface $em,
-        RestaurantMenuFiller $restaurantMenuFiller,
-        EmployeeRecruiter $employeeRecruiter
+        EntityManagerInterface $em
     ) {
         $this->em = $em;
-        $this->restaurantMenuFiller = $restaurantMenuFiller;
-        $this->employeeRecruiter = $employeeRecruiter;
-        $this->filePath = realpath(__DIR__ . '/../../..') . $_ENV['FILE_PATH'];
     }
 
     /**
@@ -34,14 +27,74 @@ class RestaurantBuilder
      */
     public function buildRestaurant(int $days): Restaurant
     {
-        $restaurant = new Restaurant();
-
-        $this->employeeRecruiter->hireKitcheners($restaurant, 3);
-        $this->employeeRecruiter->hireWaiters($restaurant, 7);
-        $this->restaurantMenuFiller->fillUpMenu($restaurant, 15, 'dish');
-        $this->restaurantMenuFiller->fillUpMenu($restaurant,  4, 'drink');
+        $restaurant = $this->reset();
+        $this->hireKitcheners($restaurant, 3);
+        $this->hireWaiters($restaurant, 7);
+        $this->fillUpMenu($restaurant, 15, 'dish');
+        $this->fillUpMenu($restaurant,  4, 'drink');
         $restaurant->setDays($days);
 
         return $restaurant;
     }
+
+    public function reset(): Restaurant
+    {
+        return new Restaurant();
+    }
+
+    public function hireWaiters(Restaurant $restaurant, int $amount): void
+    {
+        $waiters = $this->em->getRepository(Waiter::class)->findAll();
+        if (!count($waiters) >= $amount) {
+            throw new \Exception('U dont have enough staff in pull');
+        }
+
+        for ($i = 0; $i < $amount; $i++) {
+            $restaurant->addWaiter($waiters[$i]);
+        }
+    }
+
+    public function hireKitcheners(Restaurant $restaurant, int $amount): void
+    {
+        $kitcheners = $this->em->getRepository(Kitchener::class)->findAll();
+        if (!count($kitcheners) >= $amount) {
+            throw new \Exception('U dont have enough staff in pull');
+        }
+
+        for ($i = 0; $i < $amount; $i++) {
+            $restaurant->addKitchener($kitcheners[$i]);
+        }
+    }
+
+    public function fillUpMenu(Restaurant $restaurant, int $amount, string $type): void
+    {
+        switch ($type) {
+            case 'dish':
+                $dish = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItem::DISH]);
+                if (count($dish) < $amount) {
+                    throw new \Exception('U dont have enough dish in pull');
+                }
+
+                for ($i = 0; $i < $amount; $i++) {
+                    $restaurant->addMenuItem($dish[$i]);
+                }
+                break;
+
+            case 'drink':
+                $drink = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItem::DRINK]);
+                if (count($drink) < $amount) {
+                    throw new \Exception('U dont have enough drink in pull');
+                }
+
+                for ($i = 0; $i < $amount; $i++) {
+                    $restaurant->addMenuItem($drink[$i]);
+                }
+                break;
+
+            default:
+                throw new \Exception('Wrong menuItem type!');
+        }
+    }
+
+
 }

@@ -21,13 +21,13 @@ class MenuItem
     private int $id;
 
     #[ORM\Column(length: 255)]
-    protected string $name;
+    private string $name;
 
     #[ORM\Column]
-    protected float $price;
+    private float $price;
 
     #[ORM\Column(length: 255)]
-    protected string $time;
+    private string $time;
 
     #[ORM\Column(length: 255)]
     private int $type;

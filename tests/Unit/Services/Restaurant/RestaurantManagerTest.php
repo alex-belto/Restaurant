@@ -15,7 +15,7 @@ class RestaurantManagerTest extends TestCase
     public function testRestaurantManager(): void
     {
         $days = 3;
-        $maxVisitorPerDay = 400;
+        $maxVisitorPerDay = 10;
         $clientFactory = $this->createMock(ClientFactory::class);
         $clientRepository = $this->createMock(ClientRepository::class);
         $em = $this->createMock(EntityManagerInterface::class);
@@ -25,18 +25,18 @@ class RestaurantManagerTest extends TestCase
         $restaurant->method('getDays')->willReturn($days);
 
         $clientFactory
-            ->expects($this->atLeast(30))
+            ->expects($this->exactly(30))
             ->method('createClient')
             ->with($this->equalTo(true))
             ->willReturn($client);
 
         $em
-            ->expects($this->atLeast(30))
+            ->expects($this->exactly(30))
             ->method('persist')
             ->with($this->equalTo($client));
 
         $em
-            ->expects($this->atLeast(30))
+            ->expects($this->exactly(30))
             ->method('flush');
 
         $clientRepository

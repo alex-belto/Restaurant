@@ -45,7 +45,7 @@ class RestaurantBuilder
     public function hireWaiters(Restaurant $restaurant, int $amount): void
     {
         $waiters = $this->em->getRepository(Waiter::class)->findAll();
-        if (!count($waiters) >= $amount) {
+        if (count($waiters) < $amount) {
             throw new \Exception('U dont have enough staff in pull');
         }
 
@@ -57,7 +57,7 @@ class RestaurantBuilder
     public function hireKitcheners(Restaurant $restaurant, int $amount): void
     {
         $kitcheners = $this->em->getRepository(Kitchener::class)->findAll();
-        if (!count($kitcheners) >= $amount) {
+        if (count($kitcheners) < $amount) {
             throw new \Exception('U dont have enough staff in pull');
         }
 

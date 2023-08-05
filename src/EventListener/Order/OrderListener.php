@@ -16,12 +16,11 @@ class OrderListener
         $this->paymentHandler = $paymentHandler;
     }
 
-    public function payOrder(Order $order) {
-
+    public function payOrder(Order $order): void
+    {
         if ($order->getStatus() !== Order::DONE) {
             return;
         }
-
         $client = $order->getClient();
         $order->setTips(rand(0, 20));
         $this->paymentHandler->payOrder($client);

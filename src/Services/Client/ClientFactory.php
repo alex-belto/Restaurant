@@ -35,7 +35,6 @@ class ClientFactory
 
     private function getPaymentMethod(): string
     {
-
         $amountOfPaymentMethods = iterator_count($this->paymentMethods);
         $randomMethodNumber = rand(1,$amountOfPaymentMethods);
 

@@ -12,14 +12,11 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class CashPaymentProcessor implements PaymentInterface
 {
-    private Payment $processingPayment;
     private EntityManagerInterface $em;
 
     public function __construct(
-        Payment $processingPayment,
         EntityManagerInterface $em
     ) {
-        $this->processingPayment = $processingPayment;
         $this->em = $em;
     }
 
@@ -27,7 +24,7 @@ class CashPaymentProcessor implements PaymentInterface
     {
         try {
             $this->em->getConnection()->beginTransaction();
-            $this->processingPayment->payOrder($client);
+            $client->payOrder();
             $client->setStatus(Client::ORDER_PAYED);
             $this->em->flush();
             $this->em->getConnection()->commit();

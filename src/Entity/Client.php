@@ -181,4 +181,14 @@ class Client
     {
         return $this->connectedOrder->getWaiter()->getRestaurant();
     }
+
+    public function payOrder(): void
+    {
+        $order = $this->getConnectedOrder();
+        $restaurant =  $this->getRestaurant();
+        $restOfMoney = $this->getMoney() - ($order->getPrice() + $order->getTips());
+        $this->setMoney($restOfMoney);
+        $restaurantBalance = $restaurant->getBalance() + $order->getPrice();
+        $restaurant->setBalance($restaurantBalance);
+    }
 }

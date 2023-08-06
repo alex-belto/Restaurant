@@ -13,25 +13,22 @@ class CardPaymentProcessorTest extends TestCase
 {
     private EntityManagerInterface $em;
     private Client $client;
-    private Payment $processingPayment;
     private CardPaymentProcessor $cardPaymentProcessor;
 
     protected function setUp(): void
     {
         $this->em = $this->createMock(EntityManagerInterface::class);
         $this->client = $this->createMock(Client::class);
-        $this->processingPayment = $this->createMock(Payment::class);
-        $this->cardPaymentProcessor = new CardPaymentProcessor($this->processingPayment, $this->em);
+        $this->cardPaymentProcessor = new CardPaymentProcessor($this->em);
     }
     public function testCardPaymentProcess(): void
     {
         $this->client->method('isEnoughMoney')->willReturn(true);
         $this->client->method('isCardValid')->willReturn(true);
 
-        $this->processingPayment
+        $this->client
             ->expects($this->once())
-            ->method('payOrder')
-            ->with($this->equalTo($this->client));
+            ->method('payOrder');
 
         $this->em
             ->expects($this->atLeastOnce())

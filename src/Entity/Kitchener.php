@@ -37,7 +37,7 @@ class Kitchener implements StaffInterface
         $this->orders = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -84,7 +84,7 @@ class Kitchener implements StaffInterface
         return $this;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }

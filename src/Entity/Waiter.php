@@ -41,7 +41,7 @@ class Waiter implements StaffInterface
         $this->orders = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }

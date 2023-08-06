@@ -189,7 +189,7 @@ class Restaurant
         return Restaurant::WORK_HOURS * Restaurant::MAX_VISITORS_PER_HOUR;
     }
 
-    public function getPaymentMethod(): ?string
+    public function getPaymentMethod(): string
     {
         return $this->paymentMethod;
     }

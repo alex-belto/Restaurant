@@ -165,7 +165,7 @@ class Client
         return $this->cardExpirationDate > new \DateTime();
     }
 
-    public function getPaymentMethod(): ?string
+    public function getPaymentMethod(): string
     {
         return $this->paymentMethod;
     }

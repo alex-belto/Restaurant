@@ -11,18 +11,18 @@ use App\Services\Payment\TipsCardPaymentDecorator;
 use App\Services\Payment\TipsCashPaymentDecorator;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class PaymentHandlerTest extends TestCase
 {
-    private ContainerInterface $container;
+    private ServiceLocator $container;
     private Client $client;
     private Order $order;
     private PaymentHandler $paymentHandler;
 
     protected function setUp(): void
     {
-        $this->container = $this->createMock(ContainerInterface::class);
+        $this->container = $this->createMock(ServiceLocator::class);
         $this->client = $this->createMock(Client::class);
         $this->order = $this->createMock(Order::class);
         $this->paymentHandler = new PaymentHandler($this->container);

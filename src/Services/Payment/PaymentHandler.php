@@ -5,24 +5,21 @@ namespace App\Services\Payment;
 use App\Entity\Client;
 use App\Exception\CardValidationException;
 use Exception;
-use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
  * Selects a random payment method and processes the payment for an order.
  */
 class PaymentHandler
 {
-    private ContainerInterface $paymentStrategies;
+    private ServiceLocator $paymentStrategies;
 
     public function __construct(
-        ContainerInterface $paymentStrategies
+        ServiceLocator $paymentStrategies
     ) {
         $this->paymentStrategies = $paymentStrategies;
     }
 
-    /**
-     * @throws Exception
-     */
     public function payOrder(Client $client): void
     {
         if ($client->getStatus() === Client::ORDER_PAYED) {

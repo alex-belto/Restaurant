@@ -26,10 +26,10 @@ class Kitchener implements StaffInterface
     #[ORM\OneToMany(mappedBy: 'kitchener', targetEntity: Order::class)]
     private Collection $orders;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 32)]
     private string $name;
 
-    #[ORM\ManyToOne(cascade: ['persist', 'remove'], inversedBy: 'Kitcheners')]
+    #[ORM\ManyToOne(cascade: ['persist', 'remove'], inversedBy: 'kitcheners')]
     private Restaurant $restaurant;
 
     public function __construct()

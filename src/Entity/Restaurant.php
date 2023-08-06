@@ -43,7 +43,7 @@ class Restaurant
     #[ORM\Column]
     private int $days = 0;
 
-    #[ORM\Column(length: 255, nullable: false)]
+    #[ORM\Column(length: 32, nullable: false)]
     private string $paymentMethod = self::STANDARD_PAYMENT_STRATEGY;
 
     public function __construct()

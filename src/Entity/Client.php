@@ -25,7 +25,7 @@ class Client
     #[ORM\Column]
     private float $money;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 32)]
     private string $name;
 
     #[ORM\Column(nullable: true)]
@@ -46,7 +46,7 @@ class Client
     #[ORM\Column]
     private int $status = self::WITHOUT_ORDER;
 
-    #[ORM\Column(length: 255, nullable: false)]
+    #[ORM\Column(length: 32, nullable: false)]
     private string $paymentMethod;
 
     public function getId(): int

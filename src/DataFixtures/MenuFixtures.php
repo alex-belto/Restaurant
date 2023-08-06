@@ -2,7 +2,6 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\MenuItem;
 use App\Services\Menu\MenuItemCreator;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;

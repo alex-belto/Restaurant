@@ -3,12 +3,9 @@
 namespace App\Tests\Unit\Services\Payment;
 
 use App\Entity\Client;
-use App\Services\Payment\CardPaymentProcessor;
-use App\Services\Payment\CashPaymentProcessor;
+use App\Exception\CardValidationException;
+use App\Interfaces\PaymentInterface;
 use App\Services\Payment\PaymentHandler;
-use App\Services\Payment\TipsCardPaymentDecorator;
-use App\Services\Payment\TipsCashPaymentDecorator;
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
@@ -17,18 +14,18 @@ class PaymentHandlerTest extends TestCase
     private ServiceLocator $container;
     private Client $client;
     private PaymentHandler $paymentHandler;
+    private PaymentInterface $paymentInterface;
 
     protected function setUp(): void
     {
         $this->container = $this->createMock(ServiceLocator::class);
         $this->client = $this->createMock(Client::class);
         $this->paymentHandler = new PaymentHandler($this->container);
+        $this->paymentInterface = $this->createMock(PaymentInterface::class);
     }
 
-    public function testPayOrderByCash(): void
+    public function testPayOrder(): void
     {
-        $cashPaymentProcessor = $this->createMock(CashPaymentProcessor::class);
-
         $this->client
             ->expects($this->once())
             ->method('isEnoughMoney')
@@ -36,16 +33,14 @@ class PaymentHandlerTest extends TestCase
 
         $this->client
             ->expects($this->once())
-            ->method('getPaymentMethod')
-            ->willReturn('cashPayment');
+            ->method('getPaymentMethod');
 
         $this->container
             ->expects($this->once())
             ->method('get')
-            ->with($this->equalTo('cashPayment'))
-            ->willReturn($cashPaymentProcessor);
+            ->willReturn($this->paymentInterface);
 
-        $cashPaymentProcessor
+        $this->paymentInterface
             ->expects($this->once())
             ->method('pay')
             ->with($this->equalTo($this->client));
@@ -53,9 +48,9 @@ class PaymentHandlerTest extends TestCase
         $this->paymentHandler->payOrder($this->client);
     }
 
-    public function testPayOrderByCard(): void
+    public function testCardNotValidException(): void
     {
-        $cardPaymentProcessor = $this->createMock(CardPaymentProcessor::class);
+        $cardValidationException = $this->createMock(CardValidationException::class);
 
         $this->client
             ->expects($this->once())
@@ -64,76 +59,20 @@ class PaymentHandlerTest extends TestCase
 
         $this->client
             ->expects($this->once())
-            ->method('getPaymentMethod')
-            ->willReturn('cardPayment');
+            ->method('getPaymentMethod');
 
         $this->container
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('get')
-            ->with($this->equalTo('cardPayment'))
-            ->willReturn($cardPaymentProcessor);
+            ->willReturn($this->paymentInterface);
 
-        $cardPaymentProcessor
-            ->expects($this->once())
+        $this->paymentInterface
+            ->expects($this->exactly(2))
             ->method('pay')
-            ->with($this->equalTo($this->client));
+            ->with($this->equalTo($this->client))
+            ->willThrowException($cardValidationException);
 
-        $this->paymentHandler->payOrder($this->client);
-    }
-
-    public function testPayOrderByCashWithTips(): void
-    {
-        $tipsCashPaymentDecorator = $this->createMock(TipsCashPaymentDecorator::class);
-
-        $this->client
-            ->expects($this->once())
-            ->method('isEnoughMoney')
-            ->willReturn(true);
-
-        $this->client
-            ->expects($this->once())
-            ->method('getPaymentMethod')
-            ->willReturn('tipsCashPayment');
-
-        $this->container
-            ->expects($this->once())
-            ->method('get')
-            ->with($this->equalTo('tipsCashPayment'))
-            ->willReturn($tipsCashPaymentDecorator);
-
-        $tipsCashPaymentDecorator
-            ->expects($this->once())
-            ->method('pay')
-            ->with($this->equalTo($this->client));
-
-        $this->paymentHandler->payOrder($this->client);
-    }
-
-    public function testPayOrderByCardWithTips(): void
-    {
-        $tipsCardPaymentDecorator = $this->createMock(TipsCardPaymentDecorator::class);
-
-        $this->client
-            ->expects($this->once())
-            ->method('isEnoughMoney')
-            ->willReturn(true);
-
-        $this->client
-            ->expects($this->once())
-            ->method('getPaymentMethod')
-            ->willReturn('tipsCardPayment');
-
-        $this->container
-            ->expects($this->once())
-            ->method('get')
-            ->with($this->equalTo('tipsCardPayment'))
-            ->willReturn($tipsCardPaymentDecorator);
-
-        $tipsCardPaymentDecorator
-            ->expects($this->once())
-            ->method('pay')
-            ->with($this->equalTo($this->client));
-
+        $this->expectException(CardValidationException::class);
         $this->paymentHandler->payOrder($this->client);
     }
 
@@ -149,9 +88,32 @@ class PaymentHandlerTest extends TestCase
             ->method('isEnoughMoney')
             ->willReturn(false);
 
-        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Client dont have enough money!');
 
-        $paymentHandler = new PaymentHandler($this->container);
-        $paymentHandler->payOrder($this->client);
+        $this->paymentHandler->payOrder($this->client);
+    }
+
+    public function testClientAlreadyPayedOrder(): void
+    {
+        $this->client
+            ->expects($this->once())
+            ->method('getStatus')
+            ->willReturn(Client::ORDER_PAYED);
+
+        $this->client
+            ->expects($this->never())
+            ->method('getPaymentMethod');
+
+        $this->container
+            ->expects($this->never())
+            ->method('get')
+            ->willReturn($this->paymentInterface);
+
+        $this->paymentInterface
+            ->expects($this->never())
+            ->method('pay')
+            ->with($this->equalTo($this->client));
+
+        $this->paymentHandler->payOrder($this->client);
     }
 }

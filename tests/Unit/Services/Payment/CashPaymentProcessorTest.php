@@ -7,43 +7,86 @@ use App\Services\Payment\CashPaymentProcessor;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Doctrine\DBAL\Exception;
 
 class CashPaymentProcessorTest extends TestCase
 {
+    private Client $client;
+    private EntityManagerInterface $em;
+    private Connection $connection;
+    private CashPaymentProcessor $cashPaymentProcessor;
+
+    public function setUp(): void
+    {
+        $this->client = $this->createMock(Client::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
+        $this->connection = $this->createMock(Connection::class);
+        $this->cashPaymentProcessor = new CashPaymentProcessor($this->em);
+    }
+
     public function testCashPaymentProcess(): void
     {
-        $client = $this->createMock(Client::class);
-        $em = $this->createMock(EntityManagerInterface::class);
-        $connection = $this->createMock(Connection::class);
-
-        $client
+        $this->client
             ->expects($this->once())
             ->method('payOrder');
 
-        $em
+        $this->em
             ->expects($this->atLeast(2))
             ->method('getConnection')
-            ->willReturn($connection);
+            ->willReturn($this->connection);
 
-        $connection
+        $this->connection
             ->expects($this->once())
             ->method('beginTransaction');
 
-        $client
+        $this->client
             ->expects($this->once())
             ->method('setStatus')
             ->with(Client::ORDER_PAYED);
 
-        $em
+        $this->em
             ->expects($this->once())
             ->method('flush');
 
-        $connection
+        $this->connection
             ->expects($this->once())
             ->method('commit');
 
-        $cashPaymentProcessor = new CashPaymentProcessor($em);
-        $cashPaymentProcessor->pay($client);
+        $this->cashPaymentProcessor->pay($this->client);
+    }
+
+    public function testCashPaymentWithException(): void
+    {
+        $this->em
+            ->expects($this->atLeast(2))
+            ->method('getConnection')
+            ->willReturn($this->connection);
+
+        $this->connection
+            ->expects($this->once())
+            ->method('beginTransaction');
+
+        $this->client
+            ->expects($this->once())
+            ->method('payOrder');
+
+        $this->client
+            ->expects($this->once())
+            ->method('setStatus')
+            ->with(Client::ORDER_PAYED);
+
+        $this->em
+            ->expects($this->once())
+            ->method('flush')
+            ->willThrowException(new Exception());
+
+        $this->expectException(Exception::class);
+
+        $this->connection
+            ->expects($this->once())
+            ->method('rollBack');
+
+        $this->cashPaymentProcessor->pay($this->client);
     }
 
 }

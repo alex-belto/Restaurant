@@ -4,7 +4,6 @@ namespace App\Tests\Unit\Services\Payment;
 
 use App\Entity\Client;
 use App\Services\Payment\CashPaymentProcessor;
-use App\Services\Payment\Payment;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +13,6 @@ class CashPaymentProcessorTest extends TestCase
     {
         $client = $this->createMock(Client::class);
         $em = $this->createMock(EntityManagerInterface::class);
-        $client->method('isEnoughMoney')->willReturn(true);
 
         $client
             ->expects($this->once())

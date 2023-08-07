@@ -5,7 +5,6 @@ namespace App\Tests\Unit\Services\Payment;
 use App\Entity\Client;
 use App\Exception\CardValidationException;
 use App\Services\Payment\CardPaymentProcessor;
-use App\Services\Payment\Payment;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -23,15 +22,17 @@ class CardPaymentProcessorTest extends TestCase
     }
     public function testCardPaymentProcess(): void
     {
-        $this->client->method('isEnoughMoney')->willReturn(true);
-        $this->client->method('isCardValid')->willReturn(true);
+        $this->client
+            ->expects($this->once())
+            ->method('isCardValid')
+            ->willReturn(true);
 
         $this->client
             ->expects($this->once())
             ->method('payOrder');
 
         $this->em
-            ->expects($this->atLeastOnce())
+            ->expects($this->atLeast(2))
             ->method('getConnection')
             ->willReturnSelf();
 
@@ -57,9 +58,12 @@ class CardPaymentProcessorTest extends TestCase
 
     public function testCardValidationException(): void
     {
-        $this->client->method('isCardValid')->willReturn(false);
-        $this->expectException(CardValidationException::class);
+        $this->client
+            ->expects($this->once())
+            ->method('isCardValid')
+            ->willReturn(false);
 
+        $this->expectException(CardValidationException::class);
         $this->cardPaymentProcessor->pay($this->client);
     }
 

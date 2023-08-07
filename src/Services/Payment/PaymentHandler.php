@@ -35,11 +35,10 @@ class PaymentHandler
         }
 
         try {
-            $paymentStrategy->pay($client, $client->getConnectedOrder());
+            $paymentStrategy->pay($client);
         } catch (CardValidationException $e) {
             $cashPaymentProcessor = $this->paymentStrategies->get($restaurant->getPaymentMethod());
-            $cashPaymentProcessor->pay($client, $client->getConnectedOrder());
+            $cashPaymentProcessor->pay($client);
         }
-
     }
 }

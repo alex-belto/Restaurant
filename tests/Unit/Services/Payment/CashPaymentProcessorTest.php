@@ -19,7 +19,7 @@ class CashPaymentProcessorTest extends TestCase
             ->method('payOrder');
 
         $em
-            ->expects($this->atLeastOnce())
+            ->expects($this->atLeast(2))
             ->method('getConnection')
             ->willReturnSelf();
 

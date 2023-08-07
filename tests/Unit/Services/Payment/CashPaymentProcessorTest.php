@@ -4,6 +4,7 @@ namespace App\Tests\Unit\Services\Payment;
 
 use App\Entity\Client;
 use App\Services\Payment\CashPaymentProcessor;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -13,6 +14,7 @@ class CashPaymentProcessorTest extends TestCase
     {
         $client = $this->createMock(Client::class);
         $em = $this->createMock(EntityManagerInterface::class);
+        $connection = $this->createMock(Connection::class);
 
         $client
             ->expects($this->once())
@@ -21,9 +23,9 @@ class CashPaymentProcessorTest extends TestCase
         $em
             ->expects($this->atLeast(2))
             ->method('getConnection')
-            ->willReturnSelf();
+            ->willReturn($connection);
 
-        $em
+        $connection
             ->expects($this->once())
             ->method('beginTransaction');
 
@@ -36,7 +38,7 @@ class CashPaymentProcessorTest extends TestCase
             ->expects($this->once())
             ->method('flush');
 
-        $em
+        $connection
             ->expects($this->once())
             ->method('commit');
 

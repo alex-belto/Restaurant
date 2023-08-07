@@ -18,7 +18,10 @@ class TipsCashPaymentDecoratorTest extends TestCase
         $cashPaymentProcessor = $this->createMock(CashPaymentProcessor::class);
         $tipsDistributor = $this->createMock(TipsDistributor::class);
 
-        $client->method('getConnectedOrder')->willReturn($order);
+        $client
+            ->expects($this->once())
+            ->method('getConnectedOrder')
+            ->willReturn($order);
 
         $cashPaymentProcessor
             ->expects($this->once())

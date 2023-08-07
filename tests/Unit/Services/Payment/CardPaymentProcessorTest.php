@@ -5,6 +5,7 @@ namespace App\Tests\Unit\Services\Payment;
 use App\Entity\Client;
 use App\Exception\CardValidationException;
 use App\Services\Payment\CardPaymentProcessor;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -13,12 +14,14 @@ class CardPaymentProcessorTest extends TestCase
     private EntityManagerInterface $em;
     private Client $client;
     private CardPaymentProcessor $cardPaymentProcessor;
+    private Connection $connection;
 
     protected function setUp(): void
     {
         $this->em = $this->createMock(EntityManagerInterface::class);
         $this->client = $this->createMock(Client::class);
         $this->cardPaymentProcessor = new CardPaymentProcessor($this->em);
+        $this->connection = $this->createMock(Connection::class);
     }
     public function testCardPaymentProcess(): void
     {
@@ -34,9 +37,9 @@ class CardPaymentProcessorTest extends TestCase
         $this->em
             ->expects($this->atLeast(2))
             ->method('getConnection')
-            ->willReturnSelf();
+            ->willReturn($this->connection);
 
-        $this->em
+        $this->connection
             ->expects($this->once())
             ->method('beginTransaction');
 
@@ -49,7 +52,7 @@ class CardPaymentProcessorTest extends TestCase
             ->expects($this->once())
             ->method('flush');
 
-        $this->em
+        $this->connection
             ->expects($this->once())
             ->method('commit');
 

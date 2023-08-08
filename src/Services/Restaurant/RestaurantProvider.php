@@ -3,22 +3,18 @@
 namespace App\Services\Restaurant;
 
 use App\Entity\Restaurant;
-use App\Repository\RestaurantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class RestaurantProvider
 {
-    private RestaurantRepository $restaurantRepository;
     private RestaurantBuilder $restaurantBuilder;
     private EntityManagerInterface $em;
     private string $filePath;
 
     public function __construct(
-        RestaurantRepository $restaurantRepository,
         RestaurantBuilder $restaurantBuilder,
         EntityManagerInterface $em
     ) {
-        $this->restaurantRepository = $restaurantRepository;
         $this->restaurantBuilder = $restaurantBuilder;
         $this->em = $em;
         $this->filePath = realpath(__DIR__ . '/../../..') . $_ENV['FILE_PATH'];
@@ -34,7 +30,7 @@ class RestaurantProvider
         }
 
         $restaurantId = file_get_contents($this->filePath);
-        return $this->restaurantRepository->find($restaurantId);
+        return $this->em->getRepository(Restaurant::class)->find($restaurantId);
     }
 
     private function buildRestaurant(?int $days = null): Restaurant

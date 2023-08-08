@@ -11,5 +11,5 @@ use App\Entity\Restaurant;
  */
 interface PaymentInterface
 {
-    public function pay(Client $client, Order $order): void;
+    public function pay(Client $client): void;
 }

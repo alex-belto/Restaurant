@@ -22,7 +22,7 @@ class OrderItem
     #[ORM\ManyToOne(inversedBy: 'orderItems')]
     private ?Order $connectedOrder = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 32)]
     private string $name;
 
     #[ORM\Column]
@@ -36,7 +36,7 @@ class OrderItem
         $this->menuItem = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }

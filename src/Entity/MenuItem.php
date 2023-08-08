@@ -20,19 +20,19 @@ class MenuItem
     #[ORM\Column]
     private int $id;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 32)]
     private string $name;
 
     #[ORM\Column]
     private float $price;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 8)]
     private string $time;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column]
     private int $type;
 
-    #[ORM\ManyToOne(inversedBy: 'MenuItems')]
+    #[ORM\ManyToOne(inversedBy: 'menuItems')]
     private ?Restaurant $restaurant = null;
 
     #[ORM\ManyToOne(inversedBy: 'menuItem')]

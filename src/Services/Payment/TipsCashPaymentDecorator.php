@@ -3,7 +3,6 @@
 namespace App\Services\Payment;
 
 use App\Entity\Client;
-use App\Entity\Order;
 use App\Interfaces\PaymentInterface;
 use App\Services\Tips\TipsDistributor;
 
@@ -13,7 +12,6 @@ use App\Services\Tips\TipsDistributor;
 class TipsCashPaymentDecorator implements PaymentInterface
 {
     private TipsDistributor $tipsDistributor;
-
     private CashPaymentProcessor $cashPaymentProcessor;
 
     public function __construct(
@@ -27,9 +25,9 @@ class TipsCashPaymentDecorator implements PaymentInterface
     /**
      * @throws \Exception
      */
-    public function pay(Client $client, Order $order): void
+    public function pay(Client $client): void
     {
-        $this->cashPaymentProcessor->pay($client, $order);
-        $this->tipsDistributor->splitTips($order);
+        $this->cashPaymentProcessor->pay($client);
+        $this->tipsDistributor->splitTips($client->getConnectedOrder());
     }
 }

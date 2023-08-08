@@ -29,7 +29,7 @@ class Waiter implements StaffInterface
     #[ORM\OneToMany(mappedBy: 'waiter', targetEntity: Order::class)]
     private Collection $orders;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 32)]
     private string $name;
 
     #[ORM\ManyToOne(cascade: ['persist', 'remove'], inversedBy: 'waiters')]
@@ -41,7 +41,7 @@ class Waiter implements StaffInterface
         $this->orders = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }

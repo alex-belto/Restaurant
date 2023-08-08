@@ -4,66 +4,41 @@ namespace App\Services\Payment;
 
 use App\Entity\Client;
 use App\Exception\CardValidationException;
-use App\Interfaces\PaymentInterface;
 use Exception;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
  * Selects a random payment method and processes the payment for an order.
  */
 class PaymentHandler
 {
-    private ContainerInterface $container;
-    private CashPaymentProcessor $cashPaymentProcessor;
+    private ServiceLocator $paymentStrategies;
 
     public function __construct(
-        ContainerInterface       $container,
-        CashPaymentProcessor     $cashPaymentProcessor
+        ServiceLocator $paymentStrategies
     ) {
-        $this->container = $container;
-        $this->cashPaymentProcessor = $cashPaymentProcessor;
+        $this->paymentStrategies = $paymentStrategies;
     }
 
-    /**
-     * @throws Exception
-     */
     public function payOrder(Client $client): void
     {
         if ($client->getStatus() === Client::ORDER_PAYED) {
             return;
         }
 
-        $payment = $this->getPaymentMethod();
-        $paymentStrategy = match ($payment['paymentStrategy']) {
-            'cash' => $this->container->get('App\Services\Payment\CashPaymentProcessor'),
-            'card' => $this->container->get('App\Services\Payment\CardPaymentProcessor'),
-            'cash_tips' => $this->container->get('App\Services\Payment\TipsCashPaymentDecorator'),
-            'card_tips' => $this->container->get('App\Services\Payment\TipsCardPaymentDecorator'),
-            default => throw new Exception('wrong payment strategy'),
-        };
+        $restaurant = $client->getRestaurant();
 
-        try {
-            /** @var PaymentInterface $paymentStrategy */
-            $paymentStrategy->pay($client, $client->getConnectedOrder());
-        } catch (CardValidationException $e) {
-            $this->cashPaymentProcessor->pay($client, $client->getConnectedOrder());
+        $paymentStrategy = $this->paymentStrategies->get($client->getPaymentMethod());
+
+        if (!$client->isEnoughMoney()) {
+            throw new Exception('Client dont have enough money!');
         }
 
-    }
-
-    private function getPaymentMethod(): array
-    {
-        $strategyNumber = rand(1,4);
-
-        $paymentStrategy = match ($strategyNumber) {
-            1 => 'card',
-            2 => 'cash',
-            3 => 'cash_tips',
-            4 => 'card_tips'
-        };
-
-        return [
-            'paymentStrategy' => $paymentStrategy
-        ];
+        try {
+            $paymentStrategy->pay($client);
+        } catch (CardValidationException $e) {
+            $cashPaymentProcessor = $this->paymentStrategies->get($restaurant->getPaymentMethod());
+            $cashPaymentProcessor->pay($client);
+        }
     }
 }

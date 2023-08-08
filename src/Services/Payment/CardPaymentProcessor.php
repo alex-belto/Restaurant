@@ -3,7 +3,6 @@
 namespace App\Services\Payment;
 
 use App\Entity\Client;
-use App\Entity\Order;
 use App\Exception\CardValidationException;
 use App\Interfaces\PaymentInterface;
 use Doctrine\DBAL\Exception;
@@ -14,31 +13,24 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class CardPaymentProcessor implements PaymentInterface
 {
-    private Payment $processingPayment;
     private EntityManagerInterface $em;
 
     public function __construct(
-        Payment        $processingPayment,
         EntityManagerInterface $em
     ) {
-        $this->processingPayment = $processingPayment;
         $this->em = $em;
     }
 
-    public function pay(Client $client, Order $order): void
+    public function pay(Client $client): void
     {
         if (!$client->isCardValid()) {
             throw new CardValidationException('Card not valid!');
         }
 
         try {
-            if (!$client->isEnoughMoney()) {
-                throw new Exception('Client dont have enough money!');
-            }
-
             $this->em->getConnection()->beginTransaction();
 
-            $this->processingPayment->payOrder($client, $order);
+            $client->payOrder();
             $client->setStatus(Client::ORDER_PAYED);
             $this->em->flush();
             $this->em->getConnection()->commit();

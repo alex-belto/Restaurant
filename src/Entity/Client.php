@@ -25,7 +25,7 @@ class Client
     #[ORM\Column]
     private float $money;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 32)]
     private string $name;
 
     #[ORM\Column(nullable: true)]
@@ -45,6 +45,9 @@ class Client
 
     #[ORM\Column]
     private int $status = self::WITHOUT_ORDER;
+
+    #[ORM\Column(length: 32, nullable: false)]
+    private string $paymentMethod;
 
     public function getId(): int
     {
@@ -160,5 +163,32 @@ class Client
             return false;
         }
         return $this->cardExpirationDate > new \DateTime();
+    }
+
+    public function getPaymentMethod(): string
+    {
+        return $this->paymentMethod;
+    }
+
+    public function setPaymentMethod(string $paymentMethod): static
+    {
+        $this->paymentMethod = $paymentMethod;
+
+        return $this;
+    }
+
+    public function getRestaurant(): Restaurant
+    {
+        return $this->connectedOrder->getWaiter()->getRestaurant();
+    }
+
+    public function payOrder(): void
+    {
+        $order = $this->getConnectedOrder();
+        $restaurant =  $this->getRestaurant();
+        $restOfMoney = $this->getMoney() - ($order->getPrice() + $order->getTips());
+        $this->setMoney($restOfMoney);
+        $restaurantBalance = $restaurant->getBalance() + $order->getPrice();
+        $restaurant->setBalance($restaurantBalance);
     }
 }

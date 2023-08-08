@@ -3,7 +3,6 @@
 namespace App\Services\Payment;
 
 use App\Entity\Client;
-use App\Entity\Order;
 use App\Interfaces\PaymentInterface;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,30 +12,22 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class CashPaymentProcessor implements PaymentInterface
 {
-    private Payment $processingPayment;
     private EntityManagerInterface $em;
 
     public function __construct(
-        Payment $processingPayment,
         EntityManagerInterface $em
     ) {
-        $this->processingPayment = $processingPayment;
         $this->em = $em;
     }
 
-    public function pay(Client $client, Order $order): void
+    public function pay(Client $client): void
     {
-        $this->em->getConnection()->beginTransaction();
-
         try {
-            if (!$client->isEnoughMoney()) {
-                throw new Exception('Client dont have enough money!');
-            }
-            $this->processingPayment->payOrder($client, $order);
+            $this->em->getConnection()->beginTransaction();
+            $client->payOrder();
             $client->setStatus(Client::ORDER_PAYED);
             $this->em->flush();
             $this->em->getConnection()->commit();
-
         } catch (Exception $e) {
             $this->em->getConnection()->rollBack();
             throw $e;

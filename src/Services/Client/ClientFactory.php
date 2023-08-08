@@ -8,12 +8,19 @@ use Faker\Factory;
 
 class ClientFactory
 {
+    private \Traversable $paymentMethods;
+
+    public function __construct(\Traversable $paymentMethods) {
+        $this->paymentMethods = $paymentMethods;
+    }
+
     public function createClient(bool $card = false): Client
     {
         $faker = Factory::create();
         $client = new Client();
         $client->setName($faker->name());
         $client->setMoney(rand(100, 150));
+        $client->setPaymentMethod($this->getPaymentMethod());
         if ($card) {
             $cardExpirationString = $faker->dateTimeBetween('-6 month', '+2 year')->format('Y-m-d');
             $cardExpiration = DateTime::CreateFromFormat('Y-m-d', $cardExpirationString);
@@ -24,5 +31,22 @@ class ClientFactory
         }
 
         return $client;
+    }
+
+    private function getPaymentMethod(): string
+    {
+        $amountOfPaymentMethods = iterator_count($this->paymentMethods);
+        $randomMethodNumber = rand(1,$amountOfPaymentMethods);
+
+        $countProcessedItems = 1;
+
+        foreach ($this->paymentMethods as $key => $paymentMethod) {
+            if($randomMethodNumber === $countProcessedItems) {
+                return $key;
+            }
+            $countProcessedItems++;
+        }
+
+        throw new \Exception('Payment method not found!');
     }
 }

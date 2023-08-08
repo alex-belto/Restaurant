@@ -31,16 +31,26 @@ services:
             - '@doctrine.orm.default_entity_manager'
 
     App\Services\Payment\CashPaymentProcessor:
-        public: true
+        tags:
+            - {name: 'paymentStrategies', key: 'cashPayment'}
 
     App\Services\Payment\CardPaymentProcessor:
-        public: true
+        tags:
+            - { name: 'paymentStrategies', key: 'cardPayment' }
 
     App\Services\Payment\TipsCardPaymentDecorator:
-        public: true
+        tags:
+            - { name: 'paymentStrategies', key: 'tipsCardPayment' }
 
     App\Services\Payment\TipsCashPaymentDecorator:
-        public: true
+        tags:
+            - { name: 'paymentStrategies', key: 'tipsCashPayment' }
+
+    App\Services\Payment\PaymentHandler:
+        arguments: [!tagged_locator { tag: 'paymentStrategies', index_by: 'key' }]
+
+    App\Services\Client\ClientFactory:
+        arguments: [!tagged_iterator { tag: 'paymentStrategies', index_by: 'key' }]
 
     App\EventListener\Waiter\WaiterListener:
         tags:

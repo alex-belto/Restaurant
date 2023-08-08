@@ -24,7 +24,8 @@ class ClientListenerTest extends TestCase
         $client = $this->createMock(Client::class);
         $restaurant = $this->createMock(Restaurant::class);
         $menuItem = $this->createMock(MenuItem::class);
-        $menu = new ArrayCollection([$menuItem, $menuItem, $menuItem, $menuItem]);
+        $menuFill = array_fill(0, 4, $menuItem);
+        $menu = new ArrayCollection($menuFill);
 
         $restaurantProvider
             ->expects($this->once())

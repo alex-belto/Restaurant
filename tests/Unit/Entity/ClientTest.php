@@ -17,50 +17,69 @@ class ClientTest extends TestCase
         $this->order = $this->createMock(Order::class);
     }
 
-    public function testClientHasEnoughMoney(): void
+    /**
+     * @dataProvider dataProviderForTestIsEnoughMoney
+     */
+    public function testIsEnoughMoney(
+        float $money,
+        float $price,
+        int $tips,
+        bool $expect
+    ): void
     {
-        $this->client->setMoney(200.00);
+        $this->client->setMoney($money);
         $this->client->setConnectedOrder($this->order);
 
         $this->order
             ->method('getPrice')
-            ->willReturn(100.00);
+            ->willReturn($price);
         $this->order
             ->method('getTips')
-            ->willReturn(10);
+            ->willReturn($tips);
 
-        $this->assertEquals(true, $this->client->isEnoughMoney());
+        $this->assertEquals($expect, $this->client->isEnoughMoney());
     }
 
-    public function testClientDoesntHaveEnoughMoney(): void
+    static function dataProviderForTestIsEnoughMoney(): array
     {
-        $this->client->setMoney(100.00);
-        $this->client->setConnectedOrder($this->order);
-
-        $this->order
-            ->method('getPrice')
-            ->willReturn(100.00);
-        $this->order
-            ->method('getTips')
-            ->willReturn(10);
-
-        $this->assertEquals(false, $this->client->isEnoughMoney());
+        return [
+            'clientHasEnoughMoney' => [
+                'money' => 200.00,
+                'price' => 100.00,
+                'tips' => 10,
+                'expect' => true
+            ],
+            'clientDoesntHaveEnoughMoney' => [
+                'money' => 100.00,
+                'price' => 100.00,
+                'tips' => 10,
+                'expect' => false
+            ]
+        ];
     }
 
-    public function testCardNotValid(): void
+    /**
+     * @dataProvider dataProviderForTestIsCardValid
+     */
+    public function testIsCardValid(\DateTime $dateExpiration, bool $expect): void
     {
-        $notValidDate = new \DateTime('-1year');
-        $this->client->setCardExpirationDate($notValidDate);
+        $this->client->setCardExpirationDate($dateExpiration);
 
-        $this->assertEquals(false, $this->client->isCardValid());
+        $this->assertEquals($expect, $this->client->isCardValid());
     }
 
-    public function testCardValid(): void
+    static function dataProviderForTestIsCardValid(): array
     {
-        $notValidDate = new \DateTime('+1year');
-        $this->client->setCardExpirationDate($notValidDate);
-
-        $this->assertEquals(true, $this->client->isCardValid());
+        return [
+            'cardValid' => [
+                'dateExpiration' => new \DateTime('+1year'),
+                'expect' => true
+            ],
+            'cardNotValid' => [
+                'dateExpiration' => new \DateTime('-1year'),
+                'expect' => false
+            ],
+        ];
     }
 
 }

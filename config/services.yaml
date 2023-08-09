@@ -26,10 +26,6 @@ services:
     App\DataFixtures\MenuFixtures:
         tags: ['doctrine.fixture.orm']
 
-    App\Services\Payment\Payment:
-        arguments:
-            - '@doctrine.orm.default_entity_manager'
-
     App\Services\Payment\CashPaymentProcessor:
         tags:
             - {name: 'paymentStrategies', key: 'cashPayment'}

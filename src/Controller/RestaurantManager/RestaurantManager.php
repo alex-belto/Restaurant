@@ -40,9 +40,6 @@ class RestaurantManager extends AbstractController
         $this->restaurantRepository = $restaurantRepository;
     }
 
-    /**
-     * @throws \Exception
-     */
     #[Route('/restaurant/open/{days}', name: 'open_restaurant', methods: ['GET'])]
     public function openRestaurant(int $days): JsonResponse
     {
@@ -53,10 +50,6 @@ class RestaurantManager extends AbstractController
         return $this->json($result);
     }
 
-    /**
-     * @return JsonResponse
-     * @throws \Exception
-     */
     #[Route('restaurant/close', name: 'close_restaurant', methods: ['GET'])]
     public function dropRestaurant(): JsonResponse
     {

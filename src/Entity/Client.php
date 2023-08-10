@@ -153,7 +153,7 @@ class Client
 
     public function isEnoughMoney(): bool
     {
-        $orderAmountSum = $this->connectedOrder->getPrice() + $this->connectedOrder->getTips();
+        $orderAmountSum = $this->connectedOrder->getPrice() + $this->connectedOrder->calculateTips();
         return $this->money >= $orderAmountSum;
     }
 
@@ -186,7 +186,7 @@ class Client
     {
         $order = $this->getConnectedOrder();
         $restaurant =  $this->getRestaurant();
-        $restOfMoney = $this->getMoney() - ($order->getPrice() + $order->getTips());
+        $restOfMoney = $this->getMoney() - ($order->getPrice() + $order->calculateTips());
         $this->setMoney($restOfMoney);
         $restaurantBalance = $restaurant->getBalance() + $order->getPrice();
         $restaurant->setBalance($restaurantBalance);

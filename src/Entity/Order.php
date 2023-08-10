@@ -114,7 +114,7 @@ class Order
         return $orderPrice;
     }
 
-    public function getTips(): ?int
+    public function calculateTips(): ?float
     {
         return $this->getPrice()/100 * $this->tips;
     }

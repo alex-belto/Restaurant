@@ -20,9 +20,6 @@ class RestaurantProvider
         $this->filePath = realpath(__DIR__ . '/../../..') . $_ENV['FILE_PATH'];
     }
 
-    /**
-     * @throws \Exception
-     */
     public function getRestaurant(?int $days = null): Restaurant
     {
         if (!file_exists($this->filePath)) {
@@ -30,7 +27,13 @@ class RestaurantProvider
         }
 
         $restaurantId = file_get_contents($this->filePath);
-        return $this->em->getRepository(Restaurant::class)->find($restaurantId);
+        $restaurant = $this->em->getRepository(Restaurant::class)->find($restaurantId);
+
+        if ($restaurant === null) {
+            $restaurant = $this->buildRestaurant($days);
+        }
+
+        return $restaurant;
     }
 
     private function buildRestaurant(?int $days = null): Restaurant

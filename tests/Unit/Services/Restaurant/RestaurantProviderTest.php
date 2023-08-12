@@ -81,4 +81,30 @@ class RestaurantProviderTest extends TestCase
         $this->assertInstanceOf(Restaurant::class, $restaurant);
     }
 
+    public function testRestaurantFileExistButRestaurantNotFound(): void
+    {
+        $restaurantId = 111;
+        file_put_contents($this->filePath, $restaurantId);
+
+        $this->em
+            ->expects($this->once())
+            ->method('getRepository')
+            ->with($this->equalTo(Restaurant::class))
+            ->willReturn($this->restaurantRepository);
+
+       $this->restaurantRepository
+            ->expects($this->once())
+            ->method('find')
+            ->with($this->equalTo($restaurantId))
+            ->willReturn(null);
+
+        $this->restaurantBuilder
+            ->expects($this->once())
+            ->method('buildRestaurant')
+            ->willReturn($this->restaurant);
+
+        $restaurant = $this->restaurantProvider->getRestaurant(1);
+        $this->assertInstanceOf(Restaurant::class, $restaurant);
+    }
+
 }

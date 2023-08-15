@@ -102,10 +102,9 @@ class Order
 
     public function getPrice(): ?float
     {
-        $orderItems = $this->orderItems;
         $orderPrice = 0;
 
-        foreach ($orderItems as $orderItem)
+        foreach ($this->orderItems as $orderItem)
         {
             $price = $orderItem->getPrice();
             $orderPrice += $price;

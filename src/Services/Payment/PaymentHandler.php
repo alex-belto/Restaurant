@@ -30,7 +30,7 @@ class PaymentHandler
 
         $paymentStrategy = $this->paymentStrategies->get($client->getPaymentMethod());
 
-        if (!$client->isEnoughMoney()) {
+        if (!$client->isEnoughMoneyForOrder()) {
             throw new Exception('Client dont have enough money!');
         }
 

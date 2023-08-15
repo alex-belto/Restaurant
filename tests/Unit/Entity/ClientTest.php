@@ -18,9 +18,9 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @dataProvider dataProviderForTestIsEnoughMoney
+     * @dataProvider dataProviderForTestIsEnoughMoneyForOrder
      */
-    public function testIsEnoughMoney(
+    public function testIsEnoughMoneyForOrder(
         float $money,
         float $price,
         int $tips,
@@ -37,10 +37,10 @@ class ClientTest extends TestCase
             ->method('getTips')
             ->willReturn($tips);
 
-        $this->assertEquals($expect, $this->client->isEnoughMoney());
+        $this->assertEquals($expect, $this->client->isEnoughMoneyForOrder());
     }
 
-    static function dataProviderForTestIsEnoughMoney(): array
+    static function dataProviderForTestIsEnoughMoneyForOrder(): array
     {
         return [
             'clientHasEnoughMoney' => [

@@ -28,7 +28,7 @@ class PaymentHandlerTest extends TestCase
     {
         $this->client
             ->expects($this->once())
-            ->method('isEnoughMoney')
+            ->method('isEnoughMoneyForOrder')
             ->willReturn(true);
 
         $this->client
@@ -54,7 +54,7 @@ class PaymentHandlerTest extends TestCase
 
         $this->client
             ->expects($this->once())
-            ->method('isEnoughMoney')
+            ->method('isEnoughMoneyForOrder')
             ->willReturn(true);
 
         $this->client
@@ -85,7 +85,7 @@ class PaymentHandlerTest extends TestCase
 
         $this->client
             ->expects($this->once())
-            ->method('isEnoughMoney')
+            ->method('isEnoughMoneyForOrder')
             ->willReturn(false);
 
         $this->expectExceptionMessage('Client dont have enough money!');

@@ -151,7 +151,7 @@ class Client
         return $this;
     }
 
-    public function isEnoughMoney(): bool
+    public function isEnoughMoneyForOrder(): bool
     {
         $orderAmountSum = $this->connectedOrder->getPrice() + $this->connectedOrder->getTips();
         return $this->money >= $orderAmountSum;

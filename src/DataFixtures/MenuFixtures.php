@@ -12,27 +12,27 @@ use Doctrine\Persistence\ObjectManager;
  */
 class MenuFixtures extends Fixture
 {
-    private  MenuItemCreator $createMenuItem;
+    private  MenuItemCreator $menuItemCreator;
     private EntityManagerInterface $em;
 
     public function __construct(
-        MenuItemCreator $createMenuItem,
+        MenuItemCreator $menuItemCreator,
         EntityManagerInterface $em
     )
     {
-        $this->createMenuItem = $createMenuItem;
+        $this->menuItemCreator = $menuItemCreator;
         $this->em = $em;
     }
 
     public function load(ObjectManager $manager)
     {
         for ($i = 1; $i <= 15; $i++) {
-            $dish = $this->createMenuItem->createDish();
+            $dish = $this->menuItemCreator->createDish();
             $this->em->persist($dish);
         }
 
         for ($j = 1; $j <= 5; $j++) {
-            $drink = $this->createMenuItem->createDrink();
+            $drink = $this->menuItemCreator->createDrink();
             $this->em->persist($drink);
         }
 

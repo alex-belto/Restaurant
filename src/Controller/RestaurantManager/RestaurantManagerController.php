@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * The main controller is responsible for managing the restaurant.
  */
-class RestaurantManager extends AbstractController
+class RestaurantManagerController extends AbstractController
 {
     private Manager $restaurantManager;
 

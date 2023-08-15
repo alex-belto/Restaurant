@@ -4,9 +4,9 @@ namespace App\EventListener\Waiter;
 
 use App\Entity\Client;
 use App\Entity\Order;
-use App\Services\Waiter\WaiterOrderProcessor;
+use App\Entity\Waiter;
+use App\Services\Staff\StaffResolver;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 /**
  * Listening to the client, we pass the order to the chef after its status has been changed.
@@ -14,22 +14,26 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
  */
 class WaiterListener
 {
-    private WaiterOrderProcessor $waiterOrderProcessor;
-
+    private StaffResolver $staffResolver;
     private EntityManagerInterface $em;
 
     public function __construct(
-        WaiterOrderProcessor   $waiterOrderProcessor,
+        StaffResolver $staffResolver,
         EntityManagerInterface $em,
     ) {
-        $this->waiterOrderProcessor = $waiterOrderProcessor;
+        $this->staffResolver = $staffResolver;
         $this->em = $em;
     }
 
-    public function processOrderByWaiter(Client $client, LifecycleEventArgs $eventArgs): void
+    public function processOrderByWaiter(Client $client): void
     {
         if ($client->getStatus() === Client::ORDER_PLACED) {
-            $this->waiterOrderProcessor->processingOrder($client->getConnectedOrder());
+            /** @var Waiter $waiter */
+            $waiter = $this->staffResolver->chooseStaff('waiter');
+            $order = $client->getConnectedOrder();
+            $waiter->addOrder($order);
+            $order->setStatus(Order::READY_TO_KITCHEN);
+            $this->em->flush();
         }
     }
 
@@ -41,7 +45,7 @@ class WaiterListener
 
         $kitchener = $order->getKitchener();
         $kitchener->removeOrder($order);
-        $this->waiterOrderProcessor->bringFood($order);
+        $order->setStatus(Order::DONE);
         $this->em->flush();
     }
 }

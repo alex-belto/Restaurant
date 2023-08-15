@@ -9,14 +9,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 
-class MenuFixturesTest extends TestCase
+class MenuFixtureTest extends TestCase
 {
     public function testMenuFixturesLoad(): void
     {
         $menuItemCreator = $this->createMock(MenuItemCreator::class);
         $menuItem = $this->createMock(MenuItem::class);
-        $em = $this->createMock(EntityManagerInterface::class);
-        $menuFixtures = new MenuFixture($menuItemCreator, $em);
+        $menuFixtures = new MenuFixture($menuItemCreator);
         $objectManager = $this->createMock(ObjectManager::class);
 
         $menuItemCreator
@@ -29,12 +28,12 @@ class MenuFixturesTest extends TestCase
             ->method('createDrink')
             ->willReturn($menuItem);
 
-        $em
+        $objectManager
             ->expects($this->exactly(20))
             ->method('persist')
             ->with($this->equalTo($menuItem));
 
-        $em
+        $objectManager
             ->expects($this->once())
             ->method('flush');
 

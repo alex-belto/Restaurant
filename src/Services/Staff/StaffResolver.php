@@ -32,7 +32,7 @@ class StaffResolver
         };
         
         $amountOfStaffs = count($staffs);
-        $randomStaffId = rand(0, $amountOfStaffs - 1);
-        return $staffs[$randomStaffId];
+        $randomStaffIdx = rand(0, $amountOfStaffs - 1);
+        return $staffs[$randomStaffIdx];
     }
 }

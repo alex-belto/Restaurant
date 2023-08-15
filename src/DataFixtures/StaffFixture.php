@@ -10,7 +10,7 @@ use Doctrine\Persistence\ObjectManager;
 /**
  * Creating staff members.
  */
-class StaffFixtures extends Fixture
+class StaffFixture extends Fixture
 {
     private StaffFactory $staffFactory;
     private EntityManagerInterface $em;

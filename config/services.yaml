@@ -23,12 +23,8 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\DataFixtures\MenuFixtures:
+    App\DataFixtures\MenuFixture:
         tags: ['doctrine.fixture.orm']
-
-    App\Services\Payment\Payment:
-        arguments:
-            - '@doctrine.orm.default_entity_manager'
 
     App\Services\Payment\CashPaymentProcessor:
         tags:

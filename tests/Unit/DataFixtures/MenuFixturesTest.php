@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\DataFixtures;
 
-use App\DataFixtures\MenuFixtures;
+use App\DataFixtures\MenuFixture;
 use App\Entity\MenuItem;
 use App\Services\Menu\MenuItemCreator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,7 +16,7 @@ class MenuFixturesTest extends TestCase
         $menuItemCreator = $this->createMock(MenuItemCreator::class);
         $menuItem = $this->createMock(MenuItem::class);
         $em = $this->createMock(EntityManagerInterface::class);
-        $menuFixtures = new MenuFixtures($menuItemCreator, $em);
+        $menuFixtures = new MenuFixture($menuItemCreator, $em);
         $objectManager = $this->createMock(ObjectManager::class);
 
         $menuItemCreator

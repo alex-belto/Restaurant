@@ -9,7 +9,7 @@ use Doctrine\Persistence\ObjectManager;
 /**
  * Creating the main menu.
  */
-class MenuFixtures extends Fixture
+class MenuFixture extends Fixture
 {
     private  MenuItemCreator $menuItemCreator;
 

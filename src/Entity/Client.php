@@ -83,7 +83,7 @@ class Client
         return $this->cardNumber;
     }
 
-    public function setCardNumber(?string $cardNumber): static
+    public function setCardNumber(string $cardNumber): static
     {
         $this->cardNumber = $cardNumber;
 
@@ -95,7 +95,7 @@ class Client
         return $this->cardExpirationDate;
     }
 
-    public function setCardExpirationDate(?\DateTime $cardExpirationDate): static
+    public function setCardExpirationDate(\DateTime $cardExpirationDate): static
     {
         $this->cardExpirationDate = $cardExpirationDate;
 
@@ -107,7 +107,7 @@ class Client
         return $this->cardCvv;
     }
 
-    public function setCardCvv(?int $cardCvv): static
+    public function setCardCvv(int $cardCvv): static
     {
         $this->cardCvv = $cardCvv;
 

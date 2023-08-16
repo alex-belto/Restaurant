@@ -70,24 +70,24 @@ class RestaurantBuilder
     {
         switch ($type) {
             case 'dish':
-                $dish = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItem::DISH]);
-                if (count($dish) < $amount) {
+                $dishes = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItem::DISH]);
+                if (count($dishes) < $amount) {
                     throw new \Exception('U dont have enough dish in pull');
                 }
 
                 for ($i = 0; $i < $amount; $i++) {
-                    $restaurant->addMenuItem($dish[$i]);
+                    $restaurant->addMenuItem($dishes[$i]);
                 }
                 break;
 
             case 'drink':
-                $drink = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItem::DRINK]);
-                if (count($drink) < $amount) {
+                $drinks = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItem::DRINK]);
+                if (count($drinks) < $amount) {
                     throw new \Exception('U dont have enough drink in pull');
                 }
 
                 for ($i = 0; $i < $amount; $i++) {
-                    $restaurant->addMenuItem($drink[$i]);
+                    $restaurant->addMenuItem($drinks[$i]);
                 }
                 break;
 

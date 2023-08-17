@@ -25,7 +25,7 @@ class ClientFactory
             $cardExpirationString = $faker->dateTimeBetween('-6 month', '+2 year')->format('Y-m-d');
             $cardExpiration = DateTime::CreateFromFormat('Y-m-d', $cardExpirationString);
             $cardNumber = rand(2910000000000000, 4800000000000000);
-            $client->setCardNumber("$cardNumber");
+            $client->setCardNumber((string)$cardNumber);
             $client->setCardExpirationDate($cardExpiration);
             $client->setCardCvv(rand(001, 999));
         }

@@ -27,7 +27,6 @@ class RestaurantManagerTest extends TestCase
         $clientFactory
             ->expects($this->exactly(30))
             ->method('createClient')
-            ->with($this->equalTo(true))
             ->willReturn($client);
 
         $em

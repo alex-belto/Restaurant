@@ -32,12 +32,12 @@ class ClientListener
         $restaurant = $this->restaurantProvider->getRestaurant();
         $order = new Order();
         $order->setClient($client);
-        $menu = $restaurant->getMenuItems()->toArray();
-        $amountOfMenuItems = count($menu) - 1;
+        $menu = $restaurant->getMenuItems();
+        $amountOfMenuItems = $menu->count() - 1;
 
         for ($i = 0; $i < 3; $i++) {
             $item = rand(0, $amountOfMenuItems);
-            $menuItem = $menu[$item];
+            $menuItem = $menu->get($item);
             $orderItem = $this->orderItemFactory->createOrderItem($menuItem, $order);
             $this->em->persist($orderItem);
             $order->addOrderItem($orderItem);

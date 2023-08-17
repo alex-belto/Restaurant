@@ -15,11 +15,13 @@ use Doctrine\ORM\EntityManagerInterface;
 class RestaurantBuilder
 {
     private EntityManagerInterface $em;
+    private Restaurant $restaurant;
 
     public function __construct(
         EntityManagerInterface $em
     ) {
         $this->em = $em;
+        $this->restaurant = new Restaurant();
     }
 
     /**
@@ -27,22 +29,23 @@ class RestaurantBuilder
      */
     public function buildRestaurant(int $days): Restaurant
     {
-        $restaurant = $this->reset();
-        $this->hireKitcheners($restaurant, 3);
-        $this->hireWaiters($restaurant, 7);
-        $this->fillUpMenu($restaurant, 15, 'dish');
-        $this->fillUpMenu($restaurant,  4, 'drink');
+        $restaurant = $this->build();
+        $this
+            ->hireKitcheners($restaurant, 3)
+            ->hireWaiters($restaurant, 7)
+            ->fillUpMenu($restaurant, 15, 'dish')
+            ->fillUpMenu($restaurant, 4, 'drink');
         $restaurant->setDays($days);
 
         return $restaurant;
     }
 
-    public function reset(): Restaurant
+    public function build(): Restaurant
     {
-        return new Restaurant();
+        return $this->restaurant;
     }
 
-    public function hireWaiters(Restaurant $restaurant, int $amount): void
+    public function hireWaiters(Restaurant $restaurant, int $amount): self
     {
         $waiters = $this->em->getRepository(Waiter::class)->findAll();
         if (count($waiters) < $amount) {
@@ -52,9 +55,11 @@ class RestaurantBuilder
         for ($i = 0; $i < $amount; $i++) {
             $restaurant->addWaiter($waiters[$i]);
         }
+
+        return $this;
     }
 
-    public function hireKitcheners(Restaurant $restaurant, int $amount): void
+    public function hireKitcheners(Restaurant $restaurant, int $amount): self
     {
         $kitcheners = $this->em->getRepository(Kitchener::class)->findAll();
         if (count($kitcheners) < $amount) {
@@ -64,9 +69,11 @@ class RestaurantBuilder
         for ($i = 0; $i < $amount; $i++) {
             $restaurant->addKitchener($kitcheners[$i]);
         }
+
+        return $this;
     }
 
-    public function fillUpMenu(Restaurant $restaurant, int $amount, string $type): void
+    public function fillUpMenu(Restaurant $restaurant, int $amount, string $type): self
     {
         switch ($type) {
             case 'dish':
@@ -94,7 +101,7 @@ class RestaurantBuilder
             default:
                 throw new \Exception('Wrong menuItem type!');
         }
+
+        return $this;
     }
-
-
 }

@@ -6,6 +6,9 @@ use App\Entity\MenuItem;
 use App\Entity\Order;
 use App\Entity\OrderItem;
 
+/**
+ * Class that creates OrderItem instances for the restaurant system.
+ */
 class OrderItemFactory
 {
     public function createOrderItem(MenuItem $menuItem, Order $order): OrderItem

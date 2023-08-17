@@ -7,6 +7,9 @@ use App\Entity\Order;
 use App\Entity\OrderItem;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * A utility class responsible for cleansing data for restaurant operations.
+ */
 class DataCleaner
 {
     private EntityManagerInterface $em;

@@ -6,6 +6,9 @@ use App\Entity\Client;
 use DateTime;
 use Faker\Factory;
 
+/**
+ * Class that creates client instances for the restaurant system.
+ */
 class ClientFactory
 {
     private \Traversable $paymentMethods;

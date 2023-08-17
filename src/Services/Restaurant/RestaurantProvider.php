@@ -5,6 +5,9 @@ namespace App\Services\Restaurant;
 use App\Entity\Restaurant;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * A class responsible for supplying a restaurant instance for operations.
+ */
 class RestaurantProvider
 {
     private RestaurantBuilder $restaurantBuilder;

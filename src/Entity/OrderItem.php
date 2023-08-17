@@ -7,6 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Represents an item in an order, mirroring a MenuItem from the menu.
+ */
 #[ORM\Entity(repositoryClass: OrderItemRepository::class)]
 class OrderItem
 {

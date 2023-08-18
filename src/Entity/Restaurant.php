@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Enum\RestaurantData;
+use App\Enum\RestaurantTipsStrategy;
 use App\Repository\RestaurantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,12 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: RestaurantRepository::class)]
 class Restaurant
 {
-    public const TIPS_STANDARD_STRATEGY = 1;
-    public const TIPS_WAITER_STRATEGY = 2;
-    private const WORK_HOURS = 8;
-    private const MAX_VISITORS_PER_HOUR = 50;
-    private const STANDARD_PAYMENT_STRATEGY = 'cashPayment';
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -38,19 +34,20 @@ class Restaurant
     private Collection $menuItems;
 
     #[ORM\Column]
-    private int $tipsStrategy = self::TIPS_STANDARD_STRATEGY;
+    private int $tipsStrategy;
 
     #[ORM\Column]
     private int $days = 0;
 
     #[ORM\Column(length: 32, nullable: false)]
-    private string $paymentMethod = self::STANDARD_PAYMENT_STRATEGY;
+    private string $paymentMethod = 'cashPayment';
 
     public function __construct()
     {
         $this->waiters = new ArrayCollection();
         $this->kitcheners = new ArrayCollection();
         $this->menuItems = new ArrayCollection();
+        $this->tipsStrategy = RestaurantTipsStrategy::TIPS_STANDARD_STRATEGY->getIndex();
     }
 
     public function getId(): int
@@ -186,7 +183,7 @@ class Restaurant
 
     public function getMaxVisitorsPerDay(): int
     {
-        return Restaurant::WORK_HOURS * Restaurant::MAX_VISITORS_PER_HOUR;
+        return RestaurantData::WORK_HOURS->value * RestaurantData::MAX_VISITORS_PER_HOUR->value;
     }
 
     public function getPaymentMethod(): string

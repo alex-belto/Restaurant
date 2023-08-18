@@ -15,10 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: '`order`')]
 class Order
 {
-    public const READY_TO_WAITER = 1;
-    public const READY_TO_KITCHEN = 2;
-    public const DONE = 3;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

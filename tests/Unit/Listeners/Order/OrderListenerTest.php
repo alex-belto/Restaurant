@@ -3,6 +3,7 @@
 namespace App\Tests\Unit\Listeners\Order;
 
 use App\Entity\Order;
+use App\Enum\OrderStatus;
 use App\EventListener\Order\OrderListener;
 use App\Services\Payment\PaymentHandler;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +26,7 @@ class OrderListenerTest extends TestCase
         $this->order
             ->expects($this->once())
             ->method('getStatus')
-            ->willReturn(Order::READY_TO_WAITER);
+            ->willReturn(OrderStatus::READY_TO_WAITER->getIndex());
 
         $this->paymentHandler
             ->expects($this->never())
@@ -39,7 +40,7 @@ class OrderListenerTest extends TestCase
         $this->order
             ->expects($this->once())
             ->method('getStatus')
-            ->willReturn(Order::DONE);
+            ->willReturn(OrderStatus::DONE->getIndex());
 
         $this->paymentHandler
             ->expects($this->once())

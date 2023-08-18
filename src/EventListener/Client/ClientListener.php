@@ -4,6 +4,7 @@ namespace App\EventListener\Client;
 
 use App\Entity\Client;
 use App\Entity\Order;
+use App\Enum\ClientStatus;
 use App\Services\OrderItem\OrderItemFactory;
 use App\Services\Restaurant\RestaurantProvider;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,7 +44,7 @@ class ClientListener
             $order->addOrderItem($orderItem);
         }
 
-        $client->setStatus(Client::ORDER_PLACED);
+        $client->setStatus(ClientStatus::ORDER_PLACED->getIndex());
         $client->setConnectedOrder($order);
         $this->em->persist($order);
         $this->em->flush();

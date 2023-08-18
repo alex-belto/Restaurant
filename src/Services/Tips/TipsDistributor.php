@@ -4,6 +4,7 @@ namespace App\Services\Tips;
 
 use App\Entity\Order;
 use App\Entity\Restaurant;
+use App\Enum\RestaurantTipsStrategy;
 
 /**
  * Selects a tip distribution strategy and distributes the tips among the staff members.
@@ -29,8 +30,8 @@ class TipsDistributor
     {
         $restaurant = $order->getWaiter()->getRestaurant();
         $tipsStrategy = match ($restaurant->getTipsStrategy()) {
-            Restaurant::TIPS_STANDARD_STRATEGY => $this->tipsStandardStrategy,
-            Restaurant::TIPS_WAITER_STRATEGY => $this->tipsWaiterStrategy,
+            RestaurantTipsStrategy::TIPS_STANDARD_STRATEGY->getIndex() => $this->tipsStandardStrategy,
+            RestaurantTipsStrategy::TIPS_WAITER_STRATEGY->getIndex() => $this->tipsWaiterStrategy,
             default => 'wrong tips strategy type!'
         };
         $tipsStrategy->splitTips($order);

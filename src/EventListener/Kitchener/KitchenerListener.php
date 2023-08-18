@@ -4,6 +4,7 @@ namespace App\EventListener\Kitchener;
 
 use App\Entity\Kitchener;
 use App\Entity\Order;
+use App\Enum\OrderStatus;
 use App\Services\Staff\StaffResolver;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -28,14 +29,14 @@ class KitchenerListener
      */
     public function processOrderByKitchen(Order $order) {
 
-        if ($order->getStatus() !== Order::READY_TO_KITCHEN) {
+        if ($order->getStatus() !== OrderStatus::READY_TO_KITCHEN->getIndex()) {
             return;
         }
 
         /** @var Kitchener $kitchener */
         $kitchener = $this->staffResolver->chooseStaff('kitchener');
         $kitchener->addOrder($order);
-        $order->setStatus(Order::READY_TO_WAITER);
+        $order->setStatus(OrderStatus::READY_TO_WAITER->getIndex());
         $this->em->flush();
     }
 

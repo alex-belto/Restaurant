@@ -6,6 +6,7 @@ use App\Entity\Kitchener;
 use App\Entity\MenuItem;
 use App\Entity\Restaurant;
 use App\Entity\Waiter;
+use App\Enum\MenuItemType;
 use App\Repository\KitchenerRepository;
 use App\Repository\MenuItemRepository;
 use App\Repository\WaiterRepository;
@@ -130,7 +131,7 @@ class RestaurantBuilderTest extends TestCase
         $this->menuItemRepository
             ->expects($this->once())
             ->method('findBy')
-            ->with(['type' => MenuItem::DISH])
+            ->with(['type' => MenuItemType::DISH->getIndex()])
             ->willReturn([$this->menuItem, $this->menuItem]);
 
         $this->restaurant
@@ -151,7 +152,7 @@ class RestaurantBuilderTest extends TestCase
         $this->menuItemRepository
             ->expects($this->once())
             ->method('findBy')
-            ->with(['type' => MenuItem::DISH])
+            ->with(['type' => MenuItemType::DISH->getIndex()])
             ->willReturn([$this->menuItem]);
 
         $this->expectException(Exception::class);
@@ -170,7 +171,7 @@ class RestaurantBuilderTest extends TestCase
         $this->menuItemRepository
             ->expects($this->once())
             ->method('findBy')
-            ->with(['type' => MenuItem::DRINK])
+            ->with(['type' => MenuItemType::DRINK->getIndex()])
             ->willReturn([$this->menuItem, $this->menuItem]);
 
         $this->restaurant
@@ -191,7 +192,7 @@ class RestaurantBuilderTest extends TestCase
         $this->menuItemRepository
             ->expects($this->once())
             ->method('findBy')
-            ->with(['type' => MenuItem::DRINK])
+            ->with(['type' => MenuItemType::DRINK->getIndex()])
             ->willReturn([$this->menuItem]);
 
         $this->expectException(Exception::class);

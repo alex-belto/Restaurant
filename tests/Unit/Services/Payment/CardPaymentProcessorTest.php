@@ -3,6 +3,7 @@
 namespace App\Tests\Unit\Services\Payment;
 
 use App\Entity\Client;
+use App\Enum\ClientStatus;
 use App\Exception\CardValidationException;
 use App\Services\Payment\CardPaymentProcessor;
 use Doctrine\DBAL\Connection;
@@ -46,7 +47,7 @@ class CardPaymentProcessorTest extends TestCase
         $this->client
             ->expects($this->once())
             ->method('setStatus')
-            ->with(Client::ORDER_PAYED);
+            ->with(ClientStatus::ORDER_PAYED->getIndex());
 
         $this->em
             ->expects($this->once())

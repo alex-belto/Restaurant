@@ -13,10 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 class Client
 {
-    public const WITHOUT_ORDER = 1;
-    public const ORDER_PLACED = 2;
-    public const ORDER_PAYED = 3;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -44,7 +40,7 @@ class Client
     private ?Order $connectedOrder = null;
 
     #[ORM\Column]
-    private int $status = self::WITHOUT_ORDER;
+    private int $status;
 
     #[ORM\Column(length: 32, nullable: false)]
     private string $paymentMethod;

@@ -3,6 +3,7 @@
 namespace App\Services\Menu;
 
 use App\Entity\MenuItem;
+use App\Enum\MenuItemType;
 
 /**
  * Responsible for creating menu items.
@@ -17,7 +18,7 @@ class MenuItemCreator
 
         $drink = new MenuItem();
         $drink->setName($name);
-        $drink->setType(MenuItem::DRINK);
+        $drink->setType(MenuItemType::DRINK->getIndex());
         $drink->setPrice($price);
         $drink->setTime($time . 'min');
 
@@ -32,7 +33,7 @@ class MenuItemCreator
 
         $dish = new MenuItem();
         $dish->setName($name);
-        $dish->setType(MenuItem::DISH);
+        $dish->setType(MenuItemType::DISH->getIndex());
         $dish->setPrice($price);
         $dish->setTime($time . 'min');
 

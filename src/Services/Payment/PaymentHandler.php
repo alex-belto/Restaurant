@@ -3,6 +3,7 @@
 namespace App\Services\Payment;
 
 use App\Entity\Client;
+use App\Enum\ClientStatus;
 use App\Exception\CardValidationException;
 use Exception;
 use Symfony\Component\DependencyInjection\ServiceLocator;
@@ -22,7 +23,7 @@ class PaymentHandler
 
     public function payOrder(Client $client): void
     {
-        if ($client->getStatus() === Client::ORDER_PAYED) {
+        if ($client->getStatus() === ClientStatus::ORDER_PAYED->getIndex()) {
             return;
         }
 

@@ -3,6 +3,7 @@
 namespace App\Services\Client;
 
 use App\Entity\Client;
+use App\Enum\ClientStatus;
 use DateTime;
 use Faker\Factory;
 
@@ -22,6 +23,7 @@ class ClientFactory
         $faker = Factory::create();
         $client = new Client();
         $client->setName($faker->name());
+        $client->setStatus(ClientStatus::WITHOUT_ORDER->getIndex());
         $client->setMoney(rand(100, 150));
         $client->setPaymentMethod($this->getPaymentMethod());
         if ($card) {

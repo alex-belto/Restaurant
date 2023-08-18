@@ -12,9 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: MenuItemRepository::class)]
 class MenuItem
 {
-    public const DISH = 1;
-    public const DRINK = 2;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

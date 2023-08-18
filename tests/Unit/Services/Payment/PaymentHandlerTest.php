@@ -3,6 +3,7 @@
 namespace App\Tests\Unit\Services\Payment;
 
 use App\Entity\Client;
+use App\Enum\ClientStatus;
 use App\Exception\CardValidationException;
 use App\Interfaces\PaymentInterface;
 use App\Services\Payment\PaymentHandler;
@@ -98,7 +99,7 @@ class PaymentHandlerTest extends TestCase
         $this->client
             ->expects($this->once())
             ->method('getStatus')
-            ->willReturn(Client::ORDER_PAYED);
+            ->willReturn(ClientStatus::ORDER_PAYED->getIndex());
 
         $this->client
             ->expects($this->never())

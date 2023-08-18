@@ -6,6 +6,7 @@ use App\Entity\Kitchener;
 use App\Entity\MenuItem;
 use App\Entity\Restaurant;
 use App\Entity\Waiter;
+use App\Enum\MenuItemType;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -77,7 +78,7 @@ class RestaurantBuilder
     {
         switch ($type) {
             case 'dish':
-                $dishes = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItem::DISH]);
+                $dishes = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItemType::DISH->getIndex()]);
                 if (count($dishes) < $amount) {
                     throw new \Exception('U dont have enough dish in pull');
                 }
@@ -88,7 +89,7 @@ class RestaurantBuilder
                 break;
 
             case 'drink':
-                $drinks = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItem::DRINK]);
+                $drinks = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItemType::DRINK->getIndex()]);
                 if (count($drinks) < $amount) {
                     throw new \Exception('U dont have enough drink in pull');
                 }

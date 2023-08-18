@@ -3,6 +3,7 @@
 namespace App\Services\Payment;
 
 use App\Entity\Client;
+use App\Enum\ClientStatus;
 use App\Exception\CardValidationException;
 use App\Interfaces\PaymentInterface;
 use Doctrine\DBAL\Exception;
@@ -31,7 +32,7 @@ class CardPaymentProcessor implements PaymentInterface
             $this->em->getConnection()->beginTransaction();
 
             $client->payOrder();
-            $client->setStatus(Client::ORDER_PAYED);
+            $client->setStatus(ClientStatus::ORDER_PAYED->getIndex());
             $this->em->flush();
             $this->em->getConnection()->commit();
 

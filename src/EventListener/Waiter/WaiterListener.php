@@ -5,6 +5,8 @@ namespace App\EventListener\Waiter;
 use App\Entity\Client;
 use App\Entity\Order;
 use App\Entity\Waiter;
+use App\Enum\ClientStatus;
+use App\Enum\OrderStatus;
 use App\Services\Staff\StaffResolver;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -27,25 +29,25 @@ class WaiterListener
 
     public function processOrderByWaiter(Client $client): void
     {
-        if ($client->getStatus() === Client::ORDER_PLACED) {
+        if ($client->getStatus() === ClientStatus::ORDER_PLACED->getIndex()) {
             /** @var Waiter $waiter */
             $waiter = $this->staffResolver->chooseStaff('waiter');
             $order = $client->getConnectedOrder();
             $waiter->addOrder($order);
-            $order->setStatus(Order::READY_TO_KITCHEN);
+            $order->setStatus(OrderStatus::READY_TO_KITCHEN->getIndex());
             $this->em->flush();
         }
     }
 
     public function deliveryOrder(Order $order): void
     {
-        if ($order->getStatus() !== Order::READY_TO_WAITER) {
+        if ($order->getStatus() !== OrderStatus::READY_TO_WAITER->getIndex()) {
             return;
         }
 
         $kitchener = $order->getKitchener();
         $kitchener->removeOrder($order);
-        $order->setStatus(Order::DONE);
+        $order->setStatus(OrderStatus::DONE->getIndex());
         $this->em->flush();
     }
 }

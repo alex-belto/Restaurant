@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Entity\MenuItem;
 use App\Entity\Order;
 use App\Entity\Restaurant;
+use App\Enum\ClientStatus;
 use App\EventListener\Client\ClientListener;
 use App\Services\OrderItem\OrderItemFactory;
 use App\Services\Restaurant\RestaurantProvider;
@@ -44,7 +45,7 @@ class ClientListenerTest extends TestCase
         $client
             ->expects($this->once())
             ->method('setStatus')
-            ->with($this->equalTo(Client::ORDER_PLACED));
+            ->with($this->equalTo(ClientStatus::ORDER_PLACED->getIndex()));
 
         $client
             ->expects($this->once())

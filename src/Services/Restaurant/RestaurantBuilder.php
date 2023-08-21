@@ -50,7 +50,7 @@ class RestaurantBuilder
     {
         $waiters = $this->em->getRepository(Waiter::class)->findAll();
         if (count($waiters) < $amount) {
-            throw new \Exception('U dont have enough staff in pull');
+            throw new \Exception('You dont have enough staff in pull');
         }
 
         for ($i = 0; $i < $amount; $i++) {
@@ -64,7 +64,7 @@ class RestaurantBuilder
     {
         $kitcheners = $this->em->getRepository(Kitchener::class)->findAll();
         if (count($kitcheners) < $amount) {
-            throw new \Exception('U dont have enough staff in pull');
+            throw new \Exception('You dont have enough staff in pull');
         }
 
         for ($i = 0; $i < $amount; $i++) {
@@ -80,7 +80,7 @@ class RestaurantBuilder
             case 'dish':
                 $dishes = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItemType::DISH]);
                 if (count($dishes) < $amount) {
-                    throw new \Exception('U dont have enough dish in pull');
+                    throw new \Exception('You dont have enough dish in pull');
                 }
 
                 for ($i = 0; $i < $amount; $i++) {
@@ -91,7 +91,7 @@ class RestaurantBuilder
             case 'drink':
                 $drinks = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItemType::DRINK]);
                 if (count($drinks) < $amount) {
-                    throw new \Exception('U dont have enough drink in pull');
+                    throw new \Exception('You dont have enough drink in pull');
                 }
 
                 for ($i = 0; $i < $amount; $i++) {

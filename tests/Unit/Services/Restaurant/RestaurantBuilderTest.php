@@ -77,7 +77,7 @@ class RestaurantBuilderTest extends TestCase
             ->method('findAll')
             ->willReturn([$this->waiter]);
 
-        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('You dont have enough staff in pull');
 
         $this->restaurantBuilder->hireWaiters($this->restaurant, $this->amountOfHiringStaff);
     }
@@ -115,7 +115,7 @@ class RestaurantBuilderTest extends TestCase
             ->method('findAll')
             ->willReturn([$this->kitchener]);
 
-        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('You dont have enough staff in pull');
 
         $this->restaurantBuilder->hireKitcheners($this->restaurant, $this->amountOfHiringStaff);
     }
@@ -155,7 +155,7 @@ class RestaurantBuilderTest extends TestCase
             ->with(['type' => MenuItemType::DISH])
             ->willReturn([$this->menuItem]);
 
-        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('You dont have enough dish in pull');
 
         $this->restaurantBuilder->fillUpMenu($this->restaurant, $this->amountOfAddingMenuItems, 'dish');
     }
@@ -195,7 +195,7 @@ class RestaurantBuilderTest extends TestCase
             ->with(['type' => MenuItemType::DRINK])
             ->willReturn([$this->menuItem]);
 
-        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('You dont have enough drink in pull');
 
         $this->restaurantBuilder->fillUpMenu($this->restaurant, $this->amountOfAddingMenuItems, 'drink');
     }

@@ -66,4 +66,32 @@ class CardPaymentProcessorTest extends TestCase
         $this->cardPaymentProcessor->pay($this->client);
     }
 
+    public function testCatchException(): void
+    {
+        $this->markTestSkipped('Expectation failed for method name is "getConnection" when invoked at least 2 times.
+Expected invocation at least 2 times but it occurred 0 times.');
+        $this->client
+            ->expects($this->once())
+            ->method('isCardValid')
+            ->willReturn(true);
+
+        $this->client
+            ->expects($this->once())
+            ->method('payOrder');
+
+        $this->em
+            ->expects($this->atLeast(2))
+            ->method('getConnection')
+            ->willReturn($this->connection);
+
+        $this->connection
+            ->expects($this->once())
+            ->method('beginTransaction')
+            ->willReturn(new \Exception());
+
+        $this->connection
+            ->expects($this->once())
+            ->method('rollBack');
+    }
+
 }

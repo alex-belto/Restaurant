@@ -26,7 +26,6 @@ class CashPaymentProcessor implements PaymentInterface
         try {
             $this->em->getConnection()->beginTransaction();
             $client->payOrder();
-            $client->setStatus(ClientStatus::ORDER_PAYED);
             $this->em->flush();
             $this->em->getConnection()->commit();
         } catch (Exception $e) {

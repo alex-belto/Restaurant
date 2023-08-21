@@ -187,5 +187,6 @@ class Client
         $this->setMoney($restOfMoney);
         $restaurantBalance = $restaurant->getBalance() + $order->getPrice();
         $restaurant->setBalance($restaurantBalance);
+        $this->setStatus(ClientStatus::ORDER_PAYED);
     }
 }

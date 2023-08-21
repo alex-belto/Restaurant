@@ -32,7 +32,6 @@ class CardPaymentProcessor implements PaymentInterface
             $this->em->getConnection()->beginTransaction();
 
             $client->payOrder();
-            $client->setStatus(ClientStatus::ORDER_PAYED);
             $this->em->flush();
             $this->em->getConnection()->commit();
 

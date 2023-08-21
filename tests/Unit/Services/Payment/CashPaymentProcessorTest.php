@@ -40,11 +40,6 @@ class CashPaymentProcessorTest extends TestCase
             ->expects($this->once())
             ->method('beginTransaction');
 
-        $this->client
-            ->expects($this->once())
-            ->method('setStatus')
-            ->with(ClientStatus::ORDER_PAYED);
-
         $this->em
             ->expects($this->once())
             ->method('flush');
@@ -70,11 +65,6 @@ class CashPaymentProcessorTest extends TestCase
         $this->client
             ->expects($this->once())
             ->method('payOrder');
-
-        $this->client
-            ->expects($this->once())
-            ->method('setStatus')
-            ->with(ClientStatus::ORDER_PAYED);
 
         $this->em
             ->expects($this->once())

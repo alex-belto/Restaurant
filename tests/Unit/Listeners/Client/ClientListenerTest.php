@@ -5,6 +5,7 @@ namespace App\Tests\Unit\Listeners\Client;
 use App\Entity\Client;
 use App\Entity\MenuItem;
 use App\Entity\Order;
+use App\Entity\OrderItem;
 use App\Entity\Restaurant;
 use App\Enum\ClientStatus;
 use App\EventListener\Client\ClientListener;
@@ -20,6 +21,8 @@ class ClientListenerTest extends TestCase
     {
         $restaurantProvider = $this->createMock(RestaurantProvider::class);
         $orderItemFactory = $this->createMock(OrderItemFactory::class);
+        $orderItem = $this->createMock(OrderItem::class);
+        $mockOrder = $this->createMock(Order::class);
         $em = $this->createMock(EntityManagerInterface::class);
         $clientListener = new ClientListener($restaurantProvider, $orderItemFactory, $em);
         $client = $this->createMock(Client::class);
@@ -33,6 +36,8 @@ class ClientListenerTest extends TestCase
             ->method('getRestaurant')
             ->willReturn($restaurant);
 
+        $mockOrder->setClient($client);
+
         $restaurant
             ->expects($this->once())
             ->method('getMenuItems')
@@ -40,16 +45,24 @@ class ClientListenerTest extends TestCase
 
         $orderItemFactory
             ->expects($this->exactly(3))
-            ->method('createOrderItem');
+            ->method('createOrderItem')
+//            ->with($this->equalTo($menuItem), $this->equalTo($mockOrder))
+            ->willReturn($orderItem);
+
+//        $mockOrder
+//            ->expects($this->exactly(3))
+//            ->method('addOrderItem')
+//            ->with($this->equalTo($orderItem));
 
         $client
             ->expects($this->once())
             ->method('setStatus')
-            ->with($this->equalTo(ClientStatus::ORDER_PLACED->getIndex()));
+            ->with($this->equalTo(ClientStatus::ORDER_PLACED));
 
         $client
             ->expects($this->once())
             ->method('setConnectedOrder');
+//            ->with($this->equalTo($mockOrder));
 
         $em
             ->expects($this->exactly(4))

@@ -13,7 +13,9 @@ class OrderListener
 {
     private PaymentHandler $paymentHandler;
 
-    public function __construct(PaymentHandler $paymentHandler) {
+    public function __construct(
+        PaymentHandler $paymentHandler
+    ) {
         $this->paymentHandler = $paymentHandler;
     }
 

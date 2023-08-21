@@ -44,7 +44,7 @@ class ClientListener
             $order->addOrderItem($orderItem);
         }
 
-        $client->setStatus(ClientStatus::ORDER_PLACED->getIndex());
+        $client->setStatus(ClientStatus::ORDER_PLACED);
         $client->setConnectedOrder($order);
         $this->em->persist($order);
         $this->em->flush();

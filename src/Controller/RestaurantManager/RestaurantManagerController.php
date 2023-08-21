@@ -3,9 +3,7 @@
 namespace App\Controller\RestaurantManager;
 
 use App\Repository\RestaurantRepository;
-use App\Services\Cleaner\ClientCleaner;
 use App\Services\Cleaner\DataCleaner;
-use App\Services\Cleaner\OrderCleaner;
 use \App\Services\Restaurant\RestaurantManager as Manager;
 use App\Services\Restaurant\RestaurantProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

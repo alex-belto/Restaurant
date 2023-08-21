@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\ClientStatus;
 use App\Repository\ClientRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -140,9 +141,9 @@ class Client
         return $this->status;
     }
 
-    public function setStatus(int $status): static
+    public function setStatus(ClientStatus $status): static
     {
-        $this->status = $status;
+        $this->status = $status->getIndex();
 
         return $this;
     }

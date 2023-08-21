@@ -47,7 +47,7 @@ class CardPaymentProcessorTest extends TestCase
         $this->client
             ->expects($this->once())
             ->method('setStatus')
-            ->with(ClientStatus::ORDER_PAYED->getIndex());
+            ->with(ClientStatus::ORDER_PAYED);
 
         $this->em
             ->expects($this->once())

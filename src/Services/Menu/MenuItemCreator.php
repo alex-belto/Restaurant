@@ -18,7 +18,7 @@ class MenuItemCreator
 
         $drink = new MenuItem();
         $drink->setName($name);
-        $drink->setType(MenuItemType::DRINK->getIndex());
+        $drink->setType(MenuItemType::DRINK);
         $drink->setPrice($price);
         $drink->setTime($time . 'min');
 
@@ -33,7 +33,7 @@ class MenuItemCreator
 
         $dish = new MenuItem();
         $dish->setName($name);
-        $dish->setType(MenuItemType::DISH->getIndex());
+        $dish->setType(MenuItemType::DISH);
         $dish->setPrice($price);
         $dish->setTime($time . 'min');
 

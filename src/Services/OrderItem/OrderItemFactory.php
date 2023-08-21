@@ -15,8 +15,8 @@ class OrderItemFactory
     public function createOrderItem(MenuItem $menuItem, Order $order): OrderItem
     {
         $type = match ($menuItem->getType()) {
-            MenuItemType::DISH->getIndex() => 'dish',
-            MenuItemType::DRINK->getIndex() => 'drink'
+            MenuItemType::DISH => 'dish',
+            MenuItemType::DRINK => 'drink'
         };
         $orderItem = new OrderItem();
         $orderItem->setConnectedOrder($order);

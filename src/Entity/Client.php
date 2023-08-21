@@ -136,14 +136,14 @@ class Client
         return $this;
     }
 
-    public function getStatus(): int
+    public function getStatus(): ClientStatus
     {
-        return $this->status;
+        return ClientStatus::tryFrom($this->status);
     }
 
     public function setStatus(ClientStatus $status): static
     {
-        $this->status = $status->getIndex();
+        $this->status = $status->value;
 
         return $this;
     }

@@ -30,8 +30,8 @@ class TipsDistributor
     {
         $restaurant = $order->getWaiter()->getRestaurant();
         $tipsStrategy = match ($restaurant->getTipsStrategy()) {
-            RestaurantTipsStrategy::TIPS_STANDARD_STRATEGY->getIndex() => $this->tipsStandardStrategy,
-            RestaurantTipsStrategy::TIPS_WAITER_STRATEGY->getIndex() => $this->tipsWaiterStrategy,
+            RestaurantTipsStrategy::TIPS_STANDARD_STRATEGY => $this->tipsStandardStrategy,
+            RestaurantTipsStrategy::TIPS_WAITER_STRATEGY => $this->tipsWaiterStrategy,
             default => 'wrong tips strategy type!'
         };
         $tipsStrategy->splitTips($order);

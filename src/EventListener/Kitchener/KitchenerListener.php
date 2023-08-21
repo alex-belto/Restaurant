@@ -29,14 +29,14 @@ class KitchenerListener
      */
     public function processOrderByKitchen(Order $order) {
 
-        if ($order->getStatus() !== OrderStatus::READY_TO_KITCHEN->getIndex()) {
+        if ($order->getStatus() !== OrderStatus::READY_TO_KITCHEN) {
             return;
         }
 
         /** @var Kitchener $kitchener */
         $kitchener = $this->staffResolver->chooseStaff('kitchener');
         $kitchener->addOrder($order);
-        $order->setStatus(OrderStatus::READY_TO_WAITER->getIndex());
+        $order->setStatus(OrderStatus::READY_TO_WAITER);
         $this->em->flush();
     }
 

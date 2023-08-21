@@ -21,7 +21,7 @@ class OrderListener
 
     public function payOrder(Order $order): void
     {
-        if ($order->getStatus() !== OrderStatus::DONE->getIndex()) {
+        if ($order->getStatus() !== OrderStatus::DONE) {
             return;
         }
         $client = $order->getClient();

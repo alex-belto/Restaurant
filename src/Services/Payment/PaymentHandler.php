@@ -23,7 +23,7 @@ class PaymentHandler
 
     public function payOrder(Client $client): void
     {
-        if ($client->getStatus() === ClientStatus::ORDER_PAYED->getIndex()) {
+        if ($client->getStatus() === ClientStatus::ORDER_PAYED) {
             return;
         }
 

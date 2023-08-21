@@ -2,16 +2,8 @@
 
 namespace App\Enum;
 
-enum MenuItemType
+enum MenuItemType: int
 {
-    case DISH;
-    case DRINK;
-
-    public function getIndex(): int
-    {
-        return match ($this) {
-            self::DISH => 1,
-            self:: DRINK => 2
-        };
-    }
+    case DISH = 1;
+    case DRINK = 2;
 }

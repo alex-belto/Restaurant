@@ -30,7 +30,7 @@ class OrderListenerTest extends TestCase
         $this->order
             ->expects($this->once())
             ->method('getStatus')
-            ->willReturn(OrderStatus::READY_TO_WAITER->getIndex());
+            ->willReturn(OrderStatus::READY_TO_WAITER);
 
         $this->order
             ->expects($this->once())
@@ -50,7 +50,7 @@ class OrderListenerTest extends TestCase
         $this->order
             ->expects($this->once())
             ->method('getStatus')
-            ->willReturn(OrderStatus::DONE->getIndex());
+            ->willReturn(OrderStatus::DONE);
 
         $this->order
             ->expects($this->once())

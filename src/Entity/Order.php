@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\OrderStatus;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -72,14 +73,14 @@ class Order
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): ?OrderStatus
     {
-        return $this->status;
+        return OrderStatus::tryFrom($this->status);
     }
 
-    public function setStatus(?int $status): static
+    public function setStatus(?OrderStatus $status): static
     {
-        $this->status = $status;
+        $this->status = $status->value;
 
         return $this;
     }

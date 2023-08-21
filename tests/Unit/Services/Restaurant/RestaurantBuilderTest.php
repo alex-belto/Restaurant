@@ -131,7 +131,7 @@ class RestaurantBuilderTest extends TestCase
         $this->menuItemRepository
             ->expects($this->once())
             ->method('findBy')
-            ->with(['type' => MenuItemType::DISH->getIndex()])
+            ->with(['type' => MenuItemType::DISH])
             ->willReturn([$this->menuItem, $this->menuItem]);
 
         $this->restaurant
@@ -152,7 +152,7 @@ class RestaurantBuilderTest extends TestCase
         $this->menuItemRepository
             ->expects($this->once())
             ->method('findBy')
-            ->with(['type' => MenuItemType::DISH->getIndex()])
+            ->with(['type' => MenuItemType::DISH])
             ->willReturn([$this->menuItem]);
 
         $this->expectException(Exception::class);
@@ -171,7 +171,7 @@ class RestaurantBuilderTest extends TestCase
         $this->menuItemRepository
             ->expects($this->once())
             ->method('findBy')
-            ->with(['type' => MenuItemType::DRINK->getIndex()])
+            ->with(['type' => MenuItemType::DRINK])
             ->willReturn([$this->menuItem, $this->menuItem]);
 
         $this->restaurant
@@ -192,7 +192,7 @@ class RestaurantBuilderTest extends TestCase
         $this->menuItemRepository
             ->expects($this->once())
             ->method('findBy')
-            ->with(['type' => MenuItemType::DRINK->getIndex()])
+            ->with(['type' => MenuItemType::DRINK])
             ->willReturn([$this->menuItem]);
 
         $this->expectException(Exception::class);

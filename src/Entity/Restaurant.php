@@ -47,7 +47,7 @@ class Restaurant
         $this->waiters = new ArrayCollection();
         $this->kitcheners = new ArrayCollection();
         $this->menuItems = new ArrayCollection();
-        $this->tipsStrategy = RestaurantTipsStrategy::TIPS_STANDARD_STRATEGY->getIndex();
+        $this->tipsStrategy = RestaurantTipsStrategy::TIPS_STANDARD_STRATEGY->value;
     }
 
     public function getId(): int
@@ -157,14 +157,14 @@ class Restaurant
         return $this;
     }
 
-    public function getTipsStrategy(): int
+    public function getTipsStrategy(): RestaurantTipsStrategy
     {
-        return $this->tipsStrategy;
+        return RestaurantTipsStrategy::tryFrom($this->tipsStrategy);
     }
 
-    public function setTipsStrategy(int $tipsStrategy): static
+    public function setTipsStrategy(RestaurantTipsStrategy $tipsStrategy): static
     {
-        $this->tipsStrategy = $tipsStrategy;
+        $this->tipsStrategy = $tipsStrategy->value;
 
         return $this;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\MenuItemType;
 use App\Repository\MenuItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -76,14 +77,14 @@ class MenuItem
         return $this;
     }
 
-    public function getType(): int
+    public function getType(): MenuItemType
     {
-        return $this->type;
+        return MenuItemType::tryFrom($this->type);
     }
 
-    public function setType(int $type): static
+    public function setType(MenuItemType $type): static
     {
-        $this->type = $type;
+        $this->type = $type->value;
 
         return $this;
     }

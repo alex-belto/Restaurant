@@ -39,7 +39,7 @@ class RestaurantManager
             $visitorsForAllTime += $visitorsPerDay;
 
             for ($j = 0; $j < $visitorsPerDay; $j++) {
-                $client = $this->clientFactory->createClient($this->isClientWithCard());
+                $client = $this->clientFactory->createClient();
                 $this->em->persist($client);
                 $this->em->flush();
             }
@@ -71,15 +71,5 @@ class RestaurantManager
             'visitors_for_all_time' => $visitorsForAllTime,
             'visitors_with_tips' => $visitorsWithTips
         ];
-    }
-
-    private function isClientWithCard(): bool
-    {
-        $isCard = rand(0, 1);
-
-        return match ($isCard) {
-            0 => false,
-            1 => true
-        };
     }
 }

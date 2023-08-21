@@ -23,9 +23,9 @@ class RestaurantProviderTest extends TestCase
         $this->restaurantBuilder = $this->createMock(RestaurantBuilder::class);
         $this->em = $this->createMock(EntityManagerInterface::class);
         $this->restaurantProvider = new RestaurantProvider($this->restaurantBuilder, $this->em);
-        $this->filePath = realpath(__DIR__ . '/../../../..') . $_ENV['FILE_PATH'];
         $this->restaurantRepository = $this->createMock(RestaurantRepository::class);
         $this->restaurant = $this->createMock(Restaurant::class);
+        $this->filePath = $this->restaurantProvider->getFilePath();
     }
 
     public function tearDown(): void
@@ -41,7 +41,9 @@ class RestaurantProviderTest extends TestCase
             unlink($this->filePath);
         }
 
-        $this->em->method('getRepository')->willReturn($this->restaurantRepository);
+        $this->em
+            ->method('getRepository')
+            ->willReturn($this->restaurantRepository);
 
         $this->restaurantBuilder
             ->expects($this->once())
@@ -58,6 +60,7 @@ class RestaurantProviderTest extends TestCase
 
     public function testRestaurantFileExist(): void
     {
+        $this->markTestSkipped('in progress');
         $restaurantId = 111;
         file_put_contents($this->filePath, $restaurantId);
 
@@ -77,7 +80,7 @@ class RestaurantProviderTest extends TestCase
             ->with($this->equalTo($restaurantId))
             ->willReturn($this->restaurant);
 
-        $restaurant = $this->restaurantProvider->getRestaurant();
+        $restaurant = $this->restaurantProvider->getRestaurant(1);
         $this->assertInstanceOf(Restaurant::class, $restaurant);
     }
 

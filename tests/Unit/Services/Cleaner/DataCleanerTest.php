@@ -3,6 +3,7 @@
 namespace App\Tests\Unit\Services\Cleaner;
 
 use App\Services\Cleaner\DataCleaner;
+use App\Services\Restaurant\RestaurantProvider;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -14,17 +15,20 @@ class DataCleanerTest extends TestCase
     private QueryBuilder $queryBuilder;
     private AbstractQuery $query;
     private DataCleaner $dataCleaner;
+    private RestaurantProvider $restaurantProvider;
 
     public function setUp(): void
     {
         $this->em = $this->createMock(EntityManagerInterface::class);
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
         $this->query = $this->createMock(AbstractQuery::class);
-        $this->dataCleaner = new DataCleaner($this->em);
+        $this->restaurantProvider = $this->createMock(RestaurantProvider::class);
+        $this->dataCleaner = new DataCleaner($this->em, $this->restaurantProvider);
     }
 
     public function testRemoveAllOrders(): void
     {
+
         $this->em
             ->expects($this->exactly(2))
             ->method('createQueryBuilder')

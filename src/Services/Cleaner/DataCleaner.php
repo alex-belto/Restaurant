@@ -5,6 +5,7 @@ namespace App\Services\Cleaner;
 use App\Entity\Client;
 use App\Entity\Order;
 use App\Entity\OrderItem;
+use App\Services\Restaurant\RestaurantProvider;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -13,11 +14,25 @@ use Doctrine\ORM\EntityManagerInterface;
 class DataCleaner
 {
     private EntityManagerInterface $em;
+    private RestaurantProvider $restaurantProvider;
 
     public function __construct(
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        RestaurantProvider $restaurantProvider
     ) {
         $this->em = $em;
+        $this->restaurantProvider = $restaurantProvider;
+    }
+
+    public function removeRestaurantFile(): string
+    {
+        $filePath = $this->restaurantProvider->getFilePath();
+        if (!file_exists($filePath)) {
+            return 'Restaurant not found!';
+        }
+
+        unlink($filePath);
+        return 'Restaurant closed!';
     }
 
     public function removeAllClients(): void

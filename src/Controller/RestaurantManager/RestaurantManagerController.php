@@ -52,19 +52,16 @@ class RestaurantManagerController extends AbstractController
     #[Route('restaurant/close', name: 'close_restaurant', methods: ['GET'])]
     public function dropRestaurant(): JsonResponse
     {
-        $basePath = realpath(__DIR__ . '/../../..');
-        $filePath = $basePath . $_ENV['FILE_PATH'];
+        $message = $this->dataCleaner->removeRestaurantFile();
 
-        if (file_exists($filePath)) {
-            unlink($filePath);
-            $this->dataCleaner->removeAllOrders();
-            $this->dataCleaner->removeAllClients();
-            $message = 'Restaurant closed!';
-        } else {
-            $message = 'Restaurant not found!';
+        if ($message === 'Restaurant not found!') {
+            $this->json($message);
         }
 
+        $this->dataCleaner->removeAllOrders();
+        $this->dataCleaner->removeAllClients();
         $this->restaurantRepository->dropRestaurant();
+
         return $this->json($message);
     }
 }

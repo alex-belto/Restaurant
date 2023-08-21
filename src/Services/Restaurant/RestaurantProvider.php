@@ -12,7 +12,6 @@ class RestaurantProvider
 {
     private RestaurantBuilder $restaurantBuilder;
     private EntityManagerInterface $em;
-    private string $filePath;
 
     public function __construct(
         RestaurantBuilder $restaurantBuilder,
@@ -20,7 +19,6 @@ class RestaurantProvider
     ) {
         $this->restaurantBuilder = $restaurantBuilder;
         $this->em = $em;
-        $this->filePath = realpath(__DIR__ . '/../../..') . $_ENV['FILE_PATH'];
     }
 
     /**
@@ -28,20 +26,28 @@ class RestaurantProvider
      */
     public function getRestaurant(?int $days = null): Restaurant
     {
-        if (!file_exists($this->filePath)) {
+        $filePath = $this->getFilePath();
+
+        if (!file_exists($filePath)) {
             return $this->buildRestaurant($days);
         }
 
-        $restaurantId = file_get_contents($this->filePath);
+        $restaurantId = file_get_contents($filePath);
         return $this->em->getRepository(Restaurant::class)->find($restaurantId);
     }
 
     private function buildRestaurant(?int $days = null): Restaurant
     {
+        $filePath = $this->getFilePath();
         $restaurant = $this->restaurantBuilder->buildRestaurant($days);
         $this->em->persist($restaurant);
         $this->em->flush();
-        file_put_contents($this->filePath, $restaurant->getId());
+        file_put_contents($filePath, $restaurant->getId());
         return $restaurant;
+    }
+
+    public function getFilePath(): string
+    {
+        return __DIR__ . $_ENV['FILE_PATH'];
     }
 }

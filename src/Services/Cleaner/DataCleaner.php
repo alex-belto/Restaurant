@@ -2,9 +2,7 @@
 
 namespace App\Services\Cleaner;
 
-use App\Entity\Client;
 use App\Entity\Order;
-use App\Entity\OrderItem;
 use App\Services\Restaurant\RestaurantProvider;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -24,7 +22,13 @@ class DataCleaner
         $this->restaurantProvider = $restaurantProvider;
     }
 
-    public function removeRestaurantFile(): string
+    public function removeRestaurantData(): string
+    {
+        $this->removeRestaurantHistoryData();
+        return $this->removeRestaurantFile();
+    }
+
+    private function removeRestaurantFile(): string
     {
         $filePath = $this->restaurantProvider->getFilePath();
         if (!file_exists($filePath)) {
@@ -35,36 +39,12 @@ class DataCleaner
         return 'Restaurant closed!';
     }
 
-    public function removeAllClients(): void
+    private function removeRestaurantHistoryData(): void
     {
-        $qb = $this->em->createQueryBuilder();
-
-        $qb
-            ->delete(Client::class)
-            ->getQuery()
-            ->execute();
-    }
-
-    public function removeAllOrders(): void
-    {
-        $qb = $this->em->createQueryBuilder();
-        $qbOrderItem = $this->em->createQueryBuilder();
-
-        $qbOrderItem
-            ->update(OrderItem::class, 'oi')
-            ->set('oi.connectedOrder', 'NULL')
-            ->getQuery()
-            ->execute();
-
-        $qb
-            ->update(Order::class, 'o')
-            ->set('o.client', 'NULL')
-            ->getQuery()
-            ->execute();
-
-        $qb
-            ->delete(Order::class)
-            ->getQuery()
-            ->execute();
+        $orders = $this->em->getRepository(Order::class)->findAll();
+        foreach ($orders as $order) {
+            $this->em->remove($order);
+        }
+        $this->em->flush();
     }
 }

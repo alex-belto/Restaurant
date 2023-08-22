@@ -52,14 +52,12 @@ class RestaurantManagerController extends AbstractController
     #[Route('restaurant/close', name: 'close_restaurant', methods: ['GET'])]
     public function dropRestaurant(): JsonResponse
     {
-        $message = $this->dataCleaner->removeRestaurantFile();
+        $message = $this->dataCleaner->removeRestaurantData();
 
         if ($message === 'Restaurant not found!') {
-            $this->json($message);
+            return $this->json($message);
         }
 
-        $this->dataCleaner->removeAllOrders();
-        $this->dataCleaner->removeAllClients();
         $this->restaurantRepository->dropRestaurant();
 
         return $this->json($message);

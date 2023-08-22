@@ -36,7 +36,7 @@ class Order
     #[ORM\Column(nullable: true)]
     private ?int $tips = null;
 
-    #[ORM\OneToMany(mappedBy: 'connectedOrder', targetEntity: OrderItem::class)]
+    #[ORM\OneToMany(mappedBy: 'connectedOrder', targetEntity: OrderItem::class, cascade: ['remove'])]
     private Collection $orderItems;
 
     public function __construct()

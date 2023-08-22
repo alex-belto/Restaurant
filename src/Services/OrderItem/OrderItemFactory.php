@@ -20,7 +20,7 @@ class OrderItemFactory
         };
         $orderItem = new OrderItem();
         $orderItem->setConnectedOrder($order);
-        $orderItem->addMenuItem($menuItem);
+        $orderItem->setMenuItem($menuItem);
         $orderItem->setName($menuItem->getName());
         $orderItem->setPrice($menuItem->getPrice());
         $orderItem->setType($type);

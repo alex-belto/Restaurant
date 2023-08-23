@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Services\Cleaner;
+namespace App\Tests\Functional\Services\Cleaner;
 
 use App\Entity\Order;
 use App\Repository\OrderRepository;
@@ -16,6 +16,7 @@ class DataCleanerTest extends TestCase
     private RestaurantProvider $restaurantProvider;
     private OrderRepository $orderRepository;
     private Order $order;
+    private string $filePath;
 
     public function setUp(): void
     {
@@ -23,18 +24,18 @@ class DataCleanerTest extends TestCase
         $this->restaurantProvider = $this->createMock(RestaurantProvider::class);
         $this->orderRepository = $this->createMock(OrderRepository::class);
         $this->order = $this->createMock(Order::class);
+        $this->filePath =  __DIR__ . $_ENV['FILE_PATH'];
         $this->dataCleaner = new DataCleaner($this->em, $this->restaurantProvider);
     }
 
-    public function testRestaurantClose(): void
+    public function testRestaurantClosed(): void
     {
-        $filePath = __DIR__ . $_ENV['FILE_PATH'];
-        file_put_contents($filePath, 111);
+        file_put_contents($this->filePath, 111);
 
         $this->restaurantProvider
             ->expects($this->once())
             ->method('getFilePath')
-            ->willReturn($filePath);
+            ->willReturn($this->filePath);
 
         $this->em
             ->expects($this->once())
@@ -49,5 +50,27 @@ class DataCleanerTest extends TestCase
 
         $message = $this->dataCleaner->removeRestaurantData();
         $this->assertEquals('Restaurant closed!', $message);
+    }
+
+    public function testRestaurantNotFound(): void
+    {
+        $this->restaurantProvider
+            ->expects($this->once())
+            ->method('getFilePath')
+            ->willReturn($this->filePath);
+
+        $this->em
+            ->expects($this->once())
+            ->method('getRepository')
+            ->with($this->equalTo(Order::class))
+            ->willReturn($this->orderRepository);
+
+        $this->orderRepository
+            ->expects($this->once())
+            ->method('findAll')
+            ->willReturn($this->order);
+
+        $message = $this->dataCleaner->removeRestaurantData();
+        $this->assertEquals('Restaurant not found!', $message);
     }
 }

@@ -3,10 +3,10 @@
 namespace App\Tests\Functional\Services\Cleaner;
 
 use App\Entity\Order;
-use App\Repository\OrderRepository;
 use App\Services\Cleaner\DataCleaner;
 use App\Services\Restaurant\RestaurantProvider;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 
 class DataCleanerTest extends TestCase
@@ -14,7 +14,7 @@ class DataCleanerTest extends TestCase
     private EntityManagerInterface $em;
     private DataCleaner $dataCleaner;
     private RestaurantProvider $restaurantProvider;
-    private OrderRepository $orderRepository;
+    private EntityRepository $entityRepository;
     private Order $order;
     private string $filePath;
 
@@ -22,7 +22,7 @@ class DataCleanerTest extends TestCase
     {
         $this->em = $this->createMock(EntityManagerInterface::class);
         $this->restaurantProvider = $this->createMock(RestaurantProvider::class);
-        $this->orderRepository = $this->createMock(OrderRepository::class);
+        $this->entityRepository = $this->createMock(EntityRepository::class);
         $this->order = $this->createMock(Order::class);
         $this->filePath =  __DIR__ . $_ENV['FILE_PATH'];
         $this->dataCleaner = new DataCleaner($this->em, $this->restaurantProvider);
@@ -41,9 +41,9 @@ class DataCleanerTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(Order::class))
-            ->willReturn($this->orderRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->orderRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findAll')
             ->willReturn($this->order);
@@ -63,9 +63,9 @@ class DataCleanerTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(Order::class))
-            ->willReturn($this->orderRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->orderRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findAll')
             ->willReturn($this->order);

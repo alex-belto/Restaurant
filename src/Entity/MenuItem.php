@@ -3,14 +3,13 @@
 namespace App\Entity;
 
 use App\Enum\MenuItemType;
-use App\Repository\MenuItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Represents menu item, including their name,
  * preparation time, price, associated restaurant, and related order.
  */
-#[ORM\Entity(repositoryClass: MenuItemRepository::class)]
+#[ORM\Entity]
 class MenuItem
 {
     #[ORM\Id]

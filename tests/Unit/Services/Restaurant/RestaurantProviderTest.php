@@ -7,6 +7,7 @@ use App\Repository\RestaurantRepository;
 use App\Services\Restaurant\RestaurantBuilder;
 use App\Services\Restaurant\RestaurantProvider;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 
 class RestaurantProviderTest extends TestCase
@@ -15,7 +16,7 @@ class RestaurantProviderTest extends TestCase
     private EntityManagerInterface $em;
     private RestaurantProvider $restaurantProvider;
     private string $filePath;
-    private RestaurantRepository $restaurantRepository;
+    private EntityRepository $entityRepository;
     private Restaurant $restaurant;
 
     public function setUp(): void
@@ -23,7 +24,7 @@ class RestaurantProviderTest extends TestCase
         $this->restaurantBuilder = $this->createMock(RestaurantBuilder::class);
         $this->em = $this->createMock(EntityManagerInterface::class);
         $this->restaurantProvider = new RestaurantProvider($this->restaurantBuilder, $this->em);
-        $this->restaurantRepository = $this->createMock(RestaurantRepository::class);
+        $this->entityRepository = $this->createMock(EntityRepository::class);
         $this->restaurant = $this->createMock(Restaurant::class);
         $this->filePath = $this->restaurantProvider->getFilePath();
     }
@@ -43,7 +44,7 @@ class RestaurantProviderTest extends TestCase
 
         $this->em
             ->method('getRepository')
-            ->willReturn($this->restaurantRepository);
+            ->willReturn($this->entityRepository);
 
         $this->restaurantBuilder
             ->expects($this->once())
@@ -72,9 +73,9 @@ class RestaurantProviderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(Restaurant::class))
-            ->willReturn($this->restaurantRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->restaurantRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('find')
             ->with($this->equalTo($restaurantId))

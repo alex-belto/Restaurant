@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\OrderItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Represents an item in an order, mirroring a MenuItem from the menu.
  */
-#[ORM\Entity(repositoryClass: OrderItemRepository::class)]
+#[ORM\Entity]
 class OrderItem
 {
 

@@ -7,21 +7,16 @@ use App\Entity\MenuItem;
 use App\Entity\Restaurant;
 use App\Entity\Waiter;
 use App\Enum\MenuItemType;
-use App\Repository\KitchenerRepository;
-use App\Repository\MenuItemRepository;
-use App\Repository\WaiterRepository;
 use App\Services\Restaurant\RestaurantBuilder;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
+use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 
 class RestaurantBuilderTest extends TestCase
 {
     private Restaurant $restaurant;
     private EntityManagerInterface $em;
-    private WaiterRepository $waiterRepository;
-    private KitchenerRepository $kitchenerRepository;
-    private MenuItemRepository $menuItemRepository;
+    private EntityRepository $entityRepository;
     private Waiter $waiter;
     private Kitchener $kitchener;
     private MenuItem $menuItem;
@@ -33,9 +28,7 @@ class RestaurantBuilderTest extends TestCase
     {
         $this->restaurant = $this->createMock(Restaurant::class);
         $this->em = $this->createMock(EntityManagerInterface::class);
-        $this->waiterRepository = $this->createMock(WaiterRepository::class);
-        $this->kitchenerRepository = $this->createMock(KitchenerRepository::class);
-        $this->menuItemRepository = $this->createMock(MenuItemRepository::class);
+        $this->entityRepository = $this->createMock(EntityRepository::class);
         $this->waiter = $this->createMock(Waiter::class);
         $this->kitchener = $this->createMock(Kitchener::class);
         $this->menuItem = $this->createMock(MenuItem::class);
@@ -50,9 +43,9 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(Waiter::class))
-            ->willReturn($this->waiterRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->waiterRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findAll')
             ->willReturn([$this->waiter, $this->waiter]);
@@ -70,9 +63,9 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(Waiter::class))
-            ->willReturn($this->waiterRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->waiterRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findAll')
             ->willReturn([$this->waiter]);
@@ -88,9 +81,9 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(Kitchener::class))
-            ->willReturn($this->kitchenerRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->kitchenerRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findAll')
             ->willReturn([$this->kitchener, $this->kitchener]);
@@ -108,9 +101,9 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(Kitchener::class))
-            ->willReturn($this->kitchenerRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->kitchenerRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findAll')
             ->willReturn([$this->kitchener]);
@@ -126,9 +119,9 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(MenuItem::class))
-            ->willReturn($this->menuItemRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->menuItemRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findBy')
             ->with(['type' => MenuItemType::DISH])
@@ -147,9 +140,9 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(MenuItem::class))
-            ->willReturn($this->menuItemRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->menuItemRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findBy')
             ->with(['type' => MenuItemType::DISH])
@@ -166,9 +159,9 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(MenuItem::class))
-            ->willReturn($this->menuItemRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->menuItemRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findBy')
             ->with(['type' => MenuItemType::DRINK])
@@ -187,9 +180,9 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(MenuItem::class))
-            ->willReturn($this->menuItemRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->menuItemRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findBy')
             ->with(['type' => MenuItemType::DRINK])

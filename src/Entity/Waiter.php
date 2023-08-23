@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Interfaces\StaffInterface;
-use App\Repository\WaiterRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Stores information about waiters, including their assigned orders,
  * restaurant affiliation, and tip records.
  */
-#[ORM\Entity(repositoryClass: WaiterRepository::class)]
+#[ORM\Entity]
 class Waiter implements StaffInterface
 {
     #[ORM\Id]

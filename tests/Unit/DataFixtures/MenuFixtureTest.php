@@ -5,7 +5,6 @@ namespace App\Tests\Unit\DataFixtures;
 use App\DataFixtures\MenuFixture;
 use App\Entity\MenuItem;
 use App\Services\Menu\MenuItemCreator;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 

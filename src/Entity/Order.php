@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Enum\OrderStatus;
-use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Stores information about orders,
  * including the menu item, client, waiter, chef, order status, and price.
  */
-#[ORM\Entity(repositoryClass: OrderRepository::class)]
+#[ORM\Entity]
 #[ORM\Table(name: '`order`')]
 class Order
 {

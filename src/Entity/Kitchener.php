@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Interfaces\StaffInterface;
-use App\Repository\KitchenerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Stores information about kitchiners, including their orders,
  * restaurant affiliation, and tip records.
  */
-#[ORM\Entity(repositoryClass: KitchenerRepository::class)]
+#[ORM\Entity]
 class Kitchener implements StaffInterface
 {
     #[ORM\Id]

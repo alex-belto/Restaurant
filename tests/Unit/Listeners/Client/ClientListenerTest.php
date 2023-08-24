@@ -21,7 +21,9 @@ class ClientListenerTest extends TestCase
     {
         $restaurantProvider = $this->createMock(RestaurantProvider::class);
         $orderItemFactory = $this->createMock(OrderItemFactory::class);
-        $orderItem = $this->createMock(OrderItem::class);
+        $orderItemOne = $this->createMock(OrderItem::class);
+        $orderItemTwo = $this->createMock(OrderItem::class);
+        $orderItemThree = $this->createMock(OrderItem::class);
         $mockOrder = $this->createMock(Order::class);
         $em = $this->createMock(EntityManagerInterface::class);
         $clientListener = new ClientListener($restaurantProvider, $orderItemFactory, $em);
@@ -46,13 +48,8 @@ class ClientListenerTest extends TestCase
         $orderItemFactory
             ->expects($this->exactly(3))
             ->method('createOrderItem')
-//            ->with($this->equalTo($menuItem), $this->equalTo($mockOrder))
-            ->willReturn($orderItem);
-
-//        $mockOrder
-//            ->expects($this->exactly(3))
-//            ->method('addOrderItem')
-//            ->with($this->equalTo($orderItem));
+            ->with($this->equalTo($menuItem), $this->isInstanceOf(Order::class))
+            ->willReturnOnConsecutiveCalls($orderItemOne, $orderItemTwo, $orderItemThree);
 
         $client
             ->expects($this->once())
@@ -61,8 +58,8 @@ class ClientListenerTest extends TestCase
 
         $client
             ->expects($this->once())
-            ->method('setConnectedOrder');
-//            ->with($this->equalTo($mockOrder));
+            ->method('setConnectedOrder')
+            ->with($this->isInstanceOf(Order::class));
 
         $em
             ->expects($this->exactly(4))
@@ -74,6 +71,7 @@ class ClientListenerTest extends TestCase
 
         $order = $clientListener->makeOrder($client);
         $this->assertInstanceOf(Order::class, $order);
+        $this->assertCount(3, $order->getOrderItems());
     }
 
 }

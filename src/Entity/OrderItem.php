@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class OrderItem
 {
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

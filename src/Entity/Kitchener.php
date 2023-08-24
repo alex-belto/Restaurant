@@ -29,7 +29,7 @@ class Kitchener implements StaffInterface
     private string $name;
 
     #[ORM\ManyToOne(cascade: ['persist', 'remove'], inversedBy: 'kitcheners')]
-    private Restaurant $restaurant;
+    private ?Restaurant $restaurant = null;
 
     public function __construct()
     {
@@ -95,12 +95,12 @@ class Kitchener implements StaffInterface
         return $this;
     }
 
-    public function getRestaurant(): Restaurant
+    public function getRestaurant(): ?Restaurant
     {
         return $this->restaurant;
     }
 
-    public function setRestaurant(Restaurant $restaurant): static
+    public function setRestaurant(?Restaurant $restaurant): static
     {
         $this->restaurant = $restaurant;
 

@@ -28,7 +28,7 @@ class ClientListener
         $this->em = $em;
     }
 
-    public function makeOrder(Client $client): Order
+    public function makeOrder(Client $client): void
     {
         $restaurant = $this->restaurantProvider->getRestaurant();
         $order = new Order();
@@ -48,7 +48,5 @@ class ClientListener
         $client->setConnectedOrder($order);
         $this->em->persist($order);
         $this->em->flush();
-        return $order;
     }
-
 }

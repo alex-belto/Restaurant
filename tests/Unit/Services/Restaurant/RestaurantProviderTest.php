@@ -61,7 +61,6 @@ class RestaurantProviderTest extends TestCase
 
     public function testRestaurantFileExist(): void
     {
-        $this->markTestSkipped('in progress');
         $restaurantId = 111;
         file_put_contents($this->filePath, $restaurantId);
 

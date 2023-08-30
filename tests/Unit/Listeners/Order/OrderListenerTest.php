@@ -26,14 +26,13 @@ class OrderListenerTest extends TestCase
 
     public function testOrderNotDone(): void
     {
-        $this->markTestSkipped('in progress');
         $this->order
             ->expects($this->once())
             ->method('getStatus')
             ->willReturn(OrderStatus::READY_TO_WAITER);
 
         $this->order
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('getClient')
             ->willReturn($this->client);
 
@@ -41,12 +40,11 @@ class OrderListenerTest extends TestCase
             ->expects($this->never())
             ->method('payOrder');
 
-        $this->orderListener->payOrder($this->client);
+        $this->orderListener->payOrder($this->order);
     }
 
     public function testOrderDone(): void
     {
-        $this->markTestSkipped('in progress');
         $this->order
             ->expects($this->once())
             ->method('getStatus')
@@ -61,6 +59,6 @@ class OrderListenerTest extends TestCase
             ->expects($this->once())
             ->method('payOrder');
 
-        $this->orderListener->payOrder($this->client);
+        $this->orderListener->payOrder($this->order);
     }
 }

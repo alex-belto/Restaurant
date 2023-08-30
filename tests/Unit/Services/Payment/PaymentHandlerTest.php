@@ -27,7 +27,11 @@ class PaymentHandlerTest extends TestCase
 
     public function testPayOrder(): void
     {
-        $this->markTestSkipped('Enumeration cannot be doubled');
+        $this->client
+            ->expects($this->once())
+            ->method('getStatus')
+            ->willReturn(ClientStatus::ORDER_PLACED);
+
         $this->client
             ->expects($this->once())
             ->method('isEnoughMoneyForOrder')
@@ -35,11 +39,13 @@ class PaymentHandlerTest extends TestCase
 
         $this->client
             ->expects($this->once())
-            ->method('getPaymentMethod');
+            ->method('getPaymentMethod')
+            ->willReturn('cashPayment');
 
         $this->container
             ->expects($this->once())
             ->method('get')
+            ->with($this->equalTo('cashPayment'))
             ->willReturn($this->paymentInterface);
 
         $this->paymentInterface
@@ -52,8 +58,12 @@ class PaymentHandlerTest extends TestCase
 
     public function testCardNotValidException(): void
     {
-        $this->markTestSkipped('Enumeration cannot be doubled');
         $cardValidationException = $this->createMock(CardValidationException::class);
+
+        $this->client
+            ->expects($this->once())
+            ->method('getStatus')
+            ->willReturn(ClientStatus::ORDER_PLACED);
 
         $this->client
             ->expects($this->once())
@@ -81,7 +91,11 @@ class PaymentHandlerTest extends TestCase
 
     public function testClientDontHaveEnoughMoney(): void
     {
-        $this->markTestSkipped('Enumeration cannot be doubled');
+        $this->client
+            ->expects($this->once())
+            ->method('getStatus')
+            ->willReturn(ClientStatus::ORDER_PLACED);
+
         $this->client
             ->expects($this->once())
             ->method('getPaymentMethod')

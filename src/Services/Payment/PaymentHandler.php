@@ -27,8 +27,6 @@ class PaymentHandler
             return;
         }
 
-        $restaurant = $client->getRestaurant();
-
         $paymentStrategy = $this->paymentStrategies->get($client->getPaymentMethod());
 
         if (!$client->isEnoughMoneyForOrder()) {
@@ -38,6 +36,7 @@ class PaymentHandler
         try {
             $paymentStrategy->pay($client);
         } catch (CardValidationException $e) {
+            $restaurant = $client->getRestaurant();
             $cashPaymentProcessor = $this->paymentStrategies->get($restaurant->getPaymentMethod());
             $cashPaymentProcessor->pay($client);
         }

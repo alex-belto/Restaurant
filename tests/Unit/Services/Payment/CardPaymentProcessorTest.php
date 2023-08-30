@@ -3,11 +3,11 @@
 namespace App\Tests\Unit\Services\Payment;
 
 use App\Entity\Client;
-use App\Enum\ClientStatus;
 use App\Exception\CardValidationException;
 use App\Services\Payment\CardPaymentProcessor;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 class CardPaymentProcessorTest extends TestCase
@@ -68,16 +68,10 @@ class CardPaymentProcessorTest extends TestCase
 
     public function testCatchException(): void
     {
-        $this->markTestSkipped('Expectation failed for method name is "getConnection" when invoked at least 2 times.
-Expected invocation at least 2 times but it occurred 0 times.');
         $this->client
             ->expects($this->once())
             ->method('isCardValid')
             ->willReturn(true);
-
-        $this->client
-            ->expects($this->once())
-            ->method('payOrder');
 
         $this->em
             ->expects($this->atLeast(2))
@@ -86,12 +80,20 @@ Expected invocation at least 2 times but it occurred 0 times.');
 
         $this->connection
             ->expects($this->once())
-            ->method('beginTransaction')
-            ->willReturn(new \Exception());
+            ->method('beginTransaction');
+
+        $this->client
+            ->expects($this->once())
+            ->method('payOrder')
+            ->willThrowException(new Exception('Payment failed!'));
 
         $this->connection
             ->expects($this->once())
             ->method('rollBack');
+
+        $this->expectExceptionMessage('Payment failed!');
+
+        $this->cardPaymentProcessor->pay($this->client);
     }
 
 }

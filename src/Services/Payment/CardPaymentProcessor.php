@@ -3,10 +3,9 @@
 namespace App\Services\Payment;
 
 use App\Entity\Client;
-use App\Enum\ClientStatus;
 use App\Exception\CardValidationException;
 use App\Interfaces\PaymentInterface;
-use Doctrine\DBAL\Exception;
+use Exception;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**

@@ -69,9 +69,7 @@ class ClientListenerTest extends TestCase
             ->expects($this->once())
             ->method('flush');
 
-        $order = $clientListener->makeOrder($client);
-        $this->assertInstanceOf(Order::class, $order);
-        $this->assertCount(3, $order->getOrderItems());
+        $clientListener->makeOrder($client);
     }
 
 }

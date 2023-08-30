@@ -52,7 +52,8 @@ class RestaurantBuilderTest extends TestCase
 
         $this->restaurant
             ->expects($this->exactly($this->amountOfHiringStaff))
-            ->method('addWaiter');
+            ->method('addWaiter')
+            ->with($this->equalTo($this->waiter));
 
         $this->restaurantBuilder->hireWaiters($this->restaurant, $this->amountOfHiringStaff);
     }
@@ -90,7 +91,8 @@ class RestaurantBuilderTest extends TestCase
 
         $this->restaurant
             ->expects($this->exactly($this->amountOfHiringStaff))
-            ->method('addKitchener');
+            ->method('addKitchener')
+            ->with($this->equalTo($this->kitchener));
 
         $this->restaurantBuilder->hireKitcheners($this->restaurant, $this->amountOfHiringStaff);
     }
@@ -129,7 +131,8 @@ class RestaurantBuilderTest extends TestCase
 
         $this->restaurant
             ->expects($this->exactly($this->amountOfAddingMenuItems))
-            ->method('addMenuItem');
+            ->method('addMenuItem')
+            ->with($this->equalTo($this->menuItem));
 
         $this->restaurantBuilder->fillUpMenu($this->restaurant, $this->amountOfAddingMenuItems, 'dish');
     }
@@ -169,7 +172,8 @@ class RestaurantBuilderTest extends TestCase
 
         $this->restaurant
             ->expects($this->exactly($this->amountOfAddingMenuItems))
-            ->method('addMenuItem');
+            ->method('addMenuItem')
+            ->with($this->equalTo($this->menuItem));
 
         $this->restaurantBuilder->fillUpMenu($this->restaurant, $this->amountOfAddingMenuItems, 'drink');
     }

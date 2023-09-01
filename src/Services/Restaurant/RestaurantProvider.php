@@ -39,7 +39,15 @@ class RestaurantProvider
     private function buildRestaurant(?int $days = null): Restaurant
     {
         $filePath = $this->getFilePath();
-        $restaurant = $this->restaurantBuilder->buildRestaurant($days);
+        $restaurant = $this->restaurantBuilder
+            ->build()
+            ->hireKitcheners(3)
+            ->hireWaiters(7)
+            ->fillUpMenu(15, 'dish')
+            ->fillUpMenu(4, 'drink')
+            ->getRestaurant();
+
+        $restaurant->setDays($days);
         $this->em->persist($restaurant);
         $this->em->flush();
         file_put_contents($filePath, $restaurant->getId());

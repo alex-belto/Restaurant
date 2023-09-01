@@ -22,31 +22,21 @@ class RestaurantBuilder
         EntityManagerInterface $em
     ) {
         $this->em = $em;
-        $this->restaurant = new Restaurant();
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function buildRestaurant(int $days): Restaurant
-    {
-        $restaurant = $this->build();
-        $this
-            ->hireKitcheners($restaurant, 3)
-            ->hireWaiters($restaurant, 7)
-            ->fillUpMenu($restaurant, 15, 'dish')
-            ->fillUpMenu($restaurant, 4, 'drink');
-        $restaurant->setDays($days);
-
-        return $restaurant;
-    }
-
-    public function build(): Restaurant
+    public function getRestaurant(): Restaurant
     {
         return $this->restaurant;
     }
 
-    public function hireWaiters(Restaurant $restaurant, int $amount): self
+    public function build(): self
+    {
+        $this->restaurant = new Restaurant();
+
+        return $this;
+    }
+
+    public function hireWaiters(int $amount): self
     {
         $waiters = $this->em->getRepository(Waiter::class)->findAll();
         if (count($waiters) < $amount) {
@@ -54,13 +44,13 @@ class RestaurantBuilder
         }
 
         for ($i = 0; $i < $amount; $i++) {
-            $restaurant->addWaiter($waiters[$i]);
+            $this->restaurant->addWaiter($waiters[$i]);
         }
 
         return $this;
     }
 
-    public function hireKitcheners(Restaurant $restaurant, int $amount): self
+    public function hireKitcheners(int $amount): self
     {
         $kitcheners = $this->em->getRepository(Kitchener::class)->findAll();
         if (count($kitcheners) < $amount) {
@@ -68,13 +58,13 @@ class RestaurantBuilder
         }
 
         for ($i = 0; $i < $amount; $i++) {
-            $restaurant->addKitchener($kitcheners[$i]);
+            $this->restaurant->addKitchener($kitcheners[$i]);
         }
 
         return $this;
     }
 
-    public function fillUpMenu(Restaurant $restaurant, int $amount, string $type): self
+    public function fillUpMenu(int $amount, string $type): self
     {
         switch ($type) {
             case 'dish':
@@ -84,7 +74,7 @@ class RestaurantBuilder
                 }
 
                 for ($i = 0; $i < $amount; $i++) {
-                    $restaurant->addMenuItem($dishes[$i]);
+                    $this->restaurant->addMenuItem($dishes[$i]);
                 }
                 break;
 
@@ -95,7 +85,7 @@ class RestaurantBuilder
                 }
 
                 for ($i = 0; $i < $amount; $i++) {
-                    $restaurant->addMenuItem($drinks[$i]);
+                    $this->restaurant->addMenuItem($drinks[$i]);
                 }
                 break;
 

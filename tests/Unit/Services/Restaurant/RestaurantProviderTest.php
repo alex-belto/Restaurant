@@ -43,13 +43,9 @@ class RestaurantProviderTest extends TestCase
         }
 
         $this->em
+            ->expects($this->never())
             ->method('getRepository')
             ->willReturn($this->entityRepository);
-
-        $this->restaurantBuilder
-            ->expects($this->once())
-            ->method('buildRestaurant')
-            ->willReturn($this->restaurant);
 
         $this->em
             ->expects($this->never())
@@ -66,7 +62,7 @@ class RestaurantProviderTest extends TestCase
 
         $this->restaurantBuilder
             ->expects($this->never())
-            ->method('buildRestaurant');
+            ->method('build');
 
         $this->em
             ->expects($this->once())

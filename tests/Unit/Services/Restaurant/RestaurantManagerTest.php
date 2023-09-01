@@ -26,6 +26,11 @@ class RestaurantManagerTest extends TestCase
             ->method('getDays')
             ->willReturn($days);
 
+        $restaurant
+            ->expects($this->exactly(3))
+            ->method('getMaxVisitorsPerDay')
+            ->willReturn(10);
+
         $clientFactory
             ->expects($this->exactly(30))
             ->method('createClient')

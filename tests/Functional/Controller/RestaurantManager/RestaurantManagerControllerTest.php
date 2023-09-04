@@ -42,7 +42,43 @@ class RestaurantManagerControllerTest extends WebTestCase
     public function testOpenRestaurant(): void
     {
         $this->client->request('GET', '/restaurant/open/1');
+        $response = $this->client->getResponse();
+        $data = json_decode($response->getContent(), true);
+        $days = $data['days'];
+        $restaurantBalance = $data['restaurant_balance'];
+        $waitersBalance = $data['waiters_balance'];
+        $kitchenersBalance = $data['kitcheners_balance'];
+        $visitorsForAllTime = $data['visitors_for_all_time'];
+        $visitorsWithTips = $data['visitors_with_tips'];
+        $amountOfWaitersBalance = 0;
+        foreach ($data['waiters_balance'] as $waiter) {
+            $amountOfWaitersBalance += $waiter['waiter_balance'];
+        }
+
+        $amountOfKitchenersBalance = 0;
+        foreach ($data['kitcheners_balance'] as $kitchener) {
+            $amountOfKitchenersBalance += $kitchener['kitchener_balance'];
+        }
+
         $this->assertResponseIsSuccessful();
+        $this->assertFileExists($this->filePath);
+        $this->assertIsArray($waitersBalance);
+        $this->assertIsArray($kitchenersBalance);
+        $this->assertIsInt($days);
+        $this->assertIsInt($restaurantBalance);
+        $this->assertIsInt($visitorsForAllTime);
+        $this->assertIsInt($visitorsWithTips);
+        $this->assertEquals(1, $days);
+        $this->assertLessThanOrEqual(18000, $restaurantBalance);
+        $this->assertGreaterThanOrEqual(30, $restaurantBalance);
+        $this->assertLessThanOrEqual(400, $visitorsForAllTime);
+        $this->assertGreaterThanOrEqual(10, $visitorsForAllTime);
+        $this->assertLessThanOrEqual(400, $visitorsWithTips);
+        $this->assertGreaterThanOrEqual(0, $visitorsWithTips);
+        $this->assertLessThanOrEqual(2160, $amountOfWaitersBalance);
+        $this->assertGreaterThanOrEqual(0, $amountOfWaitersBalance);
+        $this->assertLessThanOrEqual(1080, $amountOfKitchenersBalance);
+        $this->assertGreaterThanOrEqual(0, $amountOfKitchenersBalance);
     }
 
     public function testRestaurantNotFound(): void

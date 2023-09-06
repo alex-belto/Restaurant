@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Interfaces\StaffInterface;
-use App\Repository\KitchenerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Stores information about kitchiners, including their orders,
  * restaurant affiliation, and tip records.
  */
-#[ORM\Entity(repositoryClass: KitchenerRepository::class)]
+#[ORM\Entity]
 class Kitchener implements StaffInterface
 {
     #[ORM\Id]
@@ -30,7 +29,7 @@ class Kitchener implements StaffInterface
     private string $name;
 
     #[ORM\ManyToOne(cascade: ['persist', 'remove'], inversedBy: 'kitcheners')]
-    private Restaurant $restaurant;
+    private ?Restaurant $restaurant = null;
 
     public function __construct()
     {
@@ -96,12 +95,12 @@ class Kitchener implements StaffInterface
         return $this;
     }
 
-    public function getRestaurant(): Restaurant
+    public function getRestaurant(): ?Restaurant
     {
         return $this->restaurant;
     }
 
-    public function setRestaurant(Restaurant $restaurant): static
+    public function setRestaurant(?Restaurant $restaurant): static
     {
         $this->restaurant = $restaurant;
 

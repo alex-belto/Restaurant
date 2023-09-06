@@ -5,7 +5,9 @@ namespace App\Tests\Unit\Listeners\Client;
 use App\Entity\Client;
 use App\Entity\MenuItem;
 use App\Entity\Order;
+use App\Entity\OrderItem;
 use App\Entity\Restaurant;
+use App\Enum\ClientStatus;
 use App\EventListener\Client\ClientListener;
 use App\Services\OrderItem\OrderItemFactory;
 use App\Services\Restaurant\RestaurantProvider;
@@ -19,6 +21,10 @@ class ClientListenerTest extends TestCase
     {
         $restaurantProvider = $this->createMock(RestaurantProvider::class);
         $orderItemFactory = $this->createMock(OrderItemFactory::class);
+        $orderItemOne = $this->createMock(OrderItem::class);
+        $orderItemTwo = $this->createMock(OrderItem::class);
+        $orderItemThree = $this->createMock(OrderItem::class);
+        $mockOrder = $this->createMock(Order::class);
         $em = $this->createMock(EntityManagerInterface::class);
         $clientListener = new ClientListener($restaurantProvider, $orderItemFactory, $em);
         $client = $this->createMock(Client::class);
@@ -32,6 +38,8 @@ class ClientListenerTest extends TestCase
             ->method('getRestaurant')
             ->willReturn($restaurant);
 
+        $mockOrder->setClient($client);
+
         $restaurant
             ->expects($this->once())
             ->method('getMenuItems')
@@ -39,16 +47,19 @@ class ClientListenerTest extends TestCase
 
         $orderItemFactory
             ->expects($this->exactly(3))
-            ->method('createOrderItem');
+            ->method('createOrderItem')
+            ->with($this->equalTo($menuItem), $this->isInstanceOf(Order::class))
+            ->willReturnOnConsecutiveCalls($orderItemOne, $orderItemTwo, $orderItemThree);
 
         $client
             ->expects($this->once())
             ->method('setStatus')
-            ->with($this->equalTo(Client::ORDER_PLACED));
+            ->with($this->equalTo(ClientStatus::ORDER_PLACED));
 
         $client
             ->expects($this->once())
-            ->method('setConnectedOrder');
+            ->method('setConnectedOrder')
+            ->with($this->isInstanceOf(Order::class));
 
         $em
             ->expects($this->exactly(4))
@@ -58,8 +69,7 @@ class ClientListenerTest extends TestCase
             ->expects($this->once())
             ->method('flush');
 
-        $order = $clientListener->makeOrder($client);
-        $this->assertInstanceOf(Order::class, $order);
+        $clientListener->makeOrder($client);
     }
 
 }

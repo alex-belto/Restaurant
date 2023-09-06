@@ -35,11 +35,11 @@ class RestaurantManager
         $visitorsForAllTime = 0;
 
         for ($i = 1; $i <= $days; $i++) {
-            $visitorsPerDay = rand(10, $restaurant->getMaxVisitorsPerDay());
+            $visitorsPerDay = rand(10, 10);
             $visitorsForAllTime += $visitorsPerDay;
 
-            for ($j = 1; $j <= $visitorsPerDay; $j++) {
-                $client = $this->clientFactory->createClient(true);
+            for ($j = 0; $j < $visitorsPerDay; $j++) {
+                $client = $this->clientFactory->createClient();
                 $this->em->persist($client);
                 $this->em->flush();
             }

@@ -7,6 +7,7 @@ use App\Repository\RestaurantRepository;
 use App\Services\Restaurant\RestaurantBuilder;
 use App\Services\Restaurant\RestaurantProvider;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 
 class RestaurantProviderTest extends TestCase
@@ -15,7 +16,7 @@ class RestaurantProviderTest extends TestCase
     private EntityManagerInterface $em;
     private RestaurantProvider $restaurantProvider;
     private string $filePath;
-    private RestaurantRepository $restaurantRepository;
+    private EntityRepository $entityRepository;
     private Restaurant $restaurant;
 
     public function setUp(): void
@@ -23,9 +24,9 @@ class RestaurantProviderTest extends TestCase
         $this->restaurantBuilder = $this->createMock(RestaurantBuilder::class);
         $this->em = $this->createMock(EntityManagerInterface::class);
         $this->restaurantProvider = new RestaurantProvider($this->restaurantBuilder, $this->em);
-        $this->filePath = realpath(__DIR__ . '/../../../..') . $_ENV['FILE_PATH'];
-        $this->restaurantRepository = $this->createMock(RestaurantRepository::class);
+        $this->entityRepository = $this->createMock(EntityRepository::class);
         $this->restaurant = $this->createMock(Restaurant::class);
+        $this->filePath = $this->restaurantProvider->getFilePath();
     }
 
     public function tearDown(): void
@@ -41,12 +42,10 @@ class RestaurantProviderTest extends TestCase
             unlink($this->filePath);
         }
 
-        $this->em->method('getRepository')->willReturn($this->restaurantRepository);
-
-        $this->restaurantBuilder
-            ->expects($this->once())
-            ->method('buildRestaurant')
-            ->willReturn($this->restaurant);
+        $this->em
+            ->expects($this->never())
+            ->method('getRepository')
+            ->willReturn($this->entityRepository);
 
         $this->em
             ->expects($this->never())
@@ -63,21 +62,21 @@ class RestaurantProviderTest extends TestCase
 
         $this->restaurantBuilder
             ->expects($this->never())
-            ->method('buildRestaurant');
+            ->method('build');
 
         $this->em
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(Restaurant::class))
-            ->willReturn($this->restaurantRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->restaurantRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('find')
             ->with($this->equalTo($restaurantId))
             ->willReturn($this->restaurant);
 
-        $restaurant = $this->restaurantProvider->getRestaurant();
+        $restaurant = $this->restaurantProvider->getRestaurant(1);
         $this->assertInstanceOf(Restaurant::class, $restaurant);
     }
 

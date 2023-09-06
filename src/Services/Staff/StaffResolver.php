@@ -6,7 +6,7 @@ use App\Interfaces\StaffInterface;
 use App\Services\Restaurant\RestaurantProvider;
 
 /**
- * Responsible for creating staff and choose staff to restaurant.
+ * Responsible for choose staff to restaurant.
  */
 class StaffResolver
 {
@@ -32,7 +32,7 @@ class StaffResolver
         };
         
         $amountOfStaffs = count($staffs);
-        $randomStaffId = rand(0, $amountOfStaffs - 1);
-        return $staffs[$randomStaffId];
+        $randomStaffIdx = rand(0, $amountOfStaffs - 1);
+        return $staffs[$randomStaffIdx];
     }
 }

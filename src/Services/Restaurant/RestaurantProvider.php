@@ -5,11 +5,13 @@ namespace App\Services\Restaurant;
 use App\Entity\Restaurant;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * A class responsible for supplying a restaurant instance for operations.
+ */
 class RestaurantProvider
 {
     private RestaurantBuilder $restaurantBuilder;
     private EntityManagerInterface $em;
-    private string $filePath;
 
     public function __construct(
         RestaurantBuilder $restaurantBuilder,
@@ -17,16 +19,17 @@ class RestaurantProvider
     ) {
         $this->restaurantBuilder = $restaurantBuilder;
         $this->em = $em;
-        $this->filePath = realpath(__DIR__ . '/../../..') . $_ENV['FILE_PATH'];
     }
 
     public function getRestaurant(?int $days = null): Restaurant
     {
-        if (!file_exists($this->filePath)) {
+        $filePath = $this->getFilePath();
+
+        if (!file_exists($filePath)) {
             return $this->buildRestaurant($days);
         }
 
-        $restaurantId = file_get_contents($this->filePath);
+        $restaurantId = file_get_contents($filePath);
         $restaurant = $this->em->getRepository(Restaurant::class)->find($restaurantId);
 
         if ($restaurant === null) {
@@ -38,10 +41,24 @@ class RestaurantProvider
 
     private function buildRestaurant(?int $days = null): Restaurant
     {
-        $restaurant = $this->restaurantBuilder->buildRestaurant($days);
+        $filePath = $this->getFilePath();
+        $restaurant = $this->restaurantBuilder
+            ->build()
+            ->hireKitcheners(3)
+            ->hireWaiters(7)
+            ->fillUpMenu(15, 'dish')
+            ->fillUpMenu(4, 'drink')
+            ->getRestaurant();
+
+        $restaurant->setDays($days);
         $this->em->persist($restaurant);
         $this->em->flush();
-        file_put_contents($this->filePath, $restaurant->getId());
+        file_put_contents($filePath, $restaurant->getId());
         return $restaurant;
+    }
+
+    public function getFilePath(): string
+    {
+        return __DIR__ . $_ENV['FILE_PATH'];
     }
 }

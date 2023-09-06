@@ -3,6 +3,7 @@
 namespace App\EventListener\Order;
 
 use App\Entity\Order;
+use App\Enum\OrderStatus;
 use App\Services\Payment\PaymentHandler;
 
 /**
@@ -12,13 +13,15 @@ class OrderListener
 {
     private PaymentHandler $paymentHandler;
 
-    public function __construct(PaymentHandler $paymentHandler) {
+    public function __construct(
+        PaymentHandler $paymentHandler
+    ) {
         $this->paymentHandler = $paymentHandler;
     }
 
     public function payOrder(Order $order): void
     {
-        if ($order->getStatus() !== Order::DONE) {
+        if ($order->getStatus() !== OrderStatus::DONE) {
             return;
         }
         $client = $order->getClient();

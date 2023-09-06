@@ -2,20 +2,26 @@
 
 namespace App\EventListener\Kitchener;
 
+use App\Entity\Kitchener;
 use App\Entity\Order;
-use App\Services\Kitchener\KitchenerOrderProcessor;
+use App\Enum\OrderStatus;
+use App\Services\Staff\StaffResolver;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Listening to the order, after we update its status to "READY_TO_KITCHEN" and proceed with the processing.
  */
 class KitchenerListener
 {
-    private KitchenerOrderProcessor $kitchenerOrderProcessor;
+    private EntityManagerInterface $em;
+    private StaffResolver $staffResolver;
 
     public function __construct(
-        KitchenerOrderProcessor $kitchenerOrderProcessor
+        EntityManagerInterface $em,
+        StaffResolver $staffResolver
     ) {
-        $this->kitchenerOrderProcessor = $kitchenerOrderProcessor;
+        $this->em = $em;
+        $this->staffResolver = $staffResolver;
     }
 
     /**
@@ -23,11 +29,15 @@ class KitchenerListener
      */
     public function processOrderByKitchen(Order $order) {
 
-        if ($order->getStatus() !== Order::READY_TO_KITCHEN) {
+        if ($order->getStatus() !== OrderStatus::READY_TO_KITCHEN) {
             return;
         }
 
-        $this->kitchenerOrderProcessor->processingOrder($order);
+        /** @var Kitchener $kitchener */
+        $kitchener = $this->staffResolver->chooseStaff('kitchener');
+        $kitchener->addOrder($order);
+        $order->setStatus(OrderStatus::READY_TO_WAITER);
+        $this->em->flush();
     }
 
 }

@@ -3,8 +3,7 @@
 namespace App\Controller\RestaurantManager;
 
 use App\Repository\RestaurantRepository;
-use App\Services\Cleaner\ClientCleaner;
-use App\Services\Cleaner\OrderCleaner;
+use App\Services\Cleaner\DataCleaner;
 use \App\Services\Restaurant\RestaurantManager as Manager;
 use App\Services\Restaurant\RestaurantProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,29 +13,22 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * The main controller is responsible for managing the restaurant.
  */
-class RestaurantManager extends AbstractController
+class RestaurantManagerController extends AbstractController
 {
     private Manager $restaurantManager;
-
     private RestaurantProvider $restaurantProvider;
-
-    private ClientCleaner $clientCleaner;
-
-    private OrderCleaner $orderCleaner;
-
+    private DataCleaner $dataCleaner;
     private RestaurantRepository $restaurantRepository;
 
     public function __construct(
         Manager                $restaurantManager,
-        ClientCleaner          $clientCleaner,
         RestaurantProvider     $restaurantProvider,
-        OrderCleaner           $orderCleaner,
+        DataCleaner            $dataCleaner,
         RestaurantRepository   $restaurantRepository
     ) {
         $this->restaurantManager = $restaurantManager;
-        $this->clientCleaner = $clientCleaner;
         $this->restaurantProvider = $restaurantProvider;
-        $this->orderCleaner = $orderCleaner;
+        $this->dataCleaner = $dataCleaner;
         $this->restaurantRepository = $restaurantRepository;
     }
 
@@ -53,19 +45,14 @@ class RestaurantManager extends AbstractController
     #[Route('restaurant/close', name: 'close_restaurant', methods: ['GET'])]
     public function dropRestaurant(): JsonResponse
     {
-        $basePath = realpath(__DIR__ . '/../../..');
-        $filePath = $basePath . $_ENV['FILE_PATH'];
+        $message = $this->dataCleaner->removeRestaurantData();
 
-        if (file_exists($filePath)) {
-            unlink($filePath);
-            $this->orderCleaner->removeAllOrders();
-            $this->clientCleaner->removeAllClients();
-            $message = 'Restaurant closed!';
-        } else {
-            $message = 'Restaurant not found!';
+        if ($message === 'Restaurant not found!') {
+            return $this->json($message);
         }
 
         $this->restaurantRepository->dropRestaurant();
+
         return $this->json($message);
     }
 }

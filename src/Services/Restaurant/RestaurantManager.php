@@ -35,7 +35,7 @@ class RestaurantManager
         $visitorsForAllTime = 0;
 
         for ($i = 1; $i <= $days; $i++) {
-            $visitorsPerDay = rand(10, 10);
+            $visitorsPerDay = rand(10, $restaurant->getMaxVisitorsPerDay());
             $visitorsForAllTime += $visitorsPerDay;
 
             for ($j = 0; $j < $visitorsPerDay; $j++) {

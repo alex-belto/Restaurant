@@ -23,7 +23,7 @@ class ClientTest extends TestCase
     public function testIsEnoughMoneyForOrder(
         float $money,
         float $price,
-        int $tips,
+        float $tips,
         bool $expected
     ): void
     {
@@ -37,7 +37,7 @@ class ClientTest extends TestCase
 
         $this->order
             ->expects($this->once())
-            ->method('getTips')
+            ->method('calculateTips')
             ->willReturn($tips);
 
         $this->assertEquals($expected, $this->client->isEnoughMoneyForOrder());
@@ -49,13 +49,13 @@ class ClientTest extends TestCase
             'clientHasEnoughMoney' => [
                 'money' => 200.00,
                 'price' => 100.00,
-                'tips' => 10,
+                'tips' => 10.00,
                 'expected' => true
             ],
             'clientDoesntHaveEnoughMoney' => [
                 'money' => 100.00,
                 'price' => 100.00,
-                'tips' => 10,
+                'tips' => 10.00,
                 'expected' => false
             ]
         ];

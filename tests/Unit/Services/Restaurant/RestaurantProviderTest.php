@@ -89,18 +89,13 @@ class RestaurantProviderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(Restaurant::class))
-            ->willReturn($this->restaurantRepository);
+            ->willReturn($this->entityRepository);
 
-       $this->restaurantRepository
+       $this->entityRepository
             ->expects($this->once())
             ->method('find')
             ->with($this->equalTo($restaurantId))
             ->willReturn(null);
-
-        $this->restaurantBuilder
-            ->expects($this->once())
-            ->method('buildRestaurant')
-            ->willReturn($this->restaurant);
 
         $restaurant = $this->restaurantProvider->getRestaurant(1);
         $this->assertInstanceOf(Restaurant::class, $restaurant);

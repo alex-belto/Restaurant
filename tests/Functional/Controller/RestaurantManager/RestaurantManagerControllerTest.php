@@ -25,7 +25,7 @@ class RestaurantManagerControllerTest extends WebTestCase
         $em = $this->getContainer()->get(EntityManagerInterface::class);
         $restaurantBuilder = new RestaurantBuilder($em);
         $this->restaurantProvider = new RestaurantProvider($restaurantBuilder, $em);
-        $this->filePath = realpath(__DIR__ . '/../../../..') . $_ENV['FILE_PATH'];
+        $this->filePath = $this->restaurantProvider->getFilePath();
         if (file_exists($this->filePath)) {
             unlink($this->filePath);
         }

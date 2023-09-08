@@ -12,13 +12,16 @@ class RestaurantProvider
 {
     private RestaurantBuilder $restaurantBuilder;
     private EntityManagerInterface $em;
+    private string $restaurantFilePath;
 
     public function __construct(
         RestaurantBuilder $restaurantBuilder,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        $restaurantFilePath
     ) {
         $this->restaurantBuilder = $restaurantBuilder;
         $this->em = $em;
+        $this->restaurantFilePath = $restaurantFilePath;
     }
 
     public function getRestaurant(?int $days = null): Restaurant
@@ -59,6 +62,6 @@ class RestaurantProvider
 
     public function getFilePath(): string
     {
-        return __DIR__ . $_ENV['FILE_PATH'];
+        return $this->restaurantFilePath;
     }
 }

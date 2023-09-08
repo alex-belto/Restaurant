@@ -1,45 +1,44 @@
 <?php
 
-namespace App\Tests\Unit\Services\Restaurant;
+namespace App\Tests\Functional\Services\Restaurant;
 
 use App\Entity\Restaurant;
-use App\Repository\RestaurantRepository;
 use App\Services\Restaurant\RestaurantBuilder;
 use App\Services\Restaurant\RestaurantProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class RestaurantProviderTest extends TestCase
+class RestaurantProviderTest extends WebTestCase
 {
     private RestaurantBuilder $restaurantBuilder;
     private EntityManagerInterface $em;
     private RestaurantProvider $restaurantProvider;
-    private string $filePath;
+    private string $restaurantFilePath;
     private EntityRepository $entityRepository;
     private Restaurant $restaurant;
 
     public function setUp(): void
     {
+        $this->restaurantFilePath = $this->getContainer()->getParameter('app.restaurant_file_path');
         $this->restaurantBuilder = $this->createMock(RestaurantBuilder::class);
         $this->em = $this->createMock(EntityManagerInterface::class);
-        $this->restaurantProvider = new RestaurantProvider($this->restaurantBuilder, $this->em);
+        $this->restaurantProvider = new RestaurantProvider($this->restaurantBuilder, $this->em, $this->restaurantFilePath);
         $this->entityRepository = $this->createMock(EntityRepository::class);
         $this->restaurant = $this->createMock(Restaurant::class);
-        $this->filePath = $this->restaurantProvider->getFilePath();
     }
 
     public function tearDown(): void
     {
-        if (file_exists($this->filePath)) {
-            unlink($this->filePath);
+        if (file_exists($this->restaurantFilePath)) {
+            unlink($this->restaurantFilePath);
         }
     }
 
     public function testNotExistRestaurant(): void
     {
-        if (file_exists($this->filePath)) {
-            unlink($this->filePath);
+        if (file_exists($this->restaurantFilePath)) {
+            unlink($this->restaurantFilePath);
         }
 
         $this->em
@@ -58,7 +57,7 @@ class RestaurantProviderTest extends TestCase
     public function testRestaurantFileExist(): void
     {
         $restaurantId = 111;
-        file_put_contents($this->filePath, $restaurantId);
+        file_put_contents($this->restaurantFilePath, $restaurantId);
 
         $this->restaurantBuilder
             ->expects($this->never())
@@ -83,7 +82,7 @@ class RestaurantProviderTest extends TestCase
     public function testRestaurantFileExistButRestaurantNotFound(): void
     {
         $restaurantId = 111;
-        file_put_contents($this->filePath, $restaurantId);
+        file_put_contents($this->restaurantFilePath, $restaurantId);
 
         $this->em
             ->expects($this->once())

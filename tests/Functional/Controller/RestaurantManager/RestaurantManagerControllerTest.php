@@ -11,8 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class RestaurantManagerControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
-    private string $filePath;
     private RestaurantProvider $restaurantProvider;
+    private EntityManagerInterface $em;
+    private string $restaurantFilePath;
 
     static function setUpBeforeClass(): void
     {
@@ -22,19 +23,19 @@ class RestaurantManagerControllerTest extends WebTestCase
     public function setUp(): void
     {
         $this->client = static::createClient();
-        $em = $this->getContainer()->get(EntityManagerInterface::class);
-        $restaurantBuilder = new RestaurantBuilder($em);
-        $this->restaurantProvider = new RestaurantProvider($restaurantBuilder, $em);
-        $this->filePath = $this->restaurantProvider->getFilePath();
-        if (file_exists($this->filePath)) {
-            unlink($this->filePath);
+        $this->em = $this->getContainer()->get(EntityManagerInterface::class);
+        $this->restaurantFilePath = $this->getContainer()->getParameter('app.restaurant_file_path');
+        $restaurantBuilder = new RestaurantBuilder($this->em);
+        $this->restaurantProvider = new RestaurantProvider($restaurantBuilder, $this->em, $this->restaurantFilePath);
+        if (file_exists($this->restaurantFilePath)) {
+            unlink($this->restaurantFilePath);
         }
     }
 
     public function tearDown(): void
     {
-        if (file_exists($this->filePath)) {
-            unlink($this->filePath);
+        if (file_exists($this->restaurantFilePath)) {
+            unlink($this->restaurantFilePath);
         }
         parent::tearDown();
     }
@@ -61,7 +62,7 @@ class RestaurantManagerControllerTest extends WebTestCase
         }
 
         $this->assertResponseIsSuccessful();
-        $this->assertFileExists($this->filePath);
+        $this->assertFileExists($this->restaurantFilePath);
         $this->assertIsArray($waitersBalance);
         $this->assertIsArray($kitchenersBalance);
         $this->assertIsInt($days);

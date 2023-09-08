@@ -7,16 +7,16 @@ use App\Services\Cleaner\DataCleaner;
 use App\Services\Restaurant\RestaurantProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class DataCleanerTest extends TestCase
+class DataCleanerTest extends WebTestCase
 {
     private EntityManagerInterface $em;
     private DataCleaner $dataCleaner;
     private RestaurantProvider $restaurantProvider;
     private EntityRepository $entityRepository;
     private Order $order;
-    private string $filePath;
+    private string $restaurantFilePath;
 
     public function setUp(): void
     {
@@ -24,18 +24,18 @@ class DataCleanerTest extends TestCase
         $this->restaurantProvider = $this->createMock(RestaurantProvider::class);
         $this->entityRepository = $this->createMock(EntityRepository::class);
         $this->order = $this->createMock(Order::class);
-        $this->filePath =  __DIR__ . $_ENV['FILE_PATH'];
+        $this->restaurantFilePath = $this->getContainer()->getParameter('app.restaurant_file_path');
         $this->dataCleaner = new DataCleaner($this->em, $this->restaurantProvider);
     }
 
     public function testRestaurantClosed(): void
     {
-        file_put_contents($this->filePath, 111);
+        file_put_contents($this->restaurantFilePath, 111);
 
         $this->restaurantProvider
             ->expects($this->once())
             ->method('getFilePath')
-            ->willReturn($this->filePath);
+            ->willReturn($this->restaurantFilePath);
 
         $this->em
             ->expects($this->once())
@@ -57,7 +57,7 @@ class DataCleanerTest extends TestCase
         $this->restaurantProvider
             ->expects($this->once())
             ->method('getFilePath')
-            ->willReturn($this->filePath);
+            ->willReturn($this->restaurantFilePath);
 
         $this->em
             ->expects($this->once())

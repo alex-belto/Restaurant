@@ -34,7 +34,7 @@ class DataCleanerTest extends WebTestCase
 
         $this->restaurantProvider
             ->expects($this->once())
-            ->method('getFilePath')
+            ->method('getRestaurantFilePath')
             ->willReturn($this->restaurantFilePath);
 
         $this->em
@@ -56,7 +56,7 @@ class DataCleanerTest extends WebTestCase
     {
         $this->restaurantProvider
             ->expects($this->once())
-            ->method('getFilePath')
+            ->method('getRestaurantFilePath')
             ->willReturn($this->restaurantFilePath);
 
         $this->em

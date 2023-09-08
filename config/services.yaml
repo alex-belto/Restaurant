@@ -4,7 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    app.restaurant_file_path: '%kernel.project_dir%%env(FILE_PATH)%'
+    app.restaurant_file_path: '%kernel.project_dir%%env(RESTAURANT_FILE_PATH)%'
 
 services:
     # default configuration for services in *this* file
@@ -68,4 +68,4 @@ services:
 
     App\Services\Restaurant\RestaurantProvider:
         arguments:
-            $restaurantFilePath: '%kernel.project_dir%%env(FILE_PATH)%'
+            $restaurantFilePath: '%kernel.project_dir%%env(RESTAURANT_FILE_PATH)%'

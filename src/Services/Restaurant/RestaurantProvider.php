@@ -26,7 +26,7 @@ class RestaurantProvider
 
     public function getRestaurant(?int $days = null): Restaurant
     {
-        $filePath = $this->getFilePath();
+        $filePath = $this->getRestaurantFilePath();
 
         if (!file_exists($filePath)) {
             return $this->buildRestaurant($days);
@@ -44,7 +44,7 @@ class RestaurantProvider
 
     private function buildRestaurant(?int $days = null): Restaurant
     {
-        $filePath = $this->getFilePath();
+        $filePath = $this->getRestaurantFilePath();
         $restaurant = $this->restaurantBuilder
             ->build()
             ->hireKitcheners(3)
@@ -60,7 +60,7 @@ class RestaurantProvider
         return $restaurant;
     }
 
-    public function getFilePath(): string
+    public function getRestaurantFilePath(): string
     {
         return $this->restaurantFilePath;
     }

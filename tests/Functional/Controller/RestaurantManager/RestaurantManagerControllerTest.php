@@ -2,18 +2,17 @@
 
 namespace App\Tests\Functional\Controller\RestaurantManager;
 
-use App\Services\Restaurant\RestaurantBuilder;
-use App\Services\Restaurant\RestaurantProvider;
-use Doctrine\ORM\EntityManagerInterface;
+use App\DataFixtures\TestRestaurantFixture;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class RestaurantManagerControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
-    private RestaurantProvider $restaurantProvider;
-    private EntityManagerInterface $em;
     private string $restaurantFilePath;
+    private AbstractDatabaseTool $databaseTool;
 
     static function setUpBeforeClass(): void
     {
@@ -23,10 +22,8 @@ class RestaurantManagerControllerTest extends WebTestCase
     public function setUp(): void
     {
         $this->client = static::createClient();
-        $this->em = $this->getContainer()->get(EntityManagerInterface::class);
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
         $this->restaurantFilePath = $this->getContainer()->getParameter('app.restaurant_file_path');
-        $restaurantBuilder = new RestaurantBuilder($this->em);
-        $this->restaurantProvider = new RestaurantProvider($restaurantBuilder, $this->em, $this->restaurantFilePath);
         if (file_exists($this->restaurantFilePath)) {
             unlink($this->restaurantFilePath);
         }
@@ -93,7 +90,7 @@ class RestaurantManagerControllerTest extends WebTestCase
 
     public function testRestaurantClosed(): void
     {
-        $this->restaurantProvider->getRestaurant(1);
+        $this->databaseTool->loadFixtures([TestRestaurantFixture::class]);
         $this->client->request('GET', '/restaurant/close');
         $content = $this->client->getResponse()->getContent();
 

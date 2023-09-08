@@ -30,7 +30,7 @@ class DataCleaner
 
     private function removeRestaurantFile(): string
     {
-        $filePath = $this->restaurantProvider->getFilePath();
+        $filePath = $this->restaurantProvider->getRestaurantFilePath();
         if (!file_exists($filePath)) {
             return 'Restaurant not found!';
         }

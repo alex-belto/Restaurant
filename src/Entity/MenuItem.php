@@ -2,32 +2,42 @@
 
 namespace App\Entity;
 
-use App\Repository\MenuItemRepository;
+use App\Enum\MenuItemType;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: MenuItemRepository::class)]
+/**
+ * Represents menu item, including their name,
+ * preparation time, price, associated restaurant, and related order.
+ */
+#[ORM\Entity]
 class MenuItem
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
-    #[ORM\Column(length: 255)]
-    protected ?string $name = null;
+    #[ORM\Column(length: 32)]
+    private string $name;
 
     #[ORM\Column]
-    protected ?float $price = null;
+    private float $price;
 
-    #[ORM\Column(length: 255)]
-    protected ?string $time = null;
+    #[ORM\Column(length: 8)]
+    private string $time;
 
-    public function getId(): ?int
+    #[ORM\Column]
+    private int $type;
+
+    #[ORM\ManyToOne(inversedBy: 'menuItems')]
+    private ?Restaurant $restaurant = null;
+
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -39,7 +49,7 @@ class MenuItem
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): float
     {
         return $this->price;
     }
@@ -59,6 +69,30 @@ class MenuItem
     public function setTime(string $time): static
     {
         $this->time = $time;
+
+        return $this;
+    }
+
+    public function getType(): MenuItemType
+    {
+        return MenuItemType::tryFrom($this->type);
+    }
+
+    public function setType(MenuItemType $type): static
+    {
+        $this->type = $type->value;
+
+        return $this;
+    }
+
+    public function getRestaurant(): ?Restaurant
+    {
+        return $this->restaurant;
+    }
+
+    public function setRestaurant(?Restaurant $restaurant): static
+    {
+        $this->restaurant = $restaurant;
 
         return $this;
     }

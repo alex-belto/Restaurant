@@ -48,7 +48,7 @@ class OrderListenerTest extends TestCase
         $this->order
             ->expects($this->once())
             ->method('getStatus')
-            ->willReturn(OrderStatus::DONE);
+            ->willReturn(OrderStatus::DELIVERED);
 
         $this->order
             ->expects($this->once())

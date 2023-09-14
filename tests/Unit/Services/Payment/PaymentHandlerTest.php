@@ -29,11 +29,6 @@ class PaymentHandlerTest extends TestCase
     {
         $this->client
             ->expects($this->once())
-            ->method('getStatus')
-            ->willReturn(ClientStatus::ORDER_PLACED);
-
-        $this->client
-            ->expects($this->once())
             ->method('isEnoughMoneyForOrder')
             ->willReturn(true);
 
@@ -59,11 +54,6 @@ class PaymentHandlerTest extends TestCase
     public function testCardNotValidException(): void
     {
         $cardValidationException = $this->createMock(CardValidationException::class);
-
-        $this->client
-            ->expects($this->once())
-            ->method('getStatus')
-            ->willReturn(ClientStatus::ORDER_PLACED);
 
         $this->client
             ->expects($this->once())
@@ -93,11 +83,6 @@ class PaymentHandlerTest extends TestCase
     {
         $this->client
             ->expects($this->once())
-            ->method('getStatus')
-            ->willReturn(ClientStatus::ORDER_PLACED);
-
-        $this->client
-            ->expects($this->once())
             ->method('getPaymentMethod')
             ->willReturn('cardPayment');
 
@@ -107,30 +92,6 @@ class PaymentHandlerTest extends TestCase
             ->willReturn(false);
 
         $this->expectExceptionMessage('Client dont have enough money!');
-
-        $this->paymentHandler->payOrder($this->client);
-    }
-
-    public function testClientAlreadyPayedOrder(): void
-    {
-        $this->client
-            ->expects($this->once())
-            ->method('getStatus')
-            ->willReturn(ClientStatus::ORDER_PAYED);
-
-        $this->client
-            ->expects($this->never())
-            ->method('getPaymentMethod');
-
-        $this->container
-            ->expects($this->never())
-            ->method('get')
-            ->willReturn($this->paymentInterface);
-
-        $this->paymentInterface
-            ->expects($this->never())
-            ->method('pay')
-            ->with($this->equalTo($this->client));
 
         $this->paymentHandler->payOrder($this->client);
     }

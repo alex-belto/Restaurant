@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Enum\ClientStatus;
+use App\Enum\OrderStatus;
 use App\Repository\ClientRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -187,6 +188,7 @@ class Client
         $this->setMoney($restOfMoney);
         $restaurantBalance = $restaurant->getBalance() + $order->getPrice();
         $restaurant->setBalance($restaurantBalance);
+        $order->setStatus(OrderStatus::DONE);
         $this->setStatus(ClientStatus::ORDER_PAYED);
     }
 }

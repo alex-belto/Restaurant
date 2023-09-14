@@ -4,6 +4,7 @@ namespace App\Services\Payment;
 
 use App\Entity\Client;
 use App\Enum\ClientStatus;
+use App\Enum\OrderStatus;
 use App\Exception\CardValidationException;
 use Exception;
 use Symfony\Component\DependencyInjection\ServiceLocator;
@@ -23,10 +24,6 @@ class PaymentHandler
 
     public function payOrder(Client $client): void
     {
-        if ($client->getStatus() === ClientStatus::ORDER_PAYED) {
-            return;
-        }
-
         $paymentStrategy = $this->paymentStrategies->get($client->getPaymentMethod());
 
         if (!$client->isEnoughMoneyForOrder()) {

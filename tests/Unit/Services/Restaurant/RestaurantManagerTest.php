@@ -42,7 +42,7 @@ class RestaurantManagerTest extends TestCase
             ->with($this->equalTo($client));
 
         $em
-            ->expects($this->exactly(30))
+            ->expects($this->exactly(1))
             ->method('flush');
 
         $clientRepository

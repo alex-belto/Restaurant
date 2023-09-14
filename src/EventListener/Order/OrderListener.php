@@ -7,7 +7,7 @@ use App\Enum\OrderStatus;
 use App\Services\Payment\PaymentHandler;
 
 /**
- * Once we receive notification of the order status changing to "DONE," we proceed with processing the payment.
+ * Once we receive notification of the order status changing to "DELIVERED," we proceed with processing the payment.
  */
 class OrderListener
 {
@@ -21,9 +21,10 @@ class OrderListener
 
     public function payOrder(Order $order): void
     {
-        if ($order->getStatus() !== OrderStatus::DONE) {
+        if ($order->getStatus() !== OrderStatus::DELIVERED) {
             return;
         }
+
         $client = $order->getClient();
         $order->setTips(rand(0, 20));
         $this->paymentHandler->payOrder($client);

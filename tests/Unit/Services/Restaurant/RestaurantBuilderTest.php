@@ -4,40 +4,47 @@ namespace App\Tests\Unit\Services\Restaurant;
 
 use App\Entity\Kitchener;
 use App\Entity\MenuItem;
-use App\Entity\Restaurant;
 use App\Entity\Waiter;
-use App\Repository\KitchenerRepository;
-use App\Repository\MenuItemRepository;
-use App\Repository\WaiterRepository;
+use App\Enum\MenuItemType;
 use App\Services\Restaurant\RestaurantBuilder;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
+use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 
 class RestaurantBuilderTest extends TestCase
 {
-    private Restaurant $restaurant;
     private EntityManagerInterface $em;
-    private WaiterRepository $waiterRepository;
-    private KitchenerRepository $kitchenerRepository;
-    private MenuItemRepository $menuItemRepository;
-    private Waiter $waiter;
-    private Kitchener $kitchener;
-    private MenuItem $menuItem;
+    private EntityRepository $entityRepository;
     private RestaurantBuilder $restaurantBuilder;
     private int $amountOfHiringStaff;
     private int $amountOfAddingMenuItems;
+    private array $staff;
+    private array $menuItems;
 
     public function setUp(): void
     {
-        $this->restaurant = $this->createMock(Restaurant::class);
         $this->em = $this->createMock(EntityManagerInterface::class);
-        $this->waiterRepository = $this->createMock(WaiterRepository::class);
-        $this->kitchenerRepository = $this->createMock(KitchenerRepository::class);
-        $this->menuItemRepository = $this->createMock(MenuItemRepository::class);
-        $this->waiter = $this->createMock(Waiter::class);
-        $this->kitchener = $this->createMock(Kitchener::class);
-        $this->menuItem = $this->createMock(MenuItem::class);
+        $this->entityRepository = $this->createMock(EntityRepository::class);
+        $this->staff = [
+            'waiters' => [
+                $this->createMock(Waiter::class),
+                $this->createMock(Waiter::class)
+            ],
+            'kitcheners' => [
+                $this->createMock(Kitchener::class),
+                $this->createMock(Kitchener::class)
+            ]
+        ];
+//        $this->waiterOne = $this->createMock(Waiter::class);
+//        $this->waiterTwo = $this->createMock(Waiter::class);
+//        $this->kitchenerOne = $this->createMock(Kitchener::class);
+//        $this->kitchenerTwo = $this->createMock(Kitchener::class);
+        $this->menuItems = [
+            $this->createMock(MenuItem::class),
+            $this->createMock(MenuItem::class)
+        ];
+//        $this->menuItemOne = $this->createMock(MenuItem::class);
+//        $this->menuItemTwo = $this->createMock(MenuItem::class);
         $this->restaurantBuilder = new RestaurantBuilder($this->em);
         $this->amountOfHiringStaff = 2;
         $this->amountOfAddingMenuItems = 2;
@@ -49,18 +56,17 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(Waiter::class))
-            ->willReturn($this->waiterRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->waiterRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findAll')
-            ->willReturn([$this->waiter, $this->waiter]);
+            ->willReturn($this->staff['waiters']);
 
-        $this->restaurant
-            ->expects($this->exactly($this->amountOfHiringStaff))
-            ->method('addWaiter');
-
-        $this->restaurantBuilder->hireWaiters($this->restaurant, $this->amountOfHiringStaff);
+        $this->restaurantBuilder->build();
+        $builder = $this->restaurantBuilder->hireWaiters($this->amountOfHiringStaff);
+        $this->assertInstanceOf(RestaurantBuilder::class, $builder);
+        $this->assertCount(2, $builder->getRestaurant()->getWaiters());
     }
 
     public function testHiringWaitersWithException(): void
@@ -69,16 +75,17 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(Waiter::class))
-            ->willReturn($this->waiterRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->waiterRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findAll')
-            ->willReturn([$this->waiter]);
+            ->willReturn([$this->staff['waiters'][0]]);
 
-        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('You dont have enough staff in pull');
 
-        $this->restaurantBuilder->hireWaiters($this->restaurant, $this->amountOfHiringStaff);
+        $this->restaurantBuilder->build();
+        $this->restaurantBuilder->hireWaiters($this->amountOfHiringStaff);
     }
 
     public function testHiringKitchenersSuccessfully(): void
@@ -87,18 +94,17 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(Kitchener::class))
-            ->willReturn($this->kitchenerRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->kitchenerRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findAll')
-            ->willReturn([$this->kitchener, $this->kitchener]);
+            ->willReturn($this->staff['kitcheners']);
 
-        $this->restaurant
-            ->expects($this->exactly($this->amountOfHiringStaff))
-            ->method('addKitchener');
-
-        $this->restaurantBuilder->hireKitcheners($this->restaurant, $this->amountOfHiringStaff);
+        $this->restaurantBuilder->build();
+        $builder = $this->restaurantBuilder->hireKitcheners($this->amountOfHiringStaff);
+        $this->assertInstanceOf(RestaurantBuilder::class, $builder);
+        $this->assertCount(2, $builder->getRestaurant()->getKitcheners());
     }
 
     public function testHiringKitchenersWithException(): void
@@ -107,16 +113,16 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(Kitchener::class))
-            ->willReturn($this->kitchenerRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->kitchenerRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findAll')
-            ->willReturn([$this->kitchener]);
+            ->willReturn([$this->staff['kitcheners'][0]]);
 
-        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('You dont have enough staff in pull');
 
-        $this->restaurantBuilder->hireKitcheners($this->restaurant, $this->amountOfHiringStaff);
+        $this->restaurantBuilder->hireKitcheners($this->amountOfHiringStaff);
     }
 
     public function testAddDishToRestaurantSuccessfully(): void
@@ -125,19 +131,18 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(MenuItem::class))
-            ->willReturn($this->menuItemRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->menuItemRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findBy')
-            ->with(['type' => MenuItem::DISH])
-            ->willReturn([$this->menuItem, $this->menuItem]);
+            ->with(['type' => MenuItemType::DISH])
+            ->willReturn($this->menuItems);
 
-        $this->restaurant
-            ->expects($this->exactly($this->amountOfAddingMenuItems))
-            ->method('addMenuItem');
-
-        $this->restaurantBuilder->fillUpMenu($this->restaurant, $this->amountOfAddingMenuItems, 'dish');
+        $this->restaurantBuilder->build();
+        $builder =$this->restaurantBuilder->fillUpMenu($this->amountOfAddingMenuItems, 'dish');
+        $this->assertInstanceOf(RestaurantBuilder::class, $builder);
+        $this->assertCount(2, $builder->getRestaurant()->getMenuItems());
     }
 
     public function testAddDishToRestaurantWithException(): void
@@ -146,17 +151,17 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(MenuItem::class))
-            ->willReturn($this->menuItemRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->menuItemRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findBy')
-            ->with(['type' => MenuItem::DISH])
-            ->willReturn([$this->menuItem]);
+            ->with(['type' => MenuItemType::DISH])
+            ->willReturn([$this->menuItems[0]]);
 
-        $this->expectException(Exception::class);
-
-        $this->restaurantBuilder->fillUpMenu($this->restaurant, $this->amountOfAddingMenuItems, 'dish');
+        $this->expectExceptionMessage('You dont have enough dish in pull');
+        $this->restaurantBuilder->build();
+        $this->restaurantBuilder->fillUpMenu($this->amountOfAddingMenuItems, 'dish');
     }
 
     public function testAddDrinkToRestaurantSuccessfully(): void
@@ -165,19 +170,18 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(MenuItem::class))
-            ->willReturn($this->menuItemRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->menuItemRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findBy')
-            ->with(['type' => MenuItem::DRINK])
-            ->willReturn([$this->menuItem, $this->menuItem]);
+            ->with(['type' => MenuItemType::DRINK])
+            ->willReturn($this->menuItems);
 
-        $this->restaurant
-            ->expects($this->exactly($this->amountOfAddingMenuItems))
-            ->method('addMenuItem');
-
-        $this->restaurantBuilder->fillUpMenu($this->restaurant, $this->amountOfAddingMenuItems, 'drink');
+        $this->restaurantBuilder->build();
+        $builder =$this->restaurantBuilder->fillUpMenu($this->amountOfAddingMenuItems, 'drink');
+        $this->assertInstanceOf(RestaurantBuilder::class, $builder);
+        $this->assertCount(2, $builder->getRestaurant()->getMenuItems());
     }
 
     public function testAddDrinkToRestaurantWithException(): void
@@ -186,17 +190,18 @@ class RestaurantBuilderTest extends TestCase
             ->expects($this->once())
             ->method('getRepository')
             ->with($this->equalTo(MenuItem::class))
-            ->willReturn($this->menuItemRepository);
+            ->willReturn($this->entityRepository);
 
-        $this->menuItemRepository
+        $this->entityRepository
             ->expects($this->once())
             ->method('findBy')
-            ->with(['type' => MenuItem::DRINK])
-            ->willReturn([$this->menuItem]);
+            ->with(['type' => MenuItemType::DRINK])
+            ->willReturn([$this->menuItems[0]]);
 
-        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('You dont have enough drink in pull');
 
-        $this->restaurantBuilder->fillUpMenu($this->restaurant, $this->amountOfAddingMenuItems, 'drink');
+        $this->restaurantBuilder->build();
+        $this->restaurantBuilder->fillUpMenu($this->amountOfAddingMenuItems, 'drink');
     }
 
 }

@@ -2,19 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\MenuItemRepository;
+use App\Enum\MenuItemType;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Represents menu item, including their name,
  * preparation time, price, associated restaurant, and related order.
  */
-#[ORM\Entity(repositoryClass: MenuItemRepository::class)]
+#[ORM\Entity]
 class MenuItem
 {
-    public const DISH = 1;
-    public const DRINK = 2;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -34,9 +31,6 @@ class MenuItem
 
     #[ORM\ManyToOne(inversedBy: 'menuItems')]
     private ?Restaurant $restaurant = null;
-
-    #[ORM\ManyToOne(inversedBy: 'menuItem')]
-    private ?OrderItem $orderItem = null;
 
     public function getId(): int
     {
@@ -79,14 +73,14 @@ class MenuItem
         return $this;
     }
 
-    public function getType(): int
+    public function getType(): MenuItemType
     {
-        return $this->type;
+        return MenuItemType::tryFrom($this->type);
     }
 
-    public function setType(int $type): static
+    public function setType(MenuItemType $type): static
     {
-        $this->type = $type;
+        $this->type = $type->value;
 
         return $this;
     }
@@ -99,18 +93,6 @@ class MenuItem
     public function setRestaurant(?Restaurant $restaurant): static
     {
         $this->restaurant = $restaurant;
-
-        return $this;
-    }
-
-    public function getOrderItem(): ?OrderItem
-    {
-        return $this->orderItem;
-    }
-
-    public function setOrderItem(?OrderItem $orderItem): static
-    {
-        $this->orderItem = $orderItem;
 
         return $this;
     }

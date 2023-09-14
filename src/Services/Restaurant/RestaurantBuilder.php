@@ -6,6 +6,7 @@ use App\Entity\Kitchener;
 use App\Entity\MenuItem;
 use App\Entity\Restaurant;
 use App\Entity\Waiter;
+use App\Enum\MenuItemType;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -15,6 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class RestaurantBuilder
 {
     private EntityManagerInterface $em;
+    private Restaurant $restaurant;
 
     public function __construct(
         EntityManagerInterface $em
@@ -22,79 +24,75 @@ class RestaurantBuilder
         $this->em = $em;
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function buildRestaurant(int $days): Restaurant
+    public function getRestaurant(): Restaurant
     {
-        $restaurant = $this->reset();
-        $this->hireKitcheners($restaurant, 3);
-        $this->hireWaiters($restaurant, 7);
-        $this->fillUpMenu($restaurant, 15, 'dish');
-        $this->fillUpMenu($restaurant,  4, 'drink');
-        $restaurant->setDays($days);
-
-        return $restaurant;
+        return $this->restaurant;
     }
 
-    public function reset(): Restaurant
+    public function build(): self
     {
-        return new Restaurant();
+        $this->restaurant = new Restaurant();
+
+        return $this;
     }
 
-    public function hireWaiters(Restaurant $restaurant, int $amount): void
+    public function hireWaiters(int $amount): self
     {
         $waiters = $this->em->getRepository(Waiter::class)->findAll();
         if (count($waiters) < $amount) {
-            throw new \Exception('U dont have enough staff in pull');
+            throw new \Exception('You dont have enough staff in pull');
         }
 
         for ($i = 0; $i < $amount; $i++) {
-            $restaurant->addWaiter($waiters[$i]);
+            $this->restaurant->addWaiter($waiters[$i]);
         }
+
+        return $this;
     }
 
-    public function hireKitcheners(Restaurant $restaurant, int $amount): void
+    public function hireKitcheners(int $amount): self
     {
         $kitcheners = $this->em->getRepository(Kitchener::class)->findAll();
         if (count($kitcheners) < $amount) {
-            throw new \Exception('U dont have enough staff in pull');
+            throw new \Exception('You dont have enough staff in pull');
         }
 
         for ($i = 0; $i < $amount; $i++) {
-            $restaurant->addKitchener($kitcheners[$i]);
+            $this->restaurant->addKitchener($kitcheners[$i]);
         }
+
+        return $this;
     }
 
-    public function fillUpMenu(Restaurant $restaurant, int $amount, string $type): void
+    public function fillUpMenu(int $amount, string $type): self
     {
         switch ($type) {
             case 'dish':
-                $dish = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItem::DISH]);
-                if (count($dish) < $amount) {
-                    throw new \Exception('U dont have enough dish in pull');
+                $dishes = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItemType::DISH]);
+                if (count($dishes) < $amount) {
+                    throw new \Exception('You dont have enough dish in pull');
                 }
 
                 for ($i = 0; $i < $amount; $i++) {
-                    $restaurant->addMenuItem($dish[$i]);
+                    $this->restaurant->addMenuItem($dishes[$i]);
                 }
                 break;
 
             case 'drink':
-                $drink = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItem::DRINK]);
-                if (count($drink) < $amount) {
-                    throw new \Exception('U dont have enough drink in pull');
+                $drinks = $this->em->getRepository(MenuItem::class)->findBy(['type' => MenuItemType::DRINK]);
+                if (count($drinks) < $amount) {
+                    throw new \Exception('You dont have enough drink in pull');
                 }
 
                 for ($i = 0; $i < $amount; $i++) {
-                    $restaurant->addMenuItem($drink[$i]);
+                    $this->restaurant->addMenuItem($drinks[$i]);
                 }
                 break;
 
             default:
                 throw new \Exception('Wrong menuItem type!');
         }
+
+        return $this;
     }
-
-
 }

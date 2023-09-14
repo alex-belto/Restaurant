@@ -3,6 +3,7 @@
 namespace App\Tests\Unit\Services\Payment;
 
 use App\Entity\Client;
+use App\Enum\ClientStatus;
 use App\Services\Payment\CashPaymentProcessor;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,11 +40,6 @@ class CashPaymentProcessorTest extends TestCase
             ->expects($this->once())
             ->method('beginTransaction');
 
-        $this->client
-            ->expects($this->once())
-            ->method('setStatus')
-            ->with(Client::ORDER_PAYED);
-
         $this->em
             ->expects($this->once())
             ->method('flush');
@@ -69,11 +65,6 @@ class CashPaymentProcessorTest extends TestCase
         $this->client
             ->expects($this->once())
             ->method('payOrder');
-
-        $this->client
-            ->expects($this->once())
-            ->method('setStatus')
-            ->with(Client::ORDER_PAYED);
 
         $this->em
             ->expects($this->once())

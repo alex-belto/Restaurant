@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Enum\ClientStatus;
+use App\Enum\OrderStatus;
 use App\Repository\ClientRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,10 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 class Client
 {
-    public const WITHOUT_ORDER = 1;
-    public const ORDER_PLACED = 2;
-    public const ORDER_PAYED = 3;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -44,7 +42,7 @@ class Client
     private ?Order $connectedOrder = null;
 
     #[ORM\Column]
-    private int $status = self::WITHOUT_ORDER;
+    private int $status;
 
     #[ORM\Column(length: 32, nullable: false)]
     private string $paymentMethod;
@@ -83,7 +81,7 @@ class Client
         return $this->cardNumber;
     }
 
-    public function setCardNumber(?string $cardNumber): static
+    public function setCardNumber(string $cardNumber): static
     {
         $this->cardNumber = $cardNumber;
 
@@ -95,7 +93,7 @@ class Client
         return $this->cardExpirationDate;
     }
 
-    public function setCardExpirationDate(?\DateTime $cardExpirationDate): static
+    public function setCardExpirationDate(\DateTime $cardExpirationDate): static
     {
         $this->cardExpirationDate = $cardExpirationDate;
 
@@ -107,7 +105,7 @@ class Client
         return $this->cardCvv;
     }
 
-    public function setCardCvv(?int $cardCvv): static
+    public function setCardCvv(int $cardCvv): static
     {
         $this->cardCvv = $cardCvv;
 
@@ -139,21 +137,21 @@ class Client
         return $this;
     }
 
-    public function getStatus(): int
+    public function getStatus(): ClientStatus
     {
-        return $this->status;
+        return ClientStatus::tryFrom($this->status);
     }
 
-    public function setStatus(int $status): static
+    public function setStatus(ClientStatus $status): static
     {
-        $this->status = $status;
+        $this->status = $status->value;
 
         return $this;
     }
 
-    public function isEnoughMoney(): bool
+    public function isEnoughMoneyForOrder(): bool
     {
-        $orderAmountSum = $this->connectedOrder->getPrice() + $this->connectedOrder->getTips();
+        $orderAmountSum = $this->connectedOrder->getPrice() + $this->connectedOrder->calculateTips();
         return $this->money >= $orderAmountSum;
     }
 
@@ -186,9 +184,11 @@ class Client
     {
         $order = $this->getConnectedOrder();
         $restaurant =  $this->getRestaurant();
-        $restOfMoney = $this->getMoney() - ($order->getPrice() + $order->getTips());
+        $restOfMoney = $this->getMoney() - ($order->getPrice() + $order->calculateTips());
         $this->setMoney($restOfMoney);
         $restaurantBalance = $restaurant->getBalance() + $order->getPrice();
         $restaurant->setBalance($restaurantBalance);
+        $order->setStatus(OrderStatus::DONE);
+        $this->setStatus(ClientStatus::ORDER_PAYED);
     }
 }

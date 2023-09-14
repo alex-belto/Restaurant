@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\OrderRepository;
+use App\Enum\OrderStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,14 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
  * Stores information about orders,
  * including the menu item, client, waiter, chef, order status, and price.
  */
-#[ORM\Entity(repositoryClass: OrderRepository::class)]
+#[ORM\Entity]
 #[ORM\Table(name: '`order`')]
 class Order
 {
-    public const READY_TO_WAITER = 1;
-    public const READY_TO_KITCHEN = 2;
-    public const DONE = 3;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -39,7 +35,7 @@ class Order
     #[ORM\Column(nullable: true)]
     private ?int $tips = null;
 
-    #[ORM\OneToMany(mappedBy: 'connectedOrder', targetEntity: OrderItem::class)]
+    #[ORM\OneToMany(mappedBy: 'connectedOrder', targetEntity: OrderItem::class, cascade: ['remove'])]
     private Collection $orderItems;
 
     public function __construct()
@@ -76,14 +72,14 @@ class Order
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): ?OrderStatus
     {
-        return $this->status;
+        return OrderStatus::tryFrom($this->status);
     }
 
-    public function setStatus(?int $status): static
+    public function setStatus(?OrderStatus $status): static
     {
-        $this->status = $status;
+        $this->status = $status->value;
 
         return $this;
     }
@@ -102,10 +98,9 @@ class Order
 
     public function getPrice(): ?float
     {
-        $orderItems = $this->orderItems;
         $orderPrice = 0;
 
-        foreach ($orderItems as $orderItem)
+        foreach ($this->orderItems as $orderItem)
         {
             $price = $orderItem->getPrice();
             $orderPrice += $price;
@@ -114,7 +109,7 @@ class Order
         return $orderPrice;
     }
 
-    public function getTips(): ?int
+    public function calculateTips(): ?float
     {
         return $this->getPrice()/100 * $this->tips;
     }

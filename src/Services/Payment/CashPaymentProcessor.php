@@ -3,6 +3,7 @@
 namespace App\Services\Payment;
 
 use App\Entity\Client;
+use App\Enum\ClientStatus;
 use App\Interfaces\PaymentInterface;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,7 +26,6 @@ class CashPaymentProcessor implements PaymentInterface
         try {
             $this->em->getConnection()->beginTransaction();
             $client->payOrder();
-            $client->setStatus(Client::ORDER_PAYED);
             $this->em->flush();
             $this->em->getConnection()->commit();
         } catch (Exception $e) {

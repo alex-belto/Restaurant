@@ -31,7 +31,7 @@ class TipsStandardStrategy implements TipsStrategyInterface
         $kitcheners = $restaurant->getKitcheners()->toArray();
         $staffs = array_merge($waiters, $kitcheners);
         $amountOfStaff = count($staffs);
-        $tipsForEach = $order->getTips() / $amountOfStaff;
+        $tipsForEach = $order->calculateTips() / $amountOfStaff;
 
         /** @var StaffInterface $staff */
         foreach ($staffs as $staff) {

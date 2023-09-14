@@ -6,6 +6,9 @@ use App\Entity\Kitchener;
 use App\Entity\Waiter;
 use Faker\Factory;
 
+/**
+ * Responsible for creating staff.
+ */
 class StaffFactory
 {
     public function createWaiter(): Waiter

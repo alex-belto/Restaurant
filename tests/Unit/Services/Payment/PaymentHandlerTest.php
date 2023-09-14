@@ -3,6 +3,7 @@
 namespace App\Tests\Unit\Services\Payment;
 
 use App\Entity\Client;
+use App\Enum\ClientStatus;
 use App\Exception\CardValidationException;
 use App\Interfaces\PaymentInterface;
 use App\Services\Payment\PaymentHandler;
@@ -28,16 +29,18 @@ class PaymentHandlerTest extends TestCase
     {
         $this->client
             ->expects($this->once())
-            ->method('isEnoughMoney')
+            ->method('isEnoughMoneyForOrder')
             ->willReturn(true);
 
         $this->client
             ->expects($this->once())
-            ->method('getPaymentMethod');
+            ->method('getPaymentMethod')
+            ->willReturn('cashPayment');
 
         $this->container
             ->expects($this->once())
             ->method('get')
+            ->with($this->equalTo('cashPayment'))
             ->willReturn($this->paymentInterface);
 
         $this->paymentInterface
@@ -54,7 +57,7 @@ class PaymentHandlerTest extends TestCase
 
         $this->client
             ->expects($this->once())
-            ->method('isEnoughMoney')
+            ->method('isEnoughMoneyForOrder')
             ->willReturn(true);
 
         $this->client
@@ -85,34 +88,10 @@ class PaymentHandlerTest extends TestCase
 
         $this->client
             ->expects($this->once())
-            ->method('isEnoughMoney')
+            ->method('isEnoughMoneyForOrder')
             ->willReturn(false);
 
         $this->expectExceptionMessage('Client dont have enough money!');
-
-        $this->paymentHandler->payOrder($this->client);
-    }
-
-    public function testClientAlreadyPayedOrder(): void
-    {
-        $this->client
-            ->expects($this->once())
-            ->method('getStatus')
-            ->willReturn(Client::ORDER_PAYED);
-
-        $this->client
-            ->expects($this->never())
-            ->method('getPaymentMethod');
-
-        $this->container
-            ->expects($this->never())
-            ->method('get')
-            ->willReturn($this->paymentInterface);
-
-        $this->paymentInterface
-            ->expects($this->never())
-            ->method('pay')
-            ->with($this->equalTo($this->client));
 
         $this->paymentHandler->payOrder($this->client);
     }

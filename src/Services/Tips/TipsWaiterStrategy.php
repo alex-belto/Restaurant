@@ -20,7 +20,7 @@ class TipsWaiterStrategy implements TipsStrategyInterface
      */
     public function splitTips(Order $order): void
     {
-        $tips = $order->getTips();
+        $tips = $order->calculateTips();
         $restaurant = $order->getWaiter()->getRestaurant();
         $headWaiter = $order->getWaiter();
         $orderOwnerTips = ($tips / 100) * 60;

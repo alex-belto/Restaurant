@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataFixtures;
+namespace App\Tests\Functional\Controller\RestaurantManager\DataFixtures;
 
 use App\Entity\Restaurant;
 use App\Enum\RestaurantTipsStrategy;

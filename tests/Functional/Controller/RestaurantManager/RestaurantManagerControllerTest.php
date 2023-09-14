@@ -2,7 +2,8 @@
 
 namespace App\Tests\Functional\Controller\RestaurantManager;
 
-use App\DataFixtures\TestRestaurantFixture;
+use App\Tests\Functional\Controller\RestaurantManager\DataFixtures\TestRestaurantFixture;
+use Doctrine\Common\DataFixtures\Loader;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -13,6 +14,7 @@ class RestaurantManagerControllerTest extends WebTestCase
     private KernelBrowser $client;
     private string $restaurantFilePath;
     private AbstractDatabaseTool $databaseTool;
+    private ?Loader $loader;
 
     static function setUpBeforeClass(): void
     {
@@ -27,6 +29,7 @@ class RestaurantManagerControllerTest extends WebTestCase
         if (file_exists($this->restaurantFilePath)) {
             unlink($this->restaurantFilePath);
         }
+        $this->loader = static::getContainer()->get('doctrine.fixtures.loader');
     }
 
     public function tearDown(): void
@@ -90,6 +93,7 @@ class RestaurantManagerControllerTest extends WebTestCase
 
     public function testRestaurantClosed(): void
     {
+        $this->loader->addFixture(new TestRestaurantFixture());
         $this->databaseTool->loadFixtures([TestRestaurantFixture::class]);
         $this->client->request('GET', '/restaurant/close');
         $content = $this->client->getResponse()->getContent();

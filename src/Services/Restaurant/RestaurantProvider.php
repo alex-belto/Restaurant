@@ -24,25 +24,25 @@ class RestaurantProvider
         $this->restaurantFilePath = $restaurantFilePath;
     }
 
-    public function getRestaurant(?int $days = null): Restaurant
+    public function getRestaurant(): Restaurant
     {
         $filePath = $this->getRestaurantFilePath();
 
         if (!file_exists($filePath)) {
-            return $this->buildRestaurant($days);
+            return $this->buildRestaurant();
         }
 
         $restaurantId = file_get_contents($filePath);
         $restaurant = $this->em->getRepository(Restaurant::class)->find($restaurantId);
 
         if ($restaurant === null) {
-            $restaurant = $this->buildRestaurant($days);
+            $restaurant = $this->buildRestaurant();
         }
 
         return $restaurant;
     }
 
-    private function buildRestaurant(?int $days = null): Restaurant
+    private function buildRestaurant(): Restaurant
     {
         $filePath = $this->getRestaurantFilePath();
         $restaurant = $this->restaurantBuilder
@@ -53,7 +53,6 @@ class RestaurantProvider
             ->fillUpMenu(4, 'drink')
             ->getRestaurant();
 
-        $restaurant->setDays($days);
         $this->em->persist($restaurant);
         $this->em->flush();
         file_put_contents($filePath, $restaurant->getId());

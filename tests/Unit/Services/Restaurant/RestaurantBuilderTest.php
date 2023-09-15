@@ -35,16 +35,12 @@ class RestaurantBuilderTest extends TestCase
                 $this->createMock(Kitchener::class)
             ]
         ];
-//        $this->waiterOne = $this->createMock(Waiter::class);
-//        $this->waiterTwo = $this->createMock(Waiter::class);
-//        $this->kitchenerOne = $this->createMock(Kitchener::class);
-//        $this->kitchenerTwo = $this->createMock(Kitchener::class);
+
         $this->menuItems = [
             $this->createMock(MenuItem::class),
             $this->createMock(MenuItem::class)
         ];
-//        $this->menuItemOne = $this->createMock(MenuItem::class);
-//        $this->menuItemTwo = $this->createMock(MenuItem::class);
+
         $this->restaurantBuilder = new RestaurantBuilder($this->em);
         $this->amountOfHiringStaff = 2;
         $this->amountOfAddingMenuItems = 2;

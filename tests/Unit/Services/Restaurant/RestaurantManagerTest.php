@@ -27,6 +27,11 @@ class RestaurantManagerTest extends TestCase
             ->willReturn($days);
 
         $restaurant
+            ->expects($this->once())
+            ->method('getVisitorsForAllTime')
+            ->willReturn(0);
+
+        $restaurant
             ->expects($this->exactly(3))
             ->method('getMaxVisitorsPerDay')
             ->willReturn(10);
@@ -51,7 +56,7 @@ class RestaurantManagerTest extends TestCase
             ->willReturn(20);
 
         $restaurantManager = new RestaurantManager($clientFactory, $clientRepository, $em);
-        $result = $restaurantManager->startRestaurant($restaurant);
+        $result = $restaurantManager->startRestaurant($restaurant, 3);
         $this->assertIsArray($result);
         $this->assertEquals(20, $result['visitors_with_tips']);
     }

@@ -36,8 +36,8 @@ class RestaurantManagerController extends AbstractController
     public function openRestaurant(int $days): JsonResponse
     {
         set_time_limit(1200);
-        $restaurant = $this->restaurantProvider->getRestaurant($days);
-        $result = $this->restaurantManager->startRestaurant($restaurant);
+        $restaurant = $this->restaurantProvider->getRestaurant();
+        $result = $this->restaurantManager->startRestaurant($restaurant, $days);
 
         return $this->json($result);
     }

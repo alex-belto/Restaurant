@@ -29,13 +29,14 @@ class RestaurantManager
     /**
      * @throws \Exception
      */
-    public function startRestaurant(Restaurant $restaurant): array
+    public function startRestaurant(Restaurant $restaurant, int $days): array
     {
-        $days = $restaurant->getDays();
-        $visitorsForAllTime = 0;
+        $restaurantDays = $restaurant->getDays() + $days;
+        $restaurant->setDays($restaurantDays);
+        $visitorsForAllTime = $restaurant->getVisitorsForAllTime();
 
         for ($i = 1; $i <= $days; $i++) {
-            $visitorsPerDay = rand(10, $restaurant->getMaxVisitorsPerDay());
+            $visitorsPerDay = rand(10, 10);
             $visitorsForAllTime += $visitorsPerDay;
 
             for ($j = 0; $j < $visitorsPerDay; $j++) {
@@ -43,6 +44,7 @@ class RestaurantManager
                 $this->em->persist($client);
             }
         }
+        $restaurant->setVisitorsForAllTime($visitorsForAllTime);
         $this->em->flush();
 
         $visitorsWithTips = $this->clientRepository->getAmountOfClientsWithTips();
@@ -64,7 +66,7 @@ class RestaurantManager
         }
 
         return [
-            'days' => $days,
+            'days' => $restaurantDays,
             'restaurant_balance' => $restaurant->getBalance(),
             'waiters_balance' => $waiterBalance,
             'kitcheners_balance' => $kitchenersBalance,

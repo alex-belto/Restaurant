@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Handles cash payment transactions.
+ * Use a transaction solely for practice purposes.
  */
 class CashPaymentProcessor implements PaymentInterface
 {

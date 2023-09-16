@@ -2,6 +2,9 @@
 
 namespace App\Enum;
 
+/**
+ * Representing constant restaurant data.
+ */
 enum RestaurantData: int
 {
     case WORK_HOURS = 8;

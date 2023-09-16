@@ -7,6 +7,9 @@ use App\Enum\RestaurantTipsStrategy;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * Creating the restaurant for RestaurantManagerControllerTest.
+ */
 class TestRestaurantFixture extends Fixture
 {
     public function load(ObjectManager $manager)

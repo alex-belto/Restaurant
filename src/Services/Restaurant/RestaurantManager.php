@@ -26,9 +26,6 @@ class RestaurantManager
         $this->em = $em;
     }
 
-    /**
-     * @throws \Exception
-     */
     public function startRestaurant(Restaurant $restaurant, int $days): array
     {
         $restaurantDays = $restaurant->getDays() + $days;
@@ -36,7 +33,7 @@ class RestaurantManager
         $visitorsForAllTime = $restaurant->getVisitorsForAllTime();
 
         for ($i = 1; $i <= $days; $i++) {
-            $visitorsPerDay = rand(10, 20);
+            $visitorsPerDay = rand(10, $restaurant->getMaxVisitorsPerDay());
             $visitorsForAllTime += $visitorsPerDay;
 
             for ($j = 0; $j < $visitorsPerDay; $j++) {

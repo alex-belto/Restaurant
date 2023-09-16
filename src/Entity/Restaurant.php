@@ -42,6 +42,9 @@ class Restaurant
     #[ORM\Column(length: 32, nullable: false)]
     private string $paymentMethod = 'cashPayment';
 
+    #[ORM\Column]
+    private int $visitorsForAllTime = 0;
+
     public function __construct()
     {
         $this->waiters = new ArrayCollection();
@@ -194,6 +197,18 @@ class Restaurant
     public function setPaymentMethod(string $paymentMethod): static
     {
         $this->paymentMethod = $paymentMethod;
+
+        return $this;
+    }
+
+    public function getVisitorsForAllTime(): int
+    {
+        return $this->visitorsForAllTime;
+    }
+
+    public function setVisitorsForAllTime(int $visitorsForAllTime): static
+    {
+        $this->visitorsForAllTime = $visitorsForAllTime;
 
         return $this;
     }

@@ -29,11 +29,13 @@ class WaiterListener
 
     public function processOrderByWaiter(Client $client): void
     {
-        if ($client->getStatus() !== ClientStatus::ORDER_PLACED) {
+        if ($client->getStatus() !== ClientStatus::ORDER_PLACED ||
+            $client->getWaiter() !== null) {
             return;
         }
             /** @var Waiter $waiter */
             $waiter = $this->staffResolver->chooseStaff('waiter');
+            $client->setWaiter($waiter);
             $order = $client->getConnectedOrder();
             $waiter->addOrder($order);
             $order->setStatus(OrderStatus::READY_TO_KITCHEN);
@@ -46,8 +48,6 @@ class WaiterListener
             return;
         }
 
-        $kitchener = $order->getKitchener();
-        $kitchener->removeOrder($order);
         $order->setStatus(OrderStatus::DELIVERED);
         $this->em->flush();
     }

@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Handles card payment transactions.
+ * Use a transaction solely for practice purposes.
  */
 class CardPaymentProcessor implements PaymentInterface
 {

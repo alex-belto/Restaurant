@@ -2,6 +2,9 @@
 
 namespace App\Enum;
 
+/**
+ * Representing different client statuses.
+ */
 enum ClientStatus: int
 {
     case WITHOUT_ORDER = 1;
